@@ -1,0 +1,16 @@
+---
+include:
+  project: "bmi/opendesk/tooling/gitlab-config"
+  ref: "main"
+  file:
+    - "ci/common/lint.yml"
+    - "ci/container/container-build.yml"
+
+stages:
+  - ".pre"
+  - "lint"
+  - "build"
+  - "scan"
+  - "release"
+  - ".post"
+...
