@@ -1,7 +1,7 @@
 ---
 include:
   project: "bmi/opendesk/tooling/gitlab-config"
-  ref: "main"
+  ref: "2.4.8"
   file:
     - "ci/common/lint.yml"
     - "ci/container/container-build-semantic.yml"
