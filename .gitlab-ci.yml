@@ -4,6 +4,7 @@ include:
   ref: "main"
   file:
     - "ci/common/lint.yml"
+    - "ci/container/container-build-semantic.yml"
     - "ci/container/container-build.yml"
 
 stages:
