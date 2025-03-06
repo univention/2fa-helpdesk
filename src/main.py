@@ -3,6 +3,21 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
+@app.get("/startup")
+def startup():
+    return True
+
+
+@app.get("/livez")
+def liveness():
+    return True
+
+
+@app.get("/readyz")
+def readyness():
+    return True
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
