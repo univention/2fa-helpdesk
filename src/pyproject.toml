@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "2fa-helpdesk"
+version = "0.1.0"
+description = "Univention 2FA Helpdesk - Additional tools for the administration of two factor authentication"
+authors = [
+  "Univention GmbH <packages@univention.de>",
+]
+license = "GNU Affero General Public License v3"
+# packages = [{ include = "server", from = "src" }, ]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
