@@ -5,9 +5,7 @@ if [ -z "$NAMESPACE" ]; then
     exit 1
 fi
 
-NAMESPACE="yschmidt-opendesk"
-
-UDM_CONTAINER=$(kubectl get pods -n yschmidt-opendesk --no-headers | grep '^ums-udm-rest-api-' | head -n 1 | awk '{print $1}')
+UDM_CONTAINER=$(kubectl get pods -n "$NAMESPACE" --no-headers | grep '^ums-udm-rest-api-' | head -n 1 | awk '{print $1}')
 port_forwards=(
   "pod/ums-keycloak-0 8080:8080 8443:8443"
   "pod/${UDM_CONTAINER} 9979:9979"
