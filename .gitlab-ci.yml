@@ -1,0 +1,17 @@
+---
+include:
+  project: "bmi/opendesk/tooling/gitlab-config"
+  ref: "v2.4.8"
+  file:
+    - "ci/common/lint.yml"
+    - "ci/container/container-build-semantic.yml"
+    - "ci/container/container-build.yml"
+
+stages:
+  - ".pre"
+  - "lint"
+  - "build"
+  - "scan"
+  - "release"
+  - ".post"
+...
