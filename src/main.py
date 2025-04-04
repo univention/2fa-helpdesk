@@ -33,24 +33,26 @@ class Reset2FARequest(BaseModel):
 class GroupToRoleRequest(BaseModel):
     group_name: str
 
-def is_functional_admin(username):
 
-    try:
-        guardian = Guardian()
-        user_roles = guardian.get_roles_of_user(username)
+def is_2fa_admin(username):
 
-        for role in user_roles:
-            if role.get("name") == "Functional Admin":
-                return True
-
-        return False
-
-    except GuardianError as e:
-        print(f"Guardian error occurred: {e}")
-        return False
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-        return False
+    pass
+    # try:
+    #     guardian = Guardian()
+    #     user_roles = guardian.get_roles_of_user(username)
+    #
+    #     for role in user_roles:
+    #         if role.get("name") == "Functional Admin":
+    #             return True
+    #
+    #     return False
+    #
+    # except GuardianError as e:
+    #     print(f"Guardian error occurred: {e}")
+    #     return False
+    # except Exception as e:
+    #     print(f"Unexpected error: {e}")
+    #     return False
 
 def verify_user_in_group(credentials: HTTPBasicCredentials = Depends(security)):
     """FastAPI dependency that checks if user is part of a UDM group."""
@@ -84,6 +86,7 @@ def verify_user_in_group(credentials: HTTPBasicCredentials = Depends(security)):
     except requests.RequestException as e:
         raise HTTPException(status_code=500, detail=f"Error connecting to UDM: {str(e)}")
 
+
 def get_kc_admin():
     try:
         kc_admin = KeycloakAdmin(
@@ -109,6 +112,7 @@ def get_2fa_groups():
         raise HTTPException(status_code=404, detail=f"Error fetching groups for role '{TARGET_ROLE}': {str(e)}")
 
     return {"role": TARGET_ROLE, "groups": groups}
+
 
 def _get_users_in_groups(group_names):
 
@@ -144,11 +148,13 @@ def _get_users_in_groups(group_names):
 
     return user_objects
 
+
 @app.get("/get-users")
 def get_group_users(groups: List[str] = Query(..., description="List of group names")):
 
     users = get_users_in_groups(groups)
     return {"groups": groups, "users": users}
+
 
 @app.post("/group-add")
 def add_user_to_group(data: GroupAddRequest, auth: HTTPBasicAuth = Depends(get_udm_auth)):
@@ -192,6 +198,7 @@ def add_user_to_group(data: GroupAddRequest, auth: HTTPBasicAuth = Depends(get_u
         raise HTTPException(status_code=500, detail=f"Failed to update group: {patch_resp.text}")
 
     return {"detail": f"User '{data.username}' added to group '{data.group}'"}
+
 
 @app.post("/reset-2fa")
 def reset_user_2fa(data: Reset2FARequest):
