@@ -4,7 +4,7 @@
 ARG UCS_BASE_IMAGE_TAG=0.16.1-build-2025-02-20
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/components/ucs-base-image/ucs-base-520
 
-ARG WORKDIR="/app"
+ARG WORKDIR="/src"
 
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} as build
 ARG WORKDIR
@@ -41,7 +41,7 @@ RUN pip3 install --break-system-packages --no-cache-dir poetry==1.6.1
 
 # copy source code and install project
 COPY ./src ${WORKDIR}
-RUN poetry install --only main
+RUN poetry install #--only main
 
 ###############################################
 # Stage 2: test image
@@ -59,4 +59,5 @@ WORKDIR ${WORKDIR}
 COPY --from=build ${WORKDIR} ${WORKDIR}
 
 EXPOSE 8080
-CMD exec fastapi run 2fa_helpdesk/main.py --proxy-headers --root-path "$ROOT_PATH" --port 8080
+CMD exec python3.11
+# CMD exec fastapi run 2fa_helpdesk/main.py --proxy-headers --root-path "$ROOT_PATH" --port 8080
