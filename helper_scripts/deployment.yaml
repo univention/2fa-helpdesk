@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 2fa-helpdesk-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 2fa-helpdesk-backend
+  template:
+    metadata:
+      labels:
+        app: 2fa-helpdesk-backend
+    spec:
+      containers:
+      - name: 2fa-helpdesk-backend
+        image: 2fa-helpdesk-backend
+        env:
+        - name: OIDC_HOST
+          value: ""
+        - name: OIDC_REALM
+          value: ""
+        - name: OIDC_CLIENT_ID
+          value: ""
+
+        - name: UDM_USERNAME
+          value: ""
+        - name: UDM_PASSWORD
+          value: ""
+        - name: UDM_HOST
+          value: ""
+
+        - name: KEYCLOAK_URL
+          value: ""
+        - name: KEYCLOAK_USERNAME
+          value: ""
+        - name: KEYCLOAK_PASSWORD
+          value: ""
+        - name: KEYCLOAK_REALM_NAME
+          value: ""
+        - name: KEYCLOAK_CLIENT_ID
+          value: ""
+        - name: KEYCLOAK_VERIFY_SSL
+          value: "true"  # Or "false"
