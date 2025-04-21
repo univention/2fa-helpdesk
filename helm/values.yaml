@@ -1,0 +1,31 @@
+replicaCount: 1
+
+image:
+  repository: your-backend-image
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+  targetPort: 8080
+
+env:
+  OIDC_HOST: ""
+  OIDC_REALM: ""
+  OIDC_CLIENT_ID: ""
+  UDM_USERNAME: ""
+  UDM_PASSWORD: ""
+  UDM_HOST: ""
+  KEYCLOAK_URL: ""
+  KEYCLOAK_USERNAME: ""
+  KEYCLOAK_PASSWORD: ""
+  KEYCLOAK_REALM_NAME: ""
+  KEYCLOAK_CLIENT_ID: ""
+  KEYCLOAK_VERIFY_SSL: "true"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  host: portal.ys-opendesk.test.rancher.falkenstein-2.potaris.de
+  path: /2fa-backend(/|$)(.*)
+  rewriteTarget: /$2

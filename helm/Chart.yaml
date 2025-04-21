@@ -1,0 +1,5 @@
+apiVersion: v2
+name: 2fa-helpdesk-backend
+description: 2FA Helpdesk Backend API
+version: 0.1.0
+appVersion: "1.0.0"
