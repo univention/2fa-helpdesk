@@ -12,13 +12,17 @@ WORKDIR ${WORKDIR}
 
 ARG USER=fastapi
 RUN useradd -m "$USER"
+
+COPY ./src ${WORKDIR}
+RUN chown -R "$USER":"$USER" "${WORKDIR}"
+
 RUN chown "$USER":"$USER" "$WORKDIR" \
     && apt-get -qq update \
     && apt-get --assume-yes --verbose-versions --no-install-recommends install \
       python3-pip \
       python3-univention-directory-manager-rest-client \
     && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
-USER "$USER"
+
 ENV \
     PATH="/home/${USER}/.local/bin:${PATH}" \
     PYTHONPATH="." \
@@ -37,27 +41,13 @@ ENV \
     PYTHONPATH=.:/usr/lib/python3/dist-packages/
 
 # install Poetry
-RUN pip3 install --break-system-packages --no-cache-dir poetry==1.6.1
+RUN pip3 install --break-system-packages --no-cache-dir poetry>=1.7.0
+RUN poetry --version
 
 # copy source code and install project
-COPY ./src ${WORKDIR}
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+RUN poetry config virtualenvs.create false
 RUN poetry install #--only main
 
-###############################################
-# Stage 2: test image
-# FROM build as test
-#
-#
-# RUN poetry install --with dev
-
-###############################################
-# Stage 2: final image
-FROM build as final
-ARG WORKDIR
-WORKDIR ${WORKDIR}
-
-COPY --from=build ${WORKDIR} ${WORKDIR}
-
-EXPOSE 8080
-CMD exec python3.11
-# CMD exec fastapi run 2fa_helpdesk/main.py --proxy-headers --root-path "$ROOT_PATH" --port 8080
+WORKDIR /src/2fa_helpdesk
+CMD ["uvicorn", "app:app", "--proxy-headers", "--root-path", "./", "--port", "8080", "--host", "0.0.0.0"]
