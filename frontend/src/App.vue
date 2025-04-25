@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import * as HelloWorld from "./components/HelloWorld.vue";
+import UserOverviewPage from "./components/UserOverviewPage.vue";
 </script>
 
-<template></template>
+<template>
+  <div class="app-container">
+    <UserOverviewPage />
+  </div>
+</template>
 
-<style scoped></style>
+<style>
+.app-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+</style>
