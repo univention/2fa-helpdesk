@@ -1,20 +1,14 @@
 <script setup lang="ts">
-const props = withDefaults(
+withDefaults(
   defineProps<{
     text: string;
-
     level?: 1 | 2 | 3 | 4 | 5 | 6;
-
     customClass?: string;
-
     align?: "left" | "center" | "right";
-
-    underlined?: boolean;
   }>(),
   {
     level: 1,
     align: "left",
-    underlined: false,
   }
 );
 </script>
@@ -31,31 +25,31 @@ const props = withDefaults(
 
 <style scoped>
 .headline {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-weight: 600;
   line-height: 1.2;
-  color: inherit; /* Use the inherited text color instead of hardcoded white */
+  color: inherit;
 }
 
 .headline-1 {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   margin-top: 0;
 }
 
 .headline-2 {
-  font-size: 2rem;
-}
-
-.headline-3 {
   font-size: 1.75rem;
 }
 
-.headline-4 {
+.headline-3 {
   font-size: 1.5rem;
 }
 
-.headline-5 {
+.headline-4 {
   font-size: 1.25rem;
+}
+
+.headline-5 {
+  font-size: 1.15rem;
 }
 
 .headline-6 {

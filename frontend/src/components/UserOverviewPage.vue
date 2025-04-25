@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import UserTable from "./UserTable.vue";
+import UserTable from "./table/UserTable.vue";
 import PageHeadline from "./PageHeadline.vue";
 import { type UserData } from "../types";
 
@@ -38,25 +38,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="users-page">
-    <PageHeadline text="2FA Helpdesk" />
-
+  <div class="users-overview-page">
+    <PageHeadline text="Administration Zwei-Faktor-Authentifizierung" />
+    <p class="description">
+      Wählen Sie einen Eintrag aus und klicken Sie auf eine der dann
+      erscheinenden Schaltflächen, um Token zu generieren.
+    </p>
     <UserTable
       :users="users"
       :loading="loading"
-      :page-size="5"
+      :page-size="12"
       @select-users="handleSelectedUsers"
     />
   </div>
 </template>
 
 <style scoped>
-.users-page {
+.users-overview-page {
   padding: 1rem;
   max-width: 1200px;
   margin: 0 auto;
 }
-
+.description {
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+}
 .actions {
   margin-top: 1rem;
   display: flex;

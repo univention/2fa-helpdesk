@@ -46,30 +46,39 @@ const handleInput = (event: Event) => {
 .search-container {
   position: relative;
   width: 100%;
-  max-width: 300px;
+  max-width: 354px;
   margin-bottom: 1rem;
 }
 
 .search-input {
   width: 100%;
+  box-sizing: border-box;
+  display: block;
   padding: 0.5rem 0.75rem;
   padding-right: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+  border: 1px solid #d3d7de;
+
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
   outline: none;
   transition: border-color 0.2s;
+  color: #203257;
 }
 
 .search-input:focus {
-  border-color: #42b883;
+  outline: 2px solid #203257;
 }
 
+.search-input::placeholder {
+  color: #203257;
+}
 .search-icon {
+  display: block;
   position: absolute;
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
+  color: #203257;
 }
 </style>

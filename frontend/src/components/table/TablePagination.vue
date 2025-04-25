@@ -43,55 +43,56 @@ const getVisiblePageNumbers = () => {
     >
       Zurück
     </button>
-
-    <template v-if="totalPages <= 7">
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        :class="[
-          'pagination-button',
-          'page-number',
-          { active: page === currentPage },
-        ]"
-        @click="goToPage(page)"
-      >
-        {{ page }}
-      </button>
-    </template>
-
-    <template v-else>
-      <template v-if="currentPage > 3">
-        <button class="pagination-button page-number" @click="goToPage(1)">
-          1
-        </button>
-        <span v-if="currentPage > 4" class="pagination-ellipsis">...</span>
-      </template>
-
-      <button
-        v-for="page in getVisiblePageNumbers()"
-        :key="page"
-        :class="[
-          'pagination-button',
-          'page-number',
-          { active: page === currentPage },
-        ]"
-        @click="goToPage(page)"
-      >
-        {{ page }}
-      </button>
-
-      <template v-if="currentPage < totalPages - 2">
-        <span v-if="currentPage < totalPages - 3" class="pagination-ellipsis"
-          >...</span
-        >
+    <div>
+      <template v-if="totalPages <= 7">
         <button
-          class="pagination-button page-number"
-          @click="goToPage(totalPages)"
+          v-for="page in totalPages"
+          :key="page"
+          :class="[
+            'pagination-button',
+            'page-number',
+            { active: page === currentPage },
+          ]"
+          @click="goToPage(page)"
         >
-          {{ totalPages }}
+          {{ page }}
         </button>
       </template>
-    </template>
+
+      <template v-else>
+        <template v-if="currentPage > 3">
+          <button class="pagination-button page-number" @click="goToPage(1)">
+            1
+          </button>
+          <span v-if="currentPage > 4" class="pagination-ellipsis">...</span>
+        </template>
+
+        <button
+          v-for="page in getVisiblePageNumbers()"
+          :key="page"
+          :class="[
+            'pagination-button',
+            'page-number',
+            { active: page === currentPage },
+          ]"
+          @click="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+
+        <template v-if="currentPage < totalPages - 2">
+          <span v-if="currentPage < totalPages - 3" class="pagination-ellipsis"
+            >...</span
+          >
+          <button
+            class="pagination-button page-number"
+            @click="goToPage(totalPages)"
+          >
+            {{ totalPages }}
+          </button>
+        </template>
+      </template>
+    </div>
 
     <button
       class="pagination-button"
@@ -107,23 +108,25 @@ const getVisiblePageNumbers = () => {
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 1rem 0;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .pagination-button {
   background: transparent;
-  border: 1px solid #ccc;
   border-radius: 4px;
   padding: 0.25rem 0.75rem;
   margin: 0 0.25rem;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 0.875rem;
+  color: #203257;
 }
-
-.pagination-button:hover:not(:disabled) {
-  background-color: #f0f0f0;
+.pagination-button:hover:not(.page-number) {
+  text-decoration: underline;
 }
 
 .pagination-button:disabled {
@@ -131,10 +134,14 @@ const getVisiblePageNumbers = () => {
   cursor: not-allowed;
 }
 
+.page-number {
+  border: 1px solid transparent;
+  color: #203257;
+}
 .page-number.active {
-  background-color: #42b883;
-  color: white;
-  border-color: #42b883;
+  background-color: #f6f7f9;
+  color: #2f1088;
+  border-color: #dcd2fe;
 }
 
 .pagination-ellipsis {

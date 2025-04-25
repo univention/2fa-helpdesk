@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import {
   getCoreRowModel,
   getPaginationRowModel,
@@ -7,10 +7,9 @@ import {
   useVueTable,
   type ColumnDef,
 } from "@tanstack/vue-table";
-import { type UserData } from "../types";
+import { type UserData } from "../../types";
 import TablePagination from "./TablePagination.vue";
 import TableSearch from "./TableSearch.vue";
-import PageHeadline from "./PageHeadline.vue";
 
 // Props for the component
 const props = withDefaults(
@@ -21,7 +20,6 @@ const props = withDefaults(
     loading?: boolean;
   }>(),
   {
-    title: "Administration Zwei-Faktor-Authentifizierung",
     pageSize: 10,
     loading: false,
   }
@@ -32,64 +30,23 @@ const emit = defineEmits<{
   (e: "select-users", users: UserData[]): void;
 }>();
 
-// Search state
 const searchQuery = ref("");
 
-// Selected rows state
 const selectedRows = ref<UserData[]>([]);
 
-// Toggle selection for a specific row
 const toggleRowSelection = (user: UserData) => {
   const isSelected = selectedRows.value.some(
     (selected) => selected.username === user.username
   );
 
   if (isSelected) {
-    selectedRows.value = selectedRows.value.filter(
-      (selected) => selected.username !== user.username
-    );
-  } else {
-    selectedRows.value.push(user);
+    selectedRows.value = [];
+
+    selectedRows.value = [user];
   }
 
   emit("select-users", selectedRows.value);
 };
-
-// Toggle selection for all rows on the current page
-const toggleSelectAll = (selected: boolean) => {
-  if (selected) {
-    // Add all page rows that aren't already selected
-    table.value.getRowModel().rows.forEach((row) => {
-      if (
-        !selectedRows.value.some(
-          (selected) => selected.username === row.original.username
-        )
-      ) {
-        selectedRows.value.push(row.original);
-      }
-    });
-  } else {
-    // Remove all page rows from selection
-    selectedRows.value = selectedRows.value.filter((selected) => {
-      return !table.value
-        .getRowModel()
-        .rows.some((row) => row.original.username === selected.username);
-    });
-  }
-
-  emit("select-users", selectedRows.value);
-};
-
-// Check if all rows on the current page are selected
-const areAllRowsSelected = computed(() => {
-  if (!table.value?.getRowModel().rows.length) return false;
-
-  return table.value.getRowModel().rows.every((row) => {
-    return selectedRows.value.some(
-      (selected) => selected.username === row.original.username
-    );
-  });
-});
 
 const columns = [
   {
@@ -160,14 +117,6 @@ onMounted(() => {
 
 <template>
   <div class="user-table">
-    <!-- Table title -->
-    <PageHeadline :text="title" :level="2" />
-
-    <p>
-      Wählen Sie einen Eintrag aus und klicken Sie auf eine der dann
-      erscheinenden Schaltflächen, um Token zu generieren.
-    </p>
-
     <!-- Search input -->
     <TableSearch v-model:value="searchQuery" />
 
@@ -177,15 +126,7 @@ onMounted(() => {
         <thead>
           <tr>
             <!-- Custom checkbox header column -->
-            <th class="select-column">
-              <div class="checkbox-wrapper">
-                <input
-                  type="checkbox"
-                  :checked="areAllRowsSelected"
-                  @change="(e) => toggleSelectAll(e?.target?.checked)"
-                />
-              </div>
-            </th>
+            <th class="select-column"></th>
             <!-- Regular column headers -->
             <th
               v-for="header in table.getHeaderGroups()[0].headers.slice(1)"
@@ -201,14 +142,14 @@ onMounted(() => {
         <tbody>
           <template v-if="loading">
             <tr>
-              <td colspan="4" class="text-center">
+              <td colspan="4" class="">
                 <div class="loading">Loading...</div>
               </td>
             </tr>
           </template>
           <template v-else-if="table.getRowModel().rows.length === 0">
             <tr>
-              <td colspan="4" class="text-center">
+              <td colspan="4" class="">
                 <div class="no-results">Keine Ergebnisse gefunden</div>
               </td>
             </tr>
@@ -266,9 +207,9 @@ onMounted(() => {
 
 .table-wrapper {
   overflow-x: auto;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin-bottom: 2px;
 }
 
 table {
@@ -278,39 +219,43 @@ table {
 }
 
 thead {
-  background-color: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  border-bottom: 2px solid #eeeff2;
 }
 
 th {
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
-  color: #475569;
+  color: #203257;
   white-space: nowrap;
 }
 
 td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 2px solid #eeeff2;
+  text-align: left;
 }
 
 tbody tr:last-child td {
   border-bottom: none;
 }
 
-tr:hover {
-  background-color: #f1f5f9;
+tbody tr:hover {
+  background-color: #f1eeff;
 }
 
+tr {
+  background-color: #ffffff;
+}
 tr.selected {
-  background-color: rgba(66, 184, 131, 0.1);
+  background-color: #f1eeff;
 }
 
 .checkbox-wrapper {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: left;
+  justify-content: left;
 }
 
 input[type="checkbox"] {
@@ -326,8 +271,11 @@ input[type="checkbox"] {
   color: #64748b;
 }
 
-.text-center {
-  text-align: center;
+tbody tr:has(.loading):hover,
+tbody tr:has(.no-results):hover,
+.loading:hover,
+.no-results:hover {
+  background-color: #ffffff;
 }
 
 .select-column {
