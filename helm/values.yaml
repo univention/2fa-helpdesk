@@ -1,31 +1,189 @@
-replicaCount: 1
+global:
+  affinity: {}
+  environment: {}
+  fullnameOverride: ""
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  replicaCount: 1
+  securityContext: {}
+  tolerations: []
+  imageRegistry: "artifacts.software-univention.de"
+  postgresql:
+    connection:
+      host: ""
+      port: ""
 
-image:
-  repository: your-backend-image
-  tag: latest
-  pullPolicy: IfNotPresent
+  domain: ""
+  subDomains:
+    keycloak: ""
+    portal: "portal"
 
-service:
-  port: 80
-  targetPort: 8080
-
-env:
-  OIDC_HOST: ""
-  OIDC_REALM: ""
-  OIDC_CLIENT_ID: ""
-  UDM_USERNAME: ""
-  UDM_PASSWORD: ""
-  UDM_HOST: ""
-  KEYCLOAK_URL: ""
-  KEYCLOAK_USERNAME: ""
-  KEYCLOAK_PASSWORD: ""
-  KEYCLOAK_REALM_NAME: ""
-  KEYCLOAK_CLIENT_ID: ""
-  KEYCLOAK_VERIFY_SSL: "true"
+extraIngresses: []
 
 ingress:
+
+  # -- Enable creation of Ingress.
   enabled: true
-  className: "nginx"
-  host: portal.ys-opendesk.test.rancher.falkenstein-2.potaris.de
-  path: /2fa-backend(/|$)(.*)
-  rewriteTarget: /$2
+
+  # -- Define custom ingress annotations for all Ingresses.
+  annotations: {}
+
+  # -- Define the Fully Qualified Domain Name (FQDN) where application should be reachable. (This will be the default for all Ingresses)
+  host: ""
+
+  # Request certificates via cert-manager.io annotation
+  certManager:
+    # -- Enable cert-manager.io annotaion.
+    enabled: true
+
+    # Issuer reference.
+    issuerRef:
+      # -- Name of cert-manager.io Issuer resource.
+      name: ""
+      # -- Type of Issuer, f.e. "Issuer" or "ClusterIssuer".
+      kind: "ClusterIssuer"
+
+  # -- The Ingress controller class name. (This will be the default for all Ingresses)
+  ingressClassName: "nginx"
+
+  # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
+  #
+  # Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  tls:
+    # -- Enable TLS/SSL/HTTPS for Ingress.
+    enabled: true
+
+    # -- The name of the kubernetes secret which contains a TLS private key and certificate.
+    # Hint: This secret is not created by this chart and must be provided.
+    secretName: ""
+  items:
+    - name: twofa-helpdesk-ui
+      host: ""
+      # -- Define the Ingress paths.
+      paths:
+        - path: /ui
+          pathType: Prefix
+          backend:
+            service:
+              name: 2fa-helpdesk-ui
+              port:
+                number: 8080
+      ingressClassName: ""
+      annotations: {}
+      tls:
+        # enabled: true
+        secretName: ""
+    - name: twofa-backend-api
+      host: ""
+      paths:
+        - path: /backend
+          pathType: Prefix
+          backend:
+            service:
+              name: 2fa-helpdesk-backend
+              port:
+                number: 8080
+      ingressClassName: ""
+      annotations: {}
+      tls:
+        # enabled: true
+        secretName: ""
+
+twofaBackendApi:
+  affinity: {}
+  environment: {}
+  fullnameOverride: ""
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1000
+    # -- Change ownership and permission of the volume before being exposed inside a Pod.
+    fsGroupChangePolicy: "Always"
+  replicaCount: 1
+  securityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    privileged: false
+    readOnlyRootFilesystem: true
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  tolerations: []
+
+  ingress:
+    tls:
+      secretName: "twofa-backend-api-tls"
+
+  image:
+    imagePullPolicy: "Always"
+    imagePullSecrets: []
+
+    registry: "docker.software-univention.de"
+    repository: "twofa-backend-api"
+    tag: "3.0.0"
+    # -- Define image sha256 as an alternative to `tag`
+    sha256: null
+
+  config:
+    oidc_host: ""
+    oidc_realm: ""
+    oidc_client: ""
+    keycloak_url: ""
+    keycloak_admin_user: kcadmin
+    keycloak_user_realm: opendesk
+    twofa_admin_groups: ["twofa_admins"]
+
+  service:
+    enabled: true
+    type: "ClusterIP"
+    ports:
+      http:
+        containerPort: 8080
+        port: 8080
+        protocol: "TCP"
+
+    sessionAffinity:
+      enabled: false
+      timeoutSeconds: 10800
+
+  # -- Deployment resources for the listener container
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "4Gi"
+      cpu: "4"
+
+  ## Container deployment probes
+  probes:
+    liveness:
+      enabled: true
+      initialDelaySeconds: 20
+      timeoutSeconds: 3
+      periodSeconds: 30
+      failureThreshold: 3
+      successThreshold: 1
+
+    readiness:
+      enabled: true
+      initialDelaySeconds: 20
+      timeoutSeconds: 3
+      periodSeconds: 15
+      failureThreshold: 30
+      successThreshold: 1
+
+  persistence:
+    data:
+      storageClass: ""
+      size: "1Gi"
+
