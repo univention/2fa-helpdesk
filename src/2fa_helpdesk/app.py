@@ -7,6 +7,7 @@ from typing import Annotated, Any, Dict, List, Optional
 import jwt
 import os
 from fastapi import FastAPI, APIRouter, HTTPException, Security, security, status
+from fastapi.responses import JSONResponse
 import pydantic
 from pydantic_settings import BaseSettings
 
@@ -96,14 +97,23 @@ def user_token(
 #
 # App
 #
-app = FastAPI(
+backend_app = FastAPI(
     docs_url="/",
+    openapi_url="/openapi.json",
     swagger_ui_init_oauth={
         "appName": "2FA Helpdesk Admin Backend",
         "clientId": settings.client_id,
         "usePkceWithAuthorizationCodeGrant": True,
+        "url": "/openapi.json",
     },
 )
+
+# Create a "root" app
+app = FastAPI()
+
+# Mount the backend app under the /backend prefix
+prefix = os.environ.get("PREFIX") or "/"
+app.mount(prefix, backend_app)
 
 def is_2fa_admin(user_token: dict) -> bool:
     '''Check if a given user is a 2FA-Admin'''
@@ -113,8 +123,8 @@ def is_2fa_admin(user_token: dict) -> bool:
     return any([g in twofa_admin_groups for g in groups ])
 
 
-@app.post(
-    "/token/reset/own",
+@backend_app.post(
+    "/token/reset/own/",
     dependencies=[Security(user_token, scopes=["openid"])],
 )
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
@@ -125,8 +135,8 @@ def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)])
         "detail": "",
     }
 
-@app.post(
-    "/token/reset/user",
+@backend_app.post(
+    "/token/reset/user/",
     dependencies=[Security(user_token, scopes=["openid"])],
 )
 def reset_user_tokens(
@@ -153,7 +163,7 @@ def reset_user_tokens(
     }
 
 
-@app.post(
+@backend_app.post(
     "/list_users",
     dependencies=[Security(user_token, scopes=["openid"])]
 )
@@ -184,7 +194,7 @@ def list_users(
         "detail": detail,
     }
 
-@app.get(
+@backend_app.get(
     "/whoami",
     dependencies=[Security(user_token, scopes=["openid"])]
 )
@@ -197,3 +207,7 @@ def whoami(
         "success": "success",
         "2fa_admin": is_2fa_admin(user_token)
     }
+
+@backend_app.get("/backend/openapi.json", include_in_schema=False)
+async def custom_openapi():
+    return JSONResponse(backend_app.openapi())

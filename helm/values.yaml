@@ -147,8 +147,8 @@ twofaBackendApi:
     type: "ClusterIP"
     ports:
       http:
-        containerPort: 80
-        port: 80
+        containerPort: 8080
+        port: 8080
         protocol: "TCP"
 
     sessionAffinity:
@@ -234,8 +234,8 @@ twofaFrontendUi:
     type: "ClusterIP"
     ports:
       http:
-        containerPort: 8080
-        port: 8080
+        containerPort: 80
+        port: 80
         protocol: "TCP"
 
     sessionAffinity:

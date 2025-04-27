@@ -68,7 +68,7 @@ spec:
         {{- if .Values.twofaBackendApi.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
-            path: /
+            path: /backend/
             port: 8080
           initialDelaySeconds: {{ .Values.twofaBackendApi.probes.liveness.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.twofaBackendApi.probes.liveness.timeoutSeconds }}
@@ -79,7 +79,7 @@ spec:
         {{- if .Values.twofaBackendApi.probes.readiness.enabled }}
         readinessProbe:
           httpGet:
-            path: /
+            path: /backend/
             port: 8080
           initialDelaySeconds: {{ .Values.twofaBackendApi.probes.readiness.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.twofaBackendApi.probes.readiness.timeoutSeconds }}

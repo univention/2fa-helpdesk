@@ -17,7 +17,7 @@ metadata:
     {{- if $.Values.ingress.certManager.enabled }}
     cert-manager.io/{{ $.Values.ingress.certManager.issuerRef.kind | kebabcase }}: "{{ coalesce $.Values.global.certManagerIssuer $.Values.ingress.certManager.issuerRef.name }}"
     {{- end }}
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: {{ required ".ingressClassName, .Values.ingress.ingressClassName or .Values.global.ingressClass must be defined." ( coalesce .ingressClassName $.Values.ingress.ingressClassName $.Values.global.ingressClass ) | quote }}
   {{- if or .tls.enabled $.Values.ingress.tls.enabled }}

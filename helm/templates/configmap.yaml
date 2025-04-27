@@ -28,4 +28,5 @@ data:
 
   TWO_FA_ADMIN_GROUPS: {{ join "," .Values.twofaBackendApi.config.twofa_admin_groups }}
 
+  PREFIX: "/backend"
 ...

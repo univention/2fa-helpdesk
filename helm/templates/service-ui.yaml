@@ -22,7 +22,7 @@ spec:
   ports:
     {{- range $key, $value := .Values.twofaFrontendUi.service.ports }}
     - port: {{ $value.port }}
-      targetPort: {{ $key }}
+      targetPort: 80
       protocol: {{ $value.protocol }}
       name: {{ $key }}
       {{- if and (eq $.Values.twofaFrontendUi.service.type "NodePort") $value.nodePort }}
