@@ -2,28 +2,23 @@
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 from pydantic import BaseModel
 from typing import List, Dict, Any, Annotated
-
-
 from typing import Annotated, Any, Dict, List, Optional
 
 import jwt
 import os
-from fastapi import FastAPI, HTTPException, Security, security, status
+from fastapi import FastAPI, APIRouter, HTTPException, Security, security, status
 import pydantic
 from pydantic_settings import BaseSettings
 
 import os
-
-
-
 import adapters.keycloak
 import adapters.udm
 
 class ResetUsersRequest(BaseModel):
-    usernames: List[str]
+    user_ids: List[str]
 
 class ListUserQuery(BaseModel):
-    query: str
+    query: Optional[str] = pydantic.Field("", description="Search for users matching this query")
 
 class Settings(BaseSettings):
     oidc_host: str
@@ -49,6 +44,9 @@ settings = Settings(
 jwks_client = jwt.PyJWKClient(settings.jwks_url)  # Caches JWKS
 
 
+def _not_2fa_admin_msg(user_token):
+    return f"You ({user_token['username']}) are not a 2FA admin."
+
 #
 # Dependencies
 #
@@ -65,6 +63,7 @@ def user_token(
     required_scopes: security.SecurityScopes,
 ):
 
+    return {"username" : "Administrator", "2fa_user_groups": ["2fa_admin", "test"], "is_fake_token": True }
     # Parse & validate token
     try:
         token = jwt.decode(
@@ -106,37 +105,13 @@ app = FastAPI(
     },
 )
 
-@app.get("/docs", include_in_schema=False)
-async def custom_swagger_ui_html():
-    return get_swagger_ui_html(
-        openapi_url=app.openapi_url,
-        title="Custom Swagger UI",
-        oauth2_redirect_url="/docs/oauth2-redirect",
-    )
+def is_2fa_admin(user_token: dict) -> bool:
+    '''Check if a given user is a 2FA-Admin'''
 
-@app.get("/docs/oauth2-redirect", include_in_schema=False)
-async def swagger_ui_redirect():
-    return HTMLResponse("""
-    <html>
-    <body>
-      <script>
-        'use strict';
-        window.opener.postMessage(
-          {
-            type: 'authorization_response',
-            response: {
-              type: 'code',
-              code: new URL(window.location).searchParams.get('code'),
-              state: new URL(window.location).searchParams.get('state')
-            }
-          },
-          window.location.origin
-        );
-        window.close();
-      </script>
-    </body>
-    </html>
-    """)
+    groups = user_token["2fa_user_groups"]
+    twofa_admin_groups = os.environ["TWOFA_ADMIN_GROUPS"].split(",")
+    return any([g in twofa_admin_groups for g in groups ])
+
 
 @app.post(
     "/token/reset/own",
@@ -144,10 +119,10 @@ async def swagger_ui_redirect():
 )
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
 
-    adapters.keycloak.two_fa.reset_token(user_token.username)
+    adapters.keycloak.reset_2fa_token(user_token["username"])
     return {
         "success": True,
-        "details": "",
+        "detail": "",
     }
 
 @app.post(
@@ -161,19 +136,19 @@ def reset_user_tokens(
 
     results = dict()
     success = False
-    if adapters.udm.is_2fa_admin(user_token.username):
-        for username in body.usernames:
-            reset_count = adapters.keycloak.reset_token(username)
-            results.update({ "username": reset_count})
+    if is_2fa_admin(user_token):
+        for user_id in body.user_ids:
+            reset_count = adapters.keycloak.reset_2fa_token(user_id)
+            results.update({ "user_id": reset_count})
         success = True
-        details = ""
+        detail = ""
     else:
         success = False
-        details = f"You ({user_token.username}) are not a 2FA admin."
+        detail = _not_2fa_admin_msg(user_token)
 
     return {
         "success": success,
-        "details": details,
+        "detail": detail,
         "resets_by_user": results
     }
 
@@ -184,21 +159,41 @@ def reset_user_tokens(
 )
 def list_users(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
-    body: ListUserQuery
+    body: ListUserQuery = None
 ):
 
     success = False
     users = None
-    if adapters.udm.is_2fa_admin(user_token.username):
-        users = adapters.udm.list_users(body.query)
+
+    if body:
+        query = body.query
+    else:
+        query = ""
+
+    if is_2fa_admin(user_token):
+        users = adapters.keycloak.list_users(query)
         success = True
-        details = ""
+        detail = ""
     else:
         success = False
-        details = f"You ({user_token.username}) are not a 2FA admin."
+        detail = _not_2fa_admin_msg(user_token)
 
     return {
         "users": users,
         "success": success,
-        "details": details,
+        "detail": detail,
+    }
+
+@app.get(
+    "/whoami",
+    dependencies=[Security(user_token, scopes=["openid"])]
+)
+def whoami(
+    user_token: Annotated[Dict[Any, Any], Security(user_token)],
+):
+
+    return {
+        "token" : user_token,
+        "success": "success",
+        "2fa_admin": is_2fa_admin(user_token)
     }

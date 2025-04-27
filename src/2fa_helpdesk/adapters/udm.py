@@ -22,22 +22,24 @@ def _get_udm_module(udm_module: str = "users/user"):
     udm_module = UDM.http(hostname, username, password)
     return udm_module
 
-def is_2fa_admin(self, username: str) -> bool:
+def is_2fa_admin(username: str) -> bool:
     '''Check if a given user is a 2FA-Admin'''
 
-    obj = next(self.module.search(f'uid={username}'))
+    udm_module = _get_udm_module()
+    obj = next(udm_module.module.search(f'uid={username}'))
     obj = obj.open()
     groups = obj.properties.groups
-    if self.two_fa_admin_group_dn in groups:
+    if udm_module.two_fa_admin_group_dn in groups:
         return True
     else:
         return False
 
-def list_users(self, query: str = "") -> list[User]:
+def list_users(query: str = "") -> list[User]:
     '''List users based on a query'''
 
     users = []
-    result = self.module.search(
+    udm_module = _get_udm_module()
+    result = udm_module.module.search(
         f"(|(uid={query}*)(mailPrimaryAddress={query}*)(firstname={query}*)(lastname={query}*))"
     )
 

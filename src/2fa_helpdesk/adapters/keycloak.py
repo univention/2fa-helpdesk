@@ -4,6 +4,18 @@
 import os
 import keycloak
 import fastapi
+import dataclasses
+import typing
+
+@dataclasses.dataclass
+class User:
+
+
+    keycloak_internal_id: typing.Optional[str]
+    username: typing.Optional[str]
+    email: typing.Optional[str]
+    firstname: typing.Optional[str]
+    lastname: typing.Optional[str]
 
 def _get_kc_admin():
     try:
@@ -12,6 +24,7 @@ def _get_kc_admin():
             username=os.environ["KEYCLOAK_USERNAME"],
             password=os.environ["KEYCLOAK_PASSWORD"],
             realm_name=os.environ["KEYCLOAK_REALM_NAME"],
+            user_realm_name=os.environ["KEYCLOAK_ADMIN_REALM_NAME"],
             client_id=os.environ.get("KEYCLOAK_CLIENT_ID") or "admin-cli",
             verify=os.environ.get("KEYCLOAK_VERIFY_SSL") or True
         )
@@ -19,12 +32,12 @@ def _get_kc_admin():
     except Exception as e:
         raise fastapi.HTTPException(status_code=500, detail=f"Keycloak connection error: {str(e)}")
 
-def reset_2fa_token(self, username: str) -> dict:
+
+def reset_2fa_token(user_id: str) -> dict:
     '''Reset the 2FA token for the give user'''
 
     kc_admin = _get_kc_admin()
 
-    user_id = kc_admin.get_user_id(username)
     credentials = kc_admin.get_credentials(user_id=user_id)
     
     otp_creds = [i for i in credentials if i["type"] == "otp"]
@@ -32,3 +45,32 @@ def reset_2fa_token(self, username: str) -> dict:
         kc_admin.delete_credential(user_id=user_id, credential_id=cred["id"])
     
     return len(otp_creds)
+
+def list_users(query: str = "") -> list[User]:
+    '''List users based on a query'''
+
+    kc_admin = _get_kc_admin()
+    
+    users = []
+    query_struct = ""
+    if query:
+        query_struct = {"username": query}
+    else:
+        query_struct = None
+
+    for kc_user in kc_admin.get_users(query=query_struct):
+
+        if not kc_user.get("email"):
+            continue
+
+        users.append(
+            User(
+                keycloak_internal_id=kc_user.get('id'),
+                username=kc_user.get('username'),
+                email=kc_user.get('email'),
+                firstname=kc_user.get('firstName'),
+                lastname=kc_user.get('lastName')
+            )
+        )
+
+    return users
