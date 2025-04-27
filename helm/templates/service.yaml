@@ -1,10 +1,38 @@
-apiVersion: v1
-kind: Service
+{{- if .Values.twofaBackendApi.service.enabled }}
+---
+
+apiVersion: "v1"
+kind: "Service"
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ printf "%s" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" $ }}
+  labels:
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
+    {{- $mergedLabels := merge $uiLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
 spec:
-  selector:
-    app: {{ .Release.Name }}
+  type: {{ .Values.twofaBackendApi.service.type }}
+  {{- if .Values.twofaBackendApi.service.sessionAffinity.enabled }}
+  sessionAffinity: "ClientIP"
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: {{ .Values.twofaBackendApi.service.sessionAffinity.timeoutSeconds }}
+  {{- end }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    {{- range $key, $value := .Values.twofaBackendApi.service.ports }}
+    - port: {{ $value.port }}
+      targetPort: {{ $key }}
+      protocol: {{ $value.protocol }}
+      name: {{ $key }}
+      {{- if and (eq $.Values.twofaBackendApi.service.type "NodePort") $value.nodePort }}
+      nodePort: {{ $value.nodePort }}
+      {{- end }}
+    {{- end }}
+  selector:
+    {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
+    {{- merge $uiLabels $commonLabels | toYaml | nindent 4}}
+
+...
+{{- end }}

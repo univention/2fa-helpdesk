@@ -1,25 +1,93 @@
-apiVersion: apps/v1
+---
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ printf "%s" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
+    {{- $mergedLabels := merge $otherLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.twofaBackendApi.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ printf "%s" (include "common.names.fullname" .) }}
+      {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ printf "%s" (include "common.names.fullname" .) }}
+        {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+        {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
+        {{- $mergedLabels := merge $otherLabels $commonLabels}}
+        {{- toYaml $mergedLabels | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
-      containers:
-      - name: {{ .Release.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - containerPort: {{ .Values.service.targetPort }}
-        env:
-        {{- range $key, $val := .Values.env }}
-        - name: {{ $key }}
-          value: "{{ $val }}"
+      {{- with .Values.twofaBackendApi.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.twofaBackendApi.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.twofaBackendApi.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- if .Values.twofaBackendApi.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.twofaBackendApi.imagePullSecrets }}
+        - name: "{{ . }}"
         {{- end }}
+      {{- end }}
+      containers:
+      - name: "twofa-backend-api"
+        {{- if .Values.twofaBackendApi.securityContext.enabled }}
+        securityContext:
+          {{- omit .Values.twofaBackendApi.securityContext "enabled" | toYaml  | nindent 12 }}
+        {{- end }}
+        image: "{{ coalesce .Values.twofaBackendApi.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaBackendApi.image.repository }}{{ if .Values.twofaBackendApi.image.sha256 }}@sha256:{{ .Values.twofaBackendApi.image.sha256 }}{{ else }}:{{ .Values.twofaBackendApi.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.twofaBackendApi.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
+
+        ports:
+        - containerPort: 8080
+        env:
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
+        env:
+          - name: KEYCLOAK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ums-keycloak-bootstrap-keycloak-credentials # FIXME: use nubus-common.secrets?? where docs, were banana
+                key: password
+        {{- if .Values.twofaBackendApi.probes.liveness.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: {{ .Values.twofaBackendApi.probes.liveness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaBackendApi.probes.liveness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaBackendApi.probes.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaBackendApi.probes.liveness.failureThreshold }}
+          successThreshold: {{ .Values.twofaBackendApi.probes.liveness.successThreshold }}
+        {{- end }}
+        {{- if .Values.twofaBackendApi.probes.readiness.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: {{ .Values.twofaBackendApi.probes.readiness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaBackendApi.probes.readiness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaBackendApi.probes.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaBackendApi.probes.readiness.failureThreshold }}
+          successThreshold: {{ .Values.twofaBackendApi.probes.readiness.successThreshold }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.twofaBackendApi.resources | nindent 10 }}
+
+...
