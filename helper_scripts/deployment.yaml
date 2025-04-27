@@ -14,31 +14,7 @@ spec:
     spec:
       containers:
       - name: 2fa-helpdesk-backend
-        image: 2fa-helpdesk-backend
-        env:
-        - name: OIDC_HOST
-          value: ""
-        - name: OIDC_REALM
-          value: ""
-        - name: OIDC_CLIENT_ID
-          value: ""
-
-        - name: UDM_USERNAME
-          value: ""
-        - name: UDM_PASSWORD
-          value: ""
-        - name: UDM_HOST
-          value: ""
-
-        - name: KEYCLOAK_URL
-          value: ""
-        - name: KEYCLOAK_USERNAME
-          value: ""
-        - name: KEYCLOAK_PASSWORD
-          value: ""
-        - name: KEYCLOAK_REALM_NAME
-          value: ""
-        - name: KEYCLOAK_CLIENT_ID
-          value: ""
-        - name: KEYCLOAK_VERIFY_SSL
-          value: "true"  # Or "false"
+        image: harbor-registry.atlantishq.de/atlantishq/2fa-backend
+        envFrom:
+        - configMapRef:
+            name: 2fa-helpdesk-env
