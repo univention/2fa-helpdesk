@@ -208,6 +208,6 @@ def whoami(
         "2fa_admin": is_2fa_admin(user_token)
     }
 
-@backend_app.get("/backend/openapi.json", include_in_schema=False)
+@backend_app.get("backend/openapi.json", include_in_schema=False)
 async def custom_openapi():
     return JSONResponse(backend_app.openapi())
