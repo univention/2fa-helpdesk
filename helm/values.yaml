@@ -67,9 +67,9 @@ ingress:
           pathType: Prefix
           backend:
             service:
-              name: 2fa-helpdesk-ui
+              name: 2fa-helpdesk-backend-ui
               port:
-                number: 8080
+                number: 80
       ingressClassName: ""
       annotations: {}
       tls:
@@ -147,6 +147,93 @@ twofaBackendApi:
     type: "ClusterIP"
     ports:
       http:
+        containerPort: 80
+        port: 80
+        protocol: "TCP"
+
+    sessionAffinity:
+      enabled: false
+      timeoutSeconds: 10800
+
+  # -- Deployment resources for the listener container
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "4Gi"
+      cpu: "4"
+
+  ## Container deployment probes
+  probes:
+    liveness:
+      enabled: true
+      initialDelaySeconds: 20
+      timeoutSeconds: 3
+      periodSeconds: 30
+      failureThreshold: 3
+      successThreshold: 1
+
+    readiness:
+      enabled: true
+      initialDelaySeconds: 20
+      timeoutSeconds: 3
+      periodSeconds: 15
+      failureThreshold: 30
+      successThreshold: 1
+
+  persistence:
+    data:
+      storageClass: ""
+      size: "1Gi"
+
+twofaFrontendUi:
+  affinity: {}
+  environment: {}
+  fullnameOverride: ""
+  nameOverride: ""
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1000
+    # -- Change ownership and permission of the volume before being exposed inside a Pod.
+    fsGroupChangePolicy: "Always"
+  replicaCount: 1
+  securityContext:
+    enabled: false # FIXME
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    privileged: false
+    readOnlyRootFilesystem: true
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  tolerations: []
+
+  ingress:
+    tls:
+      secretName: "twofa-backend-api-tls"
+
+  image:
+    imagePullPolicy: "Always"
+    imagePullSecrets: []
+
+    registry: "docker.software-univention.de"
+    repository: "twofa-frontend-ui"
+    tag: "3.0.0"
+    # -- Define image sha256 as an alternative to `tag`
+    sha256: null
+
+  service:
+    enabled: true
+    type: "ClusterIP"
+    ports:
+      http:
         containerPort: 8080
         port: 8080
         protocol: "TCP"
@@ -186,4 +273,3 @@ twofaBackendApi:
     data:
       storageClass: ""
       size: "1Gi"
-
