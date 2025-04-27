@@ -21,6 +21,7 @@ RUN chown "$USER":"$USER" "$WORKDIR" \
     && apt-get --assume-yes --verbose-versions --no-install-recommends install \
       python3-pip \
       python3-univention-directory-manager-rest-client \
+      curl \
     && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 ENV \
