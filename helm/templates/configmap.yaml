@@ -26,7 +26,7 @@ data:
   KEYCLOAK_USERNAME: "{{ .Values.twofaBackendApi.config.keycloak_admin_user }}"
   KEYCLOAK_REALM_NAME: "{{ .Values.twofaBackendApi.config.keycloak_user_realm }}"
 
-  TWO_FA_ADMIN_GROUPS: {{ join "," .Values.twofaBackendApi.config.twofa_admin_groups }}
+  TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaBackendApi.config.twofa_admin_groups }}
 
   PREFIX: "/backend"
 ...
