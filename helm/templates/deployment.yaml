@@ -63,8 +63,8 @@ spec:
           - name: KEYCLOAK_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ums-keycloak-bootstrap-keycloak-credentials # FIXME: use nubus-common.secrets?? where docs, were banana
-                key: password
+                name: ums-opendesk-keycloak-credentials # FIXME: use nubus-common.secrets?? where docs, were banana
+                key: admin_password
         {{- if .Values.twofaBackendApi.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
