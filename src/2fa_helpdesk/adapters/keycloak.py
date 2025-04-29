@@ -29,8 +29,10 @@ def _get_kc_admin():
             verify=os.environ.get("KEYCLOAK_VERIFY_SSL") or True
         )
         return kc_admin
+    except KeyError as e:
+        raise fastapi.HTTPException(status_code=500, detail=f"Missing required Environment: {str(e)}")
     except Exception as e:
-        raise fastapi.HTTPException(status_code=500, detail=f"Keycloak connection error: {str(e)}")
+        raise fastapi.HTTPException(status_code=500, detail=f"Keycloak connection error: {type(e)} - {str(e)}")
 
 
 def reset_2fa_token(user_id: str) -> dict:
