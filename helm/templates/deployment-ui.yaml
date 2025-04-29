@@ -68,7 +68,7 @@ spec:
         {{- if .Values.twofaFrontendUi.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
-            path: /
+            path: /ui/
             port: 80
           initialDelaySeconds: {{ .Values.twofaFrontendUi.probes.liveness.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.twofaFrontendUi.probes.liveness.timeoutSeconds }}
@@ -79,7 +79,7 @@ spec:
         {{- if .Values.twofaFrontendUi.probes.readiness.enabled }}
         readinessProbe:
           httpGet:
-            path: /
+            path: /ui/
             port: 80
           initialDelaySeconds: {{ .Values.twofaFrontendUi.probes.readiness.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.twofaFrontendUi.probes.readiness.timeoutSeconds }}
