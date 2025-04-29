@@ -15,7 +15,7 @@ FROM nginx:stable-alpine
 # Copy built assets from the previous stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy custom nginx config (optional, to disable caching etc.)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Copy our custom nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
 
-CMD ["nginx", "-g", "pid /var/cache/nginx/nginx.pid; daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
