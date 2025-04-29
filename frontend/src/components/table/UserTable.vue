@@ -1,120 +1,3 @@
-<script setup lang="ts">
-import { ref, onMounted } from "vue";
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  useVueTable,
-  type ColumnDef,
-} from "@tanstack/vue-table";
-import { type UserData } from "../../types";
-import TablePagination from "./TablePagination.vue";
-import TableSearch from "./TableSearch.vue";
-
-// Props for the component
-const props = withDefaults(
-  defineProps<{
-    title?: string;
-    users?: UserData[];
-    pageSize?: number;
-    loading?: boolean;
-  }>(),
-  {
-    pageSize: 10,
-    loading: false,
-  }
-);
-
-// Emits for handling selections and other events
-const emit = defineEmits<{
-  (e: "select-users", users: UserData[]): void;
-}>();
-
-const searchQuery = ref("");
-
-const selectedRows = ref<UserData[]>([]);
-
-const toggleRowSelection = (user: UserData) => {
-  const isSelected = selectedRows.value.some(
-    (selected) => selected.username === user.username
-  );
-
-  if (isSelected) {
-    selectedRows.value = [];
-
-    selectedRows.value = [user];
-  }
-
-  emit("select-users", selectedRows.value);
-};
-
-const columns = [
-  {
-    id: "select",
-    header: () => "Select",
-    cell: ({ row }) => row.original,
-    enableSorting: false,
-  },
-
-  {
-    accessorKey: "username",
-    header: "Benutzername",
-    cell: (info) => info.getValue(),
-  },
-
-  {
-    accessorKey: "firstName",
-    header: "Vorname",
-    cell: (info) => info.getValue(),
-  },
-
-  {
-    accessorKey: "lastName",
-    header: "Nachname",
-    cell: (info) => info.getValue(),
-  },
-] as ColumnDef<UserData>[];
-
-// Create the table instance
-const table = ref(
-  useVueTable({
-    get data() {
-      return props.users || [];
-    },
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
-    state: {
-      get globalFilter() {
-        return searchQuery.value;
-      },
-    },
-  })
-);
-
-// Set the global filter value
-function setGlobalFilter(value: string) {
-  searchQuery.value = value;
-}
-
-// Set the page size when pageSize prop changes
-function updateTablePageSize() {
-  table.value.setPageSize(props.pageSize);
-}
-
-// Handle page change from pagination component
-const handlePageChange = (page: number) => {
-  table.value.setPageIndex(page - 1); // TanStack uses 0-based index
-};
-
-// Initialize and update the table when props change
-onMounted(() => {
-  updateTablePageSize();
-});
-</script>
-
 <template>
   <div class="user-table">
     <!-- Search input -->
@@ -179,9 +62,16 @@ onMounted(() => {
                   />
                 </div>
               </td>
-              <!-- Regular data cells -->
+             
               <td v-for="cell in row.getVisibleCells().slice(1)" :key="cell.id">
                 {{ cell.getValue() }}
+              </td>
+              <td v-if="selectedRows.some(selected => selected.username === row.original.username)">
+                <SimpleButton
+                  label="Action"
+                  variant="primary"
+                  @click="handleButtonClick(row.original)"
+                />
               </td>
             </tr>
           </template>
@@ -189,7 +79,7 @@ onMounted(() => {
       </table>
     </div>
 
-    <!-- Pagination -->
+   
     <TablePagination
       :current-page="table.getState().pagination.pageIndex + 1"
       :total-pages="table.getPageCount()"
@@ -197,6 +87,138 @@ onMounted(() => {
     />
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import {
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  useVueTable,
+  type ColumnDef,
+} from "@tanstack/vue-table";
+import { type UserData } from "../../types";
+import TablePagination from "./TablePagination.vue";
+import TableSearch from "./TableSearch.vue";
+import SimpleButton from "../Button.vue";
+
+// Props for the component
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    users?: UserData[];
+    pageSize?: number;
+    loading?: boolean;
+    handleSelectedUsers?: (selected: UserData[]) => void;
+    handleResetToken?: (selected: UserData[]) => void;
+  }>(),
+  {
+    pageSize: 10,
+    loading: false,
+  }
+);
+
+
+const emit = defineEmits<{
+  (e: "select-users", users: UserData[]): void;
+}>();
+
+const searchQuery = ref("");
+
+const selectedRows = ref<UserData[]>([]);
+
+  const toggleRowSelection = (user: UserData) => {
+  const isSelected = selectedRows.value.some(
+    (selected) => selected.username === user.username
+  );
+
+  if (isSelected) {
+    // If the user is already selected, deselect them
+    selectedRows.value = [];
+  } else {
+    // Clear previous selection and add the new user
+    selectedRows.value = [user];
+  }
+
+  console.log("Selected Rows:", selectedRows.value); // Debugging
+  emit("select-users", selectedRows.value);
+};
+
+const columns = [
+  {
+    id: "select",
+    header: () => "Select",
+    cell: ({ row }) => row.original,
+    enableSorting: false,
+  },
+
+  {
+    accessorKey: "username",
+    header: "Benutzername",
+    cell: (info) => info.getValue(),
+  },
+
+  {
+    accessorKey: "firstName",
+    header: "Vorname",
+    cell: (info) => info.getValue(),
+  },
+
+  {
+    accessorKey: "lastName",
+    header: "Nachname",
+    cell: (info) => info.getValue(),
+  },
+  // {
+  //   accessorKey: "action",
+  //   header: "",
+  //   cell: null,
+  // },
+] as ColumnDef<UserData>[];
+
+
+const table = ref(
+  useVueTable({
+    get data() {
+      return props.users || [];
+    },
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    state: {
+      get globalFilter() {
+        return searchQuery.value;
+      },
+    },
+  })
+);
+
+// Set the global filter value
+function setGlobalFilter(value: string) {
+  searchQuery.value = value;
+}
+
+
+function updateTablePageSize() {
+  table.value.setPageSize(props.pageSize);
+}
+
+
+const handlePageChange = (page: number) => {
+  table.value.setPageIndex(page - 1); 
+};
+
+
+onMounted(() => {
+  updateTablePageSize();
+});
+
+const handleButtonClick = (user: UserData) => {
+  console.log("Button clicked for user:", user);
+};
+</script>
 
 <style scoped>
 .user-table {

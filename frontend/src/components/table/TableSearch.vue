@@ -59,7 +59,6 @@ const handleInput = (event: Event) => {
   border: 1px solid #d3d7de;
 
   border-radius: 8px;
-  font-size: 0.75rem;
   font-weight: 500;
   outline: none;
   transition: border-color 0.2s;

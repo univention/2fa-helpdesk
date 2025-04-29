@@ -23,13 +23,18 @@ const users = ref<UserData[]>([
 const loading = ref(true);
 const selectedUsers = ref<UserData[]>([]);
 
-// Function to handle selected users
+
 const handleSelectedUsers = (selected: UserData[]) => {
   selectedUsers.value = selected;
   console.log("Selected users:", selected);
 };
 
-// Simulate API loading
+const handleResetToken = (selected: UserData[]) => {
+
+  console.log("Reset Token from:", selected.username);
+};
+
+
 onMounted(() => {
   setTimeout(() => {
     loading.value = false;
@@ -49,6 +54,8 @@ onMounted(() => {
       :loading="loading"
       :page-size="12"
       @select-users="handleSelectedUsers"
+      @handle-reset-token="handleResetToken"
+    
     />
   </div>
 </template>
