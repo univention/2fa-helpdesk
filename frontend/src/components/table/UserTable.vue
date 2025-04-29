@@ -62,16 +62,27 @@
                   />
                 </div>
               </td>
-             
+
               <td v-for="cell in row.getVisibleCells().slice(1)" :key="cell.id">
-                {{ cell.getValue() }}
-              </td>
-              <td v-if="selectedRows.some(selected => selected.username === row.original.username)">
-                <SimpleButton
-                  label="Action"
-                  variant="primary"
-                  @click="handleButtonClick(row.original)"
-                />
+                <!-- Render action button for the action column -->
+                <template
+                  v-if="
+                    cell.column.id === 'action' &&
+                    selectedRows.some(
+                      (selected) => selected.username === row.original.username
+                    )
+                  "
+                >
+                  <SimpleButton
+                    label="Action"
+                    variant="primary"
+                    @click="handleButtonClick(row.original)"
+                  />
+                </template>
+                <!-- Otherwise render the normal cell value -->
+                <template v-else>
+                  {{ cell.getValue() }}
+                </template>
               </td>
             </tr>
           </template>
@@ -79,12 +90,39 @@
       </table>
     </div>
 
-   
     <TablePagination
       :current-page="table.getState().pagination.pageIndex + 1"
       :total-pages="table.getPageCount()"
       @page-change="handlePageChange"
     />
+
+    <!-- Lost Token Modal -->
+    <Modal :isOpen="isModalOpen" @close="closeModal">
+      <template #header>
+        <h3 class="modal-title">
+          Verlorener Token von {{ selectedUser?.firstName }}
+          {{ selectedUser?.lastName }}
+        </h3>
+      </template>
+      <div>
+        Das Gerät mit dem Zwei-Faktor-Token von {{ selectedUser?.firstName }}
+        {{ selectedUser?.lastName }} wird als verloren gemeldet.
+      </div>
+      <template #footer>
+        <div class="modal-buttons">
+          <SimpleButton
+            label="Abbrechen"
+            variant="secondary"
+            @click="closeModal"
+          />
+          <SimpleButton
+            label="Token zurücksetzen"
+            variant="primary"
+            @click="resetToken"
+          />
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -101,6 +139,7 @@ import { type UserData } from "../../types";
 import TablePagination from "./TablePagination.vue";
 import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
+import Modal from "../Modal.vue";
 
 // Props for the component
 const props = withDefaults(
@@ -118,7 +157,6 @@ const props = withDefaults(
   }
 );
 
-
 const emit = defineEmits<{
   (e: "select-users", users: UserData[]): void;
 }>();
@@ -127,7 +165,10 @@ const searchQuery = ref("");
 
 const selectedRows = ref<UserData[]>([]);
 
-  const toggleRowSelection = (user: UserData) => {
+const isModalOpen = ref(false);
+const selectedUser = ref<UserData | null>(null);
+
+const toggleRowSelection = (user: UserData) => {
   const isSelected = selectedRows.value.some(
     (selected) => selected.username === user.username
   );
@@ -169,13 +210,12 @@ const columns = [
     header: "Nachname",
     cell: (info) => info.getValue(),
   },
-  // {
-  //   accessorKey: "action",
-  //   header: "",
-  //   cell: null,
-  // },
+  {
+    id: "action",
+    header: "",
+    cell: () => null,
+  },
 ] as ColumnDef<UserData>[];
-
 
 const table = ref(
   useVueTable({
@@ -200,16 +240,13 @@ function setGlobalFilter(value: string) {
   searchQuery.value = value;
 }
 
-
 function updateTablePageSize() {
   table.value.setPageSize(props.pageSize);
 }
 
-
 const handlePageChange = (page: number) => {
-  table.value.setPageIndex(page - 1); 
+  table.value.setPageIndex(page - 1);
 };
-
 
 onMounted(() => {
   updateTablePageSize();
@@ -217,6 +254,21 @@ onMounted(() => {
 
 const handleButtonClick = (user: UserData) => {
   console.log("Button clicked for user:", user);
+  selectedUser.value = user;
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  selectedUser.value = null;
+};
+
+const resetToken = () => {
+  if (selectedUser.value) {
+    console.log("Resetting token for user:", selectedUser.value);
+    // Add your token reset logic here
+    closeModal();
+  }
 };
 </script>
 
@@ -257,6 +309,10 @@ td {
   padding: 0.75rem 1rem;
   border-bottom: 2px solid #eeeff2;
   text-align: left;
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 tbody tr:last-child td {
@@ -268,6 +324,9 @@ tbody tr:hover {
 }
 
 tr {
+  height: 3.75rem;
+  max-height: 3.75rem;
+  box-sizing: border-box;
   background-color: #ffffff;
 }
 tr.selected {
@@ -303,5 +362,52 @@ tbody tr:has(.no-results):hover,
 .select-column {
   width: 40px;
   text-align: center;
+}
+
+/* Fixed widths for each column to prevent layout shift */
+th:nth-child(2),
+td:nth-child(2) {
+  /* Username column */
+  width: 25%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  /* Firstname column */
+  width: 25%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  /* Lastname column */
+  width: 25%;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  /* Action column */
+  width: 15%;
+  text-align: center;
+}
+
+/* Make sure action button fits within the cell without expanding it */
+td:nth-child(5) .button {
+  height: 2rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Modal button styling */
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: right;
+  width: 100%;
+}
+
+.modal-title {
+  color: #4338ca;
+  font-weight: 500;
 }
 </style>
