@@ -29,9 +29,9 @@ const handleSelectedUsers = (selected: UserData[]) => {
   console.log("Selected users:", selected);
 };
 
-const handleResetToken = (selected: UserData[]) => {
+const handleResetToken = () => {
 
-  console.log("Reset Token from:", selected.username);
+  // console.log("Reset Token from:", selected.username);
 };
 
 
