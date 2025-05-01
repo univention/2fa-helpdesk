@@ -10,5 +10,14 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src')
     }
-  }
+  },
+    server: {
+    proxy: {
+      '/backend': {
+        target: 'https://twofa-backend.yschmidt-opendesk.univention.dev',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })

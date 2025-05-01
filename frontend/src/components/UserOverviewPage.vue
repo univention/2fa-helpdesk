@@ -3,24 +3,11 @@ import { ref, onMounted } from "vue";
 import UserTable from "./table/UserTable.vue";
 import PageHeadline from "./PageHeadline.vue";
 import { type UserData } from "../types";
+import { useUsers } from "../composables/useUsers";
 
 // Sample user data to demonstrate the table
-const users = ref<UserData[]>([
-  { username: "tante_anna", firstName: "Anna", lastName: "Müller" },
-  { username: "sonnenschein", firstName: "Frida", lastName: "Schmidt" },
-  { username: "kfz-chef", firstName: "Markus", lastName: "Heinz" },
-  { username: "benutzer123", firstName: "Thomas", lastName: "Weber" },
-  { username: "tech_guru", firstName: "Laura", lastName: "Fischer" },
-  { username: "buchfreund", firstName: "Stefan", lastName: "Meyer" },
-  { username: "sportfan", firstName: "Julia", lastName: "Wagner" },
-  { username: "naturliebhaber", firstName: "Michael", lastName: "Becker" },
-  { username: "filmkenner", firstName: "Sarah", lastName: "Schulz" },
-  { username: "musikexperte", firstName: "Daniel", lastName: "Hoffmann" },
-  { username: "reisefreund", firstName: "Nicole", lastName: "Koch" },
-  { username: "kochlustiger", firstName: "Andreas", lastName: "Richter" },
-]);
+const { users, loading, fetchUsers } = useUsers();
 
-const loading = ref(true);
 const selectedUsers = ref<UserData[]>([]);
 
 
@@ -35,11 +22,7 @@ const handleResetToken = (selected: UserData[]) => {
 };
 
 
-onMounted(() => {
-  setTimeout(() => {
-    loading.value = false;
-  }, 1000);
-});
+onMounted(fetchUsers);
 </script>
 
 <template>
