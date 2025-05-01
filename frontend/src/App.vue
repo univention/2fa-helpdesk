@@ -1,10 +1,6 @@
-<script setup lang="ts">
-import UserOverviewPage from "./components/UserOverviewPage.vue";
-</script>
-
 <template>
   <div class="app-container">
-    <UserOverviewPage />
+    <router-view />
   </div>
 </template>
 
