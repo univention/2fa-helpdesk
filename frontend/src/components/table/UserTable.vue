@@ -200,13 +200,13 @@ const columns = [
   },
 
   {
-    accessorKey: "firstName",
+    accessorKey: "firstname",
     header: "Vorname",
     cell: (info) => info.getValue(),
   },
 
   {
-    accessorKey: "lastName",
+    accessorKey: "lastname",
     header: "Nachname",
     cell: (info) => info.getValue(),
   },

@@ -22,7 +22,7 @@ export function useUsers() {
 
       const data = await response.json();
       console.log("Response data:", data);
-      users.value = data ?? [];
+      users.value = data.users ?? [];
     } catch (err: any) {
       error.value = err;
     } finally {
