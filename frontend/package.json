@@ -6,14 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+     "swagger": "vite & opn http://localhost:5173/ui/swagger"
   },
   "dependencies": {
     "@tanstack/vue-table": "^8.21.3",
+    "@types/swagger-ui": "^3.52.4",
     "from": "^0.1.7",
     "import": "^0.0.6",
     "path": "^0.12.7",
     "pinia": "^3.0.2",
+    "swagger-ui": "^5.21.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1"
   },
@@ -21,12 +24,14 @@
     "@eslint/css": "^0.7.0",
     "@eslint/js": "^9.25.1",
     "@eslint/json": "^0.12.0",
+    "@openapitools/openapi-generator-cli": "^2.20.0",
     "@vitejs/plugin-vue": "^5.2.2",
     "@vue/eslint-config-typescript": "^14.5.0",
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.25.1",
     "eslint-plugin-vue": "^10.0.0",
     "globals": "^16.0.0",
+    "opn-cli": "^5.0.0",
     "prettier": "^3.5.3",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.31.0",
