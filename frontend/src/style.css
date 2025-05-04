@@ -10,7 +10,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--text-color-dark-high-contrast);
+  background-color: var(--color-background-base);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,25 +21,25 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color: rgba(255, 255, 255, 0.87);
-    /* TODO */
-    background-color: #eeeff2; 
+    color: var(--text-color-light-high-contrast);
+
+    background-color: var(--color-background-base);
   }
 }
 @media (prefers-color-scheme: light) {
   :root {
-    color: #242424;
-    background-color: #eeeff2;
+    color: var(--text-color-dark-high-contrast);
+    background-color: var(--color-background-base);
   }
 }
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--color-link);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--color-link-hover);
 }
 
 body {
@@ -77,13 +78,13 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #eeeff2;
+    color: var(--text-color-light-primary);
+    background-color: var(--color-background-base);
   }
   a:hover {
-    color: #747bff;
+    color: var(--color-link-light-hover);
   }
   button {
-    background-color: #f9f9f9;
+    background-color: var(--button-light-bg);
   }
 }

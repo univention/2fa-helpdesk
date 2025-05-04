@@ -1,6 +1,11 @@
 <template>
   <div v-if="isOpen" class="modal-backdrop" @click.self="closeModal">
-    <div class="modal-content">
+    <div
+      ref="modalContent"
+      class="modal-content"
+      tabindex="-1"
+      @keydown="handleKeydown"
+    >
       <div class="modal-header">
         <slot name="header"></slot>
       </div>
@@ -16,16 +21,66 @@
 
 <script>
 export default {
-  name: "Modal",
+  name: "BaseModal",
   props: {
     isOpen: {
       type: Boolean,
       default: false,
     },
   },
+  watch: {
+    isOpen(newVal) {
+      if (newVal) {
+        this.$nextTick(() => {
+          this.setFocus();
+        });
+      }
+    },
+  },
   methods: {
     closeModal() {
       this.$emit("close");
+    },
+    setFocus() {
+      if (this.$refs.modalContent) {
+        this.$refs.modalContent.focus();
+      }
+    },
+    handleKeydown(event) {
+      if (event.key === "Escape") {
+        this.closeModal();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        this.trapFocus(event);
+      }
+    },
+    trapFocus(event) {
+      const modal = this.$refs.modalContent;
+      const focusableElements =
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const focusableNodes = modal.querySelectorAll(focusableElements);
+
+      const focusable = [...focusableNodes].filter(
+        (el) => !el.disabled && el.offsetParent !== null
+      );
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const firstFocusable = focusable[0];
+      const lastFocusable = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstFocusable) {
+        event.preventDefault();
+        lastFocusable.focus();
+      } else if (!event.shiftKey && document.activeElement === lastFocusable) {
+        event.preventDefault();
+        firstFocusable.focus();
+      }
     },
   },
 };
@@ -38,7 +93,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--modal-backdrop-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,11 +101,11 @@ export default {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--modal-content-bg);
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--modal-content-shadow);
   overflow: hidden;
   padding: 24px;
 }
@@ -63,7 +118,7 @@ export default {
 .modal-body {
   padding: 0;
   font-size: 1rem;
-  color: #203257;
+  color: var(--modal-body-text);
   line-height: 1.5;
   margin-top: 12px;
   margin-bottom: 24px;
@@ -78,12 +133,11 @@ export default {
 }
 
 h3.modal-title {
-  color: #4338ca;
+  color: var(--modal-title-text);
   font-size: 1.5rem;
   display: block;
 }
 
-/* Add a global style to reset h3 margin within the modal */
 :global(.modal-content h3) {
   margin: 0;
   padding: 0;

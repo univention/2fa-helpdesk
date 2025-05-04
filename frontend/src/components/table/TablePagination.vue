@@ -109,7 +109,7 @@ const getVisiblePageNumbers = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #fff;
+  background-color: var(--pagination-bg);
   padding: 0.75rem 1.5rem;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -123,7 +123,7 @@ const getVisiblePageNumbers = () => {
   cursor: pointer;
   transition: all 0.2s;
   font-size: 0.875rem;
-  color: #203257;
+  color: var(--pagination-text);
 }
 .pagination-button:hover:not(.page-number) {
   text-decoration: underline;
@@ -136,12 +136,12 @@ const getVisiblePageNumbers = () => {
 
 .page-number {
   border: 1px solid transparent;
-  color: #203257;
+  color: var(--pagination-text);
 }
 .page-number.active {
-  background-color: #f6f7f9;
-  color: #2f1088;
-  border-color: #dcd2fe;
+  background-color: var(--pagination-active-bg);
+  color: var(--pagination-active-text);
+  border-color: var(--pagination-active-border);
 }
 
 .pagination-ellipsis {

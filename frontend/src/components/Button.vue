@@ -18,11 +18,11 @@ export default {
     },
     variant: {
       type: String,
-      default: "primary", // e.g., primary, secondary, danger
+      default: "primary",
     },
     label: {
       type: String,
-      default: "Button", // Default label if none is provided
+      default: "Button",
     },
   },
   computed: {
@@ -54,21 +54,21 @@ export default {
 }
 
 .btn-primary {
-  background-color: #4f46e5;
-  color: white;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
 }
 
 .btn-primary:hover {
-  background-color: #4338ca;
+  background-color: var(--button-primary-hover-bg);
 }
 
 .btn-secondary {
-  background-color: #e5e7eb;
-  color: #111827;
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
 }
 
 .btn-secondary:hover {
-  background-color: #d1d5db;
+  background-color: var(--button-secondary-hover-bg);
 }
 
 .button:disabled {

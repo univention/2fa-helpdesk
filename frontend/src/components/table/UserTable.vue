@@ -252,8 +252,12 @@ onMounted(() => {
   updateTablePageSize();
 });
 
+const lastActiveElement = ref<HTMLElement | null>(null);
+
 const handleButtonClick = (user: UserData) => {
   console.log("Button clicked for user:", user);
+
+  lastActiveElement.value = document.activeElement as HTMLElement;
   selectedUser.value = user;
   isModalOpen.value = true;
 };
@@ -261,12 +265,18 @@ const handleButtonClick = (user: UserData) => {
 const closeModal = () => {
   isModalOpen.value = false;
   selectedUser.value = null;
+
+  setTimeout(() => {
+    if (lastActiveElement.value) {
+      lastActiveElement.value.focus();
+    }
+  }, 10);
 };
 
 const resetToken = () => {
   if (selectedUser.value) {
     console.log("Resetting token for user:", selectedUser.value);
-    // Add your token reset logic here
+
     closeModal();
   }
 };
@@ -293,21 +303,21 @@ table {
 }
 
 thead {
-  background-color: #ffffff;
-  border-bottom: 2px solid #eeeff2;
+  background-color: var(--table-header-bg);
+  border-bottom: 2px solid var(--table-border-color);
 }
 
 th {
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
-  color: #203257;
+  color: var(--table-header-text);
   white-space: nowrap;
 }
 
 td {
   padding: 0.75rem 1rem;
-  border-bottom: 2px solid #eeeff2;
+  border-bottom: 2px solid var(--table-border-color);
   text-align: left;
   vertical-align: middle;
   overflow: hidden;
@@ -320,17 +330,17 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
-  background-color: #f1eeff;
+  background-color: var(--table-row-hover-bg);
 }
 
 tr {
   height: 3.75rem;
   max-height: 3.75rem;
   box-sizing: border-box;
-  background-color: #ffffff;
+  background-color: var(--table-row-bg);
 }
 tr.selected {
-  background-color: #f1eeff;
+  background-color: var(--table-row-selected-bg);
 }
 
 .checkbox-wrapper {
@@ -349,14 +359,14 @@ input[type="checkbox"] {
 .no-results {
   padding: 2rem 0;
   text-align: center;
-  color: #64748b;
+  color: var(--text-color-muted);
 }
 
 tbody tr:has(.loading):hover,
 tbody tr:has(.no-results):hover,
 .loading:hover,
 .no-results:hover {
-  background-color: #ffffff;
+  background-color: var(--table-row-bg);
 }
 
 .select-column {
@@ -364,7 +374,6 @@ tbody tr:has(.no-results):hover,
   text-align: center;
 }
 
-/* Fixed widths for each column to prevent layout shift */
 th:nth-child(2),
 td:nth-child(2) {
   /* Username column */
@@ -390,7 +399,6 @@ td:nth-child(5) {
   text-align: center;
 }
 
-/* Make sure action button fits within the cell without expanding it */
 td:nth-child(5) .button {
   height: 2rem;
   padding: 0.25rem 0.75rem;
@@ -398,7 +406,6 @@ td:nth-child(5) .button {
   margin: 0;
 }
 
-/* Modal button styling */
 .modal-buttons {
   display: flex;
   gap: 1rem;
@@ -407,7 +414,7 @@ td:nth-child(5) .button {
 }
 
 .modal-title {
-  color: #4338ca;
+  color: var(--modal-title-text);
   font-weight: 500;
 }
 </style>

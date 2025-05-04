@@ -56,21 +56,20 @@ const handleInput = (event: Event) => {
   display: block;
   padding: 0.5rem 0.75rem;
   padding-right: 2rem;
-  border: 1px solid #d3d7de;
-
+  border: 1px solid var(--input-border-color);
   border-radius: 8px;
   font-weight: 500;
   outline: none;
   transition: border-color 0.2s;
-  color: #203257;
+  color: var(--text-color-default);
 }
 
 .search-input:focus {
-  outline: 2px solid #203257;
+  outline: 2px solid var(--input-focus-outline);
 }
 
 .search-input::placeholder {
-  color: #203257;
+  color: var(--input-placeholder-color);
 }
 .search-icon {
   display: block;
@@ -78,6 +77,6 @@ const handleInput = (event: Event) => {
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #203257;
+  color: var(--input-icon-color);
 }
 </style>
