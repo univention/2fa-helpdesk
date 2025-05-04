@@ -10,6 +10,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
+  /* Default to light theme variables */
   color: var(--text-color-dark-high-contrast);
   background-color: var(--color-background-base);
 
@@ -19,13 +20,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Apply dark theme variables when system preference is dark */
 @media (prefers-color-scheme: dark) {
   :root {
+    /* Variables are now defined in theme.css, just ensure base colors are set */
     color: var(--text-color-light-high-contrast);
-
     background-color: var(--color-background-base);
   }
 }
+
+/* Apply light theme variables explicitly for light scheme */
 @media (prefers-color-scheme: light) {
   :root {
     color: var(--text-color-dark-high-contrast);
@@ -46,6 +50,10 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  /* Ensure body also uses the theme background */
+  background-color: var(--color-background-base);
+  /* Ensure body text color uses the theme default */
+  color: var(--text-color-default);
 }
 
 button {
@@ -55,14 +63,16 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-
+  /* Use button variables for background and text */
+  background-color: var(--button-secondary-bg); /* Default to secondary */
+  color: var(--button-secondary-text);
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
 }
 
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto -webkit-focus-ring-color; /* Consider theming this too */
 }
 
 .card {
@@ -76,15 +86,14 @@ button:focus-visible {
   text-align: center;
 }
 
+/* Specific overrides for light theme button (if needed, Button.vue handles variants) */
 @media (prefers-color-scheme: light) {
-  :root {
-    color: var(--text-color-light-primary);
-    background-color: var(--color-background-base);
-  }
+  /* :root variables already set base colors */
   a:hover {
     color: var(--color-link-light-hover);
   }
-  button {
+  /* Default button style might need adjustment if not using variants */
+  /* button {
     background-color: var(--button-light-bg);
-  }
+  } */
 }

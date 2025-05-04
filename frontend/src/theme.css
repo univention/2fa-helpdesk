@@ -63,7 +63,7 @@
   --table-border-color: var(--color-background-base);
   --table-row-bg: var(--color-white);
   --table-row-hover-bg: var(--color-indigo-100);
-  --table-row-selected-bg: var(--color-row-hover-bg);
+  --table-row-selected-bg: var(--table-row-hover-bg);
 
   --pagination-bg: var(--color-white);
   --pagination-text: var(--color-secondary);
@@ -83,4 +83,63 @@
   --color-link: var(--color-link-base);
   --color-link-hover: var(--color-link-hover-base);
   --color-link-light-hover: var(--color-link-light-hover-base);
+
+  /* Dark Theme Overrides */
+  @media (prefers-color-scheme: dark) {
+    & {
+      /* Base */
+      --color-background-base: var(--color-gray-950); /* Darker background */
+
+      /* Brand/Primary Colors */
+      --color-primary: var(--color-indigo-600); /* Lighter primary for dark */
+      --color-primary-hover: var(--color-indigo-700);
+      --color-secondary: var(--color-gray-300); /* Lighter secondary text */
+
+      /* UI Element Colors */
+      --modal-backdrop-bg: rgba(0, 0, 0, 0.7); /* Darker backdrop */
+      --modal-content-bg: var(--color-gray-900); /* Dark modal background */
+      --modal-content-shadow: rgba(0, 0, 0, 0.3);
+      --modal-body-text: var(--color-gray-300);
+      --modal-title-text: var(--color-primary);
+
+      --button-primary-bg: var(--color-primary);
+      --button-primary-hover-bg: var(--color-primary-hover);
+      --button-primary-text: var(--color-white);
+      --button-secondary-bg: var(--color-gray-700);
+      --button-secondary-hover-bg: var(--color-gray-600);
+      --button-secondary-text: var(--color-white);
+      /* No specific light button in dark mode, defaults to secondary? */
+
+      --input-border-color: var(--color-gray-700);
+      --input-focus-outline: var(--color-primary);
+      --input-placeholder-color: var(--color-gray-500);
+      --input-icon-color: var(--color-gray-400);
+
+      --table-header-bg: var(--color-gray-900);
+      --table-header-text: var(--color-gray-200);
+      --table-border-color: var(--color-gray-800);
+      --table-row-bg: var(--color-gray-900);
+      --table-row-hover-bg: var(--color-gray-800);
+      --table-row-selected-bg: var(--color-gray-700);
+
+      --pagination-bg: var(--color-gray-900);
+      --pagination-text: var(--color-gray-300);
+      --pagination-active-bg: var(--color-indigo-800);
+      --pagination-active-text: var(--color-white);
+      --pagination-active-border: var(--color-indigo-600);
+
+      /* Text Colors */
+      --text-color-default: var(--color-gray-300);
+      --text-color-heading: var(--color-primary);
+      --text-color-muted: var(--color-gray-500);
+      /* --text-color-light-high-contrast is already defined */
+      /* --text-color-dark-high-contrast is not typically used in dark mode */
+      /* --text-color-light-primary is not typically used in dark mode */
+
+      /* Link Colors */
+      --color-link: var(--color-link-light-hover-base); /* Use lighter link color */
+      --color-link-hover: var(--color-link-base);
+      /* --color-link-light-hover is not typically used in dark mode */
+    }
+  }
 }
