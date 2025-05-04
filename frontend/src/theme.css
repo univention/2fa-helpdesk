@@ -137,7 +137,9 @@
       /* --text-color-light-primary is not typically used in dark mode */
 
       /* Link Colors */
-      --color-link: var(--color-link-light-hover-base); /* Use lighter link color */
+      --color-link: var(
+        --color-link-light-hover-base
+      ); /* Use lighter link color */
       --color-link-hover: var(--color-link-base);
       /* --color-link-light-hover is not typically used in dark mode */
     }

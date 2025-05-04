@@ -140,6 +140,7 @@ import TablePagination from "./TablePagination.vue";
 import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
 import Modal from "../Modal.vue";
+import { resetUserToken } from "../../services/reset-user-token";
 
 // Props for the component
 const props = withDefaults(
@@ -274,11 +275,7 @@ const closeModal = () => {
 };
 
 const resetToken = () => {
-  if (selectedUser.value) {
-    console.log("Resetting token for user:", selectedUser.value);
-
-    closeModal();
-  }
+  resetUserToken(selectedUser.value, closeModal);
 };
 </script>
 
