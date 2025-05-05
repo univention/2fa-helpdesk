@@ -36,6 +36,7 @@ import { ref } from "vue";
 import SimpleButton from "../components/Button.vue";
 import LanguageSelector from "../components/LanguageSelector.vue";
 import { useTranslations } from "../composables/useTranslations";
+import { Configuration, DefaultApi } from "../../api";
 
 const confirmReset = ref(false);
 const isResetting = ref(false);
@@ -52,20 +53,15 @@ const resetOwnToken = () => {
   }
 
   isResetting.value = true;
+  const config = new Configuration({
+    basePath: import.meta.env.VITE_API_URL,
+    accessToken: () => `Bearer ${import.meta.env.VITE_API_TOKEN || ""}`,
+  });
 
-  fetch("/backend/token/reset/own/", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
+  const apiClient = new DefaultApi(config);
+
+  apiClient
+    .resetOwnTokenTokenResetOwnPost()
     .then((result) => {
       console.log("Token reset successful:", result);
       alert(t.value("tokenResetSuccess"));
@@ -75,7 +71,7 @@ const resetOwnToken = () => {
       console.error("Error resetting token:", error);
       alert(t.value("tokenResetError"));
     })
-    .finally(() => {
+    .then(() => {
       isResetting.value = false;
     });
 };
