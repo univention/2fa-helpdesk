@@ -23,6 +23,12 @@ const translations = {
     lostTokenMessage: "Das Gerät mit dem Zwei-Faktor-Token von",
     cancelButton: "Abbrechen",
     willBeReported: "wird als verloren gemeldet.",
+    searchPlaceholder: "Nach Benutzer suchen",
+
+    // User Overview Page
+    adminPageTitle: "Administration Zwei-Faktor-Authentifizierung",
+    adminPageDescription:
+      "Wählen Sie einen Eintrag aus und klicken Sie auf eine der dann erscheinenden Schaltflächen, um Token zu generieren.",
   },
   en: {
     // Self-Service Page
@@ -45,6 +51,12 @@ const translations = {
     lostTokenMessage: "The device with the two-factor token of",
     cancelButton: "Cancel",
     willBeReported: "will be reported as lost.",
+    searchPlaceholder: "Search for user",
+
+    // User Overview Page
+    adminPageTitle: "Two-Factor Authentication Administration",
+    adminPageDescription:
+      "Select an entry and click one of the buttons that appear to generate tokens.",
   },
 };
 

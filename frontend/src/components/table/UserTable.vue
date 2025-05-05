@@ -2,62 +2,46 @@
   <div class="user-table">
     <div class="table-header">
       <TableSearch v-model:value="searchQuery" />
-      <LanguageSelector @change="handleLanguageChange" />
     </div>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th
-              v-for="header in table.getHeaderGroups()[0].headers"
-              :key="header.id"
-            >
-              <div v-if="header.isPlaceholder" />
-              <template v-else>
-                {{ header.column.columnDef.header }}
-              </template>
-            </th>
+            <th>{{ translations[language].username }}</th>
+            <th>{{ translations[language].firstname }}</th>
+            <th>{{ translations[language].lastname }}</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <template v-if="loading">
             <tr>
-              <td colspan="4" class="">
-                <div class="loading">{{ loadingText }}</div>
+              <td colspan="4">
+                <div class="loading">{{ translations[language].loading }}</div>
               </td>
             </tr>
           </template>
-          <template v-else-if="table.getRowModel().rows.length === 0">
+          <template v-else-if="filteredUsers.length === 0">
             <tr>
-              <td colspan="4" class="">
-                <div class="no-results">{{ noResultsText }}</div>
+              <td colspan="4">
+                <div class="no-results">
+                  {{ translations[language].noResults }}
+                </div>
               </td>
             </tr>
           </template>
           <template v-else>
-            <tr
-              v-for="row in table.getRowModel().rows"
-              :key="row.id"
-              :class="{
-                selected: selectedRows.some(
-                  (selected: UserData) =>
-                    selected.username === row.original.username
-                ),
-              }"
-            >
-              <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-                <template v-if="cell.column.id === 'action'">
-                  <SimpleButton
-                    :label="actionButtonText"
-                    variant="primary"
-                    @click="handleButtonClick(row.original)"
-                  />
-                </template>
-
-                <template v-else>
-                  {{ cell.getValue() }}
-                </template>
+            <tr v-for="user in paginatedUsers" :key="user.username">
+              <td>{{ user.username }}</td>
+              <td>{{ user.firstname }}</td>
+              <td>{{ user.lastname }}</td>
+              <td>
+                <SimpleButton
+                  :label="translations[language].actionButton"
+                  variant="primary"
+                  @click="handleButtonClick(user)"
+                />
               </td>
             </tr>
           </template>
@@ -66,32 +50,34 @@
     </div>
 
     <TablePagination
-      :current-page="table.getState().pagination.pageIndex + 1"
-      :total-pages="table.getPageCount()"
+      :current-page="currentPage"
+      :total-pages="totalPages"
       @page-change="handlePageChange"
     />
 
     <Modal :isOpen="isModalOpen" @close="closeModal">
       <template #header>
         <h3 class="modal-title">
-          {{ lostTokenTitleText }} {{ selectedUser?.firstname }}
+          {{ translations[language].lostTokenTitle }}
+          {{ selectedUser?.firstname }}
           {{ selectedUser?.lastname }}
         </h3>
       </template>
       <div>
-        {{ lostTokenMessageText }} {{ selectedUser?.firstname }}
-        {{ selectedUser?.lastname }} {{ willBeReportedText }}
+        {{ translations[language].lostTokenMessage }}
+        {{ selectedUser?.firstname }} {{ selectedUser?.lastname }}
+        {{ translations[language].willBeReported }}
       </div>
       <template #footer>
         <div class="modal-buttons">
           <SimpleButton
-            :label="cancelButtonText"
+            :label="translations[language].cancelButton"
             variant="secondary"
             @click="closeModal"
             :disabled="isTokenResetting"
           />
           <SimpleButton
-            :label="resetTokenButtonText"
+            :label="translations[language].resetTokenButton"
             variant="primary"
             @click="resetToken"
             :loading="isTokenResetting"
@@ -103,23 +89,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  useVueTable,
-  type ColumnDef,
-} from "@tanstack/vue-table";
+import { ref, computed, watch } from "vue";
 import { type UserData } from "../../types";
 import TablePagination from "./TablePagination.vue";
 import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
 import Modal from "../Modal.vue";
-import LanguageSelector from "../LanguageSelector.vue";
 import { resetUserToken } from "../../services/reset-user-token";
 
-const currentLanguage = ref(localStorage.getItem("language") || "de");
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    users?: UserData[];
+    pageSize?: number;
+    loading?: boolean;
+    language?: string;
+  }>(),
+  {
+    pageSize: 10,
+    loading: false,
+    language: "de",
+  }
+);
+
+const language = computed(() => {
+  return props.language === "en" || props.language === "de"
+    ? props.language
+    : "de";
+});
 
 const translations = {
   de: {
@@ -150,152 +147,46 @@ const translations = {
   },
 };
 
-const usernameText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].username
-);
-const firstnameText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].firstname
-);
-const lastnameText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].lastname
-);
-const loadingText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].loading
-);
-const noResultsText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].noResults
-);
-const actionButtonText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].actionButton
-);
-const lostTokenTitleText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].lostTokenTitle
-);
-const lostTokenMessageText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].lostTokenMessage
-);
-const willBeReportedText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].willBeReported
-);
-const cancelButtonText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].cancelButton
-);
-const resetTokenButtonText = computed(
-  () => translations[currentLanguage.value as "de" | "en"].resetTokenButton
-);
-
-const props = withDefaults(
-  defineProps<{
-    title?: string;
-    users?: UserData[];
-    pageSize?: number;
-    loading?: boolean;
-  }>(),
-  {
-    pageSize: 10,
-    loading: false,
-  }
-);
-
 const searchQuery = ref("");
-const selectedRows = ref<UserData[]>([]);
+const currentPage = ref(1);
 const isModalOpen = ref(false);
 const selectedUser = ref<UserData | null>(null);
 const isTokenResetting = ref(false);
 
-const handleLanguageChange = (lang: string) => {
-  currentLanguage.value = lang;
-  localStorage.setItem("language", lang);
+const filteredUsers = computed(() => {
+  if (!props.users || !searchQuery.value) {
+    return props.users || [];
+  }
 
-  updateColumns();
-};
-
-const getColumns = computed(
-  () =>
-    [
-      {
-        accessorKey: "username",
-        header: usernameText.value,
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "firstname",
-        header: firstnameText.value,
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "lastname",
-        header: lastnameText.value,
-        cell: (info) => info.getValue(),
-      },
-      {
-        id: "action",
-        header: "",
-        cell: () => null,
-      },
-    ] as ColumnDef<UserData>[]
-);
-
-const columns = ref(getColumns.value);
-
-const updateColumns = () => {
-  columns.value = getColumns.value;
-
-  table.value = useVueTable({
-    data: props.users || [],
-    columns: columns.value,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
-    state: {
-      globalFilter: searchQuery.value,
-    },
+  const query = searchQuery.value.toLowerCase();
+  return props.users.filter((user) => {
+    return (
+      user.username.toLowerCase().includes(query) ||
+      user.firstname.toLowerCase().includes(query) ||
+      user.lastname.toLowerCase().includes(query)
+    );
   });
-};
-
-const table = ref(
-  useVueTable({
-    get data() {
-      return props.users || [];
-    },
-    get columns() {
-      return columns.value;
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
-    state: {
-      get globalFilter() {
-        return searchQuery.value;
-      },
-    },
-  })
-);
-
-function setGlobalFilter(value: string) {
-  searchQuery.value = value;
-}
-
-function updateTablePageSize() {
-  table.value.setPageSize(props.pageSize);
-}
-
-const handlePageChange = (page: number) => {
-  table.value.setPageIndex(page - 1);
-};
-
-onMounted(() => {
-  updateTablePageSize();
 });
 
-const lastActiveElement = ref<HTMLElement | null>(null);
+const totalPages = computed(() => {
+  return Math.ceil(filteredUsers.value.length / props.pageSize);
+});
+
+const paginatedUsers = computed(() => {
+  const startIndex = (currentPage.value - 1) * props.pageSize;
+  const endIndex = startIndex + props.pageSize;
+  return filteredUsers.value.slice(startIndex, endIndex);
+});
+
+watch(searchQuery, () => {
+  currentPage.value = 1;
+});
+
+const handlePageChange = (page: number) => {
+  currentPage.value = page;
+};
 
 const handleButtonClick = (user: UserData) => {
-  console.log("Button clicked for user:", user);
-
-  lastActiveElement.value = document.activeElement as HTMLElement;
   selectedUser.value = user;
   isModalOpen.value = true;
 };
@@ -303,12 +194,6 @@ const handleButtonClick = (user: UserData) => {
 const closeModal = () => {
   isModalOpen.value = false;
   selectedUser.value = null;
-
-  setTimeout(() => {
-    if (lastActiveElement.value) {
-      lastActiveElement.value.focus();
-    }
-  }, 10);
 };
 
 const resetToken = () => {
@@ -316,12 +201,12 @@ const resetToken = () => {
   isTokenResetting.value = true;
 
   const successMessage =
-    currentLanguage.value === "en"
+    language.value === "en"
       ? "Token has been successfully reset."
       : "Token wurde erfolgreich zurückgesetzt.";
 
   const errorMessage =
-    currentLanguage.value === "en"
+    language.value === "en"
       ? "Error resetting token. Please try again."
       : "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut.";
 
@@ -401,39 +286,18 @@ tr {
   box-sizing: border-box;
   background-color: var(--table-row-bg);
 }
-tr.selected {
-  background-color: var(--table-row-selected-bg);
-}
 
-.checkbox-wrapper {
-  display: flex;
-  align-items: left;
-  justify-content: left;
-}
-
-input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
-
-tbody .loading,
-tbody .no-results {
+.loading,
+.no-results {
   padding: 2rem 0;
   text-align: center;
   color: var(--text-color-muted);
 }
 
-tbody tr:has(.loading):hover,
-tbody tr:has(.no-results):hover,
-.loading:hover,
-.no-results:hover {
-  background-color: var(--table-row-bg);
-}
-
-.select-column {
-  width: 40px;
-  text-align: center;
+th:nth-child(1),
+td:nth-child(1) {
+  /* Username column */
+  width: 30%;
 }
 
 th:nth-child(2),

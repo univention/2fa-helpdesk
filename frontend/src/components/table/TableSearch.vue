@@ -1,5 +1,8 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+import { useTranslations } from "../../composables/useTranslations";
+
+const props = defineProps<{
   value: string;
   placeholder?: string;
 }>();
@@ -7,6 +10,18 @@ defineProps<{
 const emit = defineEmits<{
   (e: "update:value", value: string): void;
 }>();
+
+const { currentLanguage } = useTranslations();
+
+const translatedPlaceholder = computed(() => {
+  const translations = {
+    de: "Nach Benutzer suchen",
+    en: "Search for user",
+  };
+  return (
+    props.placeholder || translations[currentLanguage.value as "de" | "en"]
+  );
+});
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -20,7 +35,7 @@ const handleInput = (event: Event) => {
       type="text"
       :value="value"
       @input="handleInput"
-      :placeholder="placeholder || 'Nach Benutzer suchen'"
+      :placeholder="translatedPlaceholder"
       class="search-input"
     />
     <span class="search-icon">
