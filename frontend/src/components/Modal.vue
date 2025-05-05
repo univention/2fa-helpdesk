@@ -128,7 +128,8 @@ export default {
 .modal-footer {
   padding: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: center;
   gap: 1rem;
 }
 

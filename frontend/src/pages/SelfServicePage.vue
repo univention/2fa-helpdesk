@@ -23,6 +23,7 @@
         label="Token zurücksetzen"
         variant="primary"
         :disabled="!confirmReset"
+        :loading="isResetting"
         @click="resetOwnToken"
       />
     </div>
@@ -44,7 +45,7 @@ const resetOwnToken = () => {
   isResetting.value = true;
 
   fetch("/backend/token/reset/own/", {
-    method: "POST", // Changed from GET to POST
+    method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
       "Content-Type": "application/json",
