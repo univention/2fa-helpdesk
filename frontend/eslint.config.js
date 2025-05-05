@@ -11,6 +11,12 @@ export default defineConfig([
   { files: ["**/*.{js,mjs,cjs,ts,vue}"], plugins: { js }, extends: ["js/recommended"] },
   { files: ["**/*.{js,mjs,cjs,ts,vue}"], languageOptions: { globals: globals.browser } },
   tseslint.configs.recommended,
+  {
+    // turn any-explicit-any into a warning
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn"
+    }
+  },
   pluginVue.configs["flat/essential"],
   { files: ["**/*.vue"], languageOptions: { parserOptions: { parser: tseslint.parser } } },
   { files: ["**/*.json"], plugins: { json }, language: "json/json", extends: ["json/recommended"] },

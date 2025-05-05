@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "yarn type-check && vite build",
     "preview": "vite preview",
+    "type-check": "vue-tsc -p tsconfig.typecheck.json --noEmit",
      "swagger": "vite & opn http://localhost:5173/ui/swagger"
   },
   "dependencies": {

@@ -150,7 +150,6 @@ const props = withDefaults(
     pageSize?: number;
     loading?: boolean;
     handleSelectedUsers?: (selected: UserData[]) => void;
-    handleResetToken?: (selected: UserData[]) => void;
   }>(),
   {
     pageSize: 10,
@@ -275,6 +274,7 @@ const closeModal = () => {
 };
 
 const resetToken = () => {
+  if (!selectedUser.value) return;
   resetUserToken(selectedUser.value, closeModal);
 };
 </script>

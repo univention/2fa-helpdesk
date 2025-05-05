@@ -13,20 +13,15 @@
  */
 
 
-import * as runtime from '../runtime';
 import type {
-  HTTPValidationError,
-  ListUserQuery,
-  ResetUsersRequest,
+    ListUserQuery,
+    ResetUsersRequest
 } from '../models/index';
 import {
-    HTTPValidationErrorFromJSON,
-    HTTPValidationErrorToJSON,
-    ListUserQueryFromJSON,
     ListUserQueryToJSON,
-    ResetUsersRequestFromJSON,
-    ResetUsersRequestToJSON,
+    ResetUsersRequestToJSON
 } from '../models/index';
+import * as runtime from '../runtime';
 
 export interface ListUsersListUsersPostRequest {
     listUserQuery?: ListUserQuery;

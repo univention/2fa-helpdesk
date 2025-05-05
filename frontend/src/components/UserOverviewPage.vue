@@ -16,10 +16,6 @@ const handleSelectedUsers = (selected: UserData[]) => {
   console.log("Selected users:", selected);
 };
 
-const handleResetToken = (selected: UserData[]) => {
-
-  console.log("Reset Token from:", selected.username);
-};
 
 
 onMounted(fetchUsers);
@@ -37,7 +33,6 @@ onMounted(fetchUsers);
       :loading="loading"
       :page-size="12"
       @select-users="handleSelectedUsers"
-      @handle-reset-token="handleResetToken"
     
     />
   </div>
