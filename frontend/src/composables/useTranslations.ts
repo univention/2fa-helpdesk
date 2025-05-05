@@ -28,7 +28,7 @@ const translations = {
     // User Overview Page
     adminPageTitle: "Administration Zwei-Faktor-Authentifizierung",
     adminPageDescription:
-      "Wählen Sie einen Eintrag aus und klicken Sie auf eine der dann erscheinenden Schaltflächen, um Token zu generieren.",
+      "Klicken Sie auf eine der Schaltflächen, um einen Token zu generieren.",
   },
   en: {
     // Self-Service Page
@@ -55,8 +55,7 @@ const translations = {
 
     // User Overview Page
     adminPageTitle: "Two-Factor Authentication Administration",
-    adminPageDescription:
-      "Select an entry and click one of the buttons that appear to generate tokens.",
+    adminPageDescription: "Click on one of the buttons to generate a token.",
   },
 };
 

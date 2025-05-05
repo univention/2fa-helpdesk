@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import UserTable from "./table/UserTable.vue";
 import PageHeadline from "./PageHeadline.vue";
 import LanguageSelector from "./LanguageSelector.vue";
@@ -8,21 +8,9 @@ import { useUsers } from "../composables/useUsers";
 import { useTranslations } from "../composables/useTranslations";
 
 const { users, loading, fetchUsers } = useUsers();
-const { currentLanguage, setLanguage } = useTranslations();
+const { currentLanguage, setLanguage, t } = useTranslations();
 
 const selectedUsers = ref<UserData[]>([]);
-
-const adminPageTitle = computed(() => {
-  return currentLanguage.value === "en"
-    ? "Two-Factor Authentication Administration"
-    : "Administration Zwei-Faktor-Authentifizierung";
-});
-
-const adminPageDescription = computed(() => {
-  return currentLanguage.value === "en"
-    ? "Select an entry and click one of the buttons that appear to generate tokens."
-    : "Wählen Sie einen Eintrag aus und klicken Sie auf eine der dann erscheinenden Schaltflächen, um Token zu generieren.";
-});
 
 const handleSelectedUsers = (selected: UserData[]) => {
   selectedUsers.value = selected;
@@ -40,11 +28,11 @@ onMounted(fetchUsers);
 <template>
   <div class="users-overview-page">
     <div class="page-header">
-      <PageHeadline :text="adminPageTitle" />
+      <PageHeadline :text="t('adminPageTitle')" />
       <LanguageSelector @change="handleLanguageChange" />
     </div>
     <p class="description">
-      {{ adminPageDescription }}
+      {{ t("adminPageDescription") }}
     </p>
     <UserTable
       :users="users"

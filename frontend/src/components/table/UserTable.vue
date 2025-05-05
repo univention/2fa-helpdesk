@@ -1,16 +1,19 @@
 <template>
   <div class="user-table">
     <div class="table-header">
-      <TableSearch v-model:value="searchQuery" />
+      <TableSearch
+        v-model:value="searchQuery"
+        :placeholder="t('searchPlaceholder')"
+      />
     </div>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>{{ translations[language].username }}</th>
-            <th>{{ translations[language].firstname }}</th>
-            <th>{{ translations[language].lastname }}</th>
+            <th>{{ t("username") }}</th>
+            <th>{{ t("firstname") }}</th>
+            <th>{{ t("lastname") }}</th>
             <th></th>
           </tr>
         </thead>
@@ -18,7 +21,7 @@
           <template v-if="loading">
             <tr>
               <td colspan="4">
-                <div class="loading">{{ translations[language].loading }}</div>
+                <div class="loading">{{ t("loading") }}</div>
               </td>
             </tr>
           </template>
@@ -26,7 +29,7 @@
             <tr>
               <td colspan="4">
                 <div class="no-results">
-                  {{ translations[language].noResults }}
+                  {{ t("noResults") }}
                 </div>
               </td>
             </tr>
@@ -38,7 +41,7 @@
               <td>{{ user.lastname }}</td>
               <td>
                 <SimpleButton
-                  :label="translations[language].actionButton"
+                  :label="t('actionButtonLabel')"
                   variant="primary"
                   @click="handleButtonClick(user)"
                 />
@@ -58,26 +61,26 @@
     <Modal :isOpen="isModalOpen" @close="closeModal">
       <template #header>
         <h3 class="modal-title">
-          {{ translations[language].lostTokenTitle }}
+          {{ t("lostTokenTitle") }}
           {{ selectedUser?.firstname }}
           {{ selectedUser?.lastname }}
         </h3>
       </template>
       <div>
-        {{ translations[language].lostTokenMessage }}
+        {{ t("lostTokenMessage") }}
         {{ selectedUser?.firstname }} {{ selectedUser?.lastname }}
-        {{ translations[language].willBeReported }}
+        {{ t("willBeReported") }}
       </div>
       <template #footer>
         <div class="modal-buttons">
           <SimpleButton
-            :label="translations[language].cancelButton"
+            :label="t('cancelButton')"
             variant="secondary"
             @click="closeModal"
             :disabled="isTokenResetting"
           />
           <SimpleButton
-            :label="translations[language].resetTokenButton"
+            :label="t('resetTokenButton')"
             variant="primary"
             @click="resetToken"
             :loading="isTokenResetting"
@@ -96,6 +99,7 @@ import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
 import Modal from "../Modal.vue";
 import { resetUserToken } from "../../services/reset-user-token";
+import { useTranslations } from "../../composables/useTranslations";
 
 const props = withDefaults(
   defineProps<{
@@ -112,40 +116,7 @@ const props = withDefaults(
   }
 );
 
-const language = computed(() => {
-  return props.language === "en" || props.language === "de"
-    ? props.language
-    : "de";
-});
-
-const translations = {
-  de: {
-    username: "Benutzername",
-    firstname: "Vorname",
-    lastname: "Nachname",
-    loading: "Lädt...",
-    noResults: "Keine Ergebnisse gefunden",
-    actionButton: "Aktion",
-    lostTokenTitle: "Verlorener Token von",
-    lostTokenMessage: "Das Gerät mit dem Zwei-Faktor-Token von",
-    willBeReported: "wird als verloren gemeldet.",
-    cancelButton: "Abbrechen",
-    resetTokenButton: "Token zurücksetzen",
-  },
-  en: {
-    username: "Username",
-    firstname: "First Name",
-    lastname: "Last Name",
-    loading: "Loading...",
-    noResults: "No results found",
-    actionButton: "Action",
-    lostTokenTitle: "Lost token of",
-    lostTokenMessage: "The device with the two-factor token of",
-    willBeReported: "will be reported as lost.",
-    cancelButton: "Cancel",
-    resetTokenButton: "Reset Token",
-  },
-};
+const { t } = useTranslations();
 
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -200,24 +171,14 @@ const resetToken = () => {
   if (!selectedUser.value) return;
   isTokenResetting.value = true;
 
-  const successMessage =
-    language.value === "en"
-      ? "Token has been successfully reset."
-      : "Token wurde erfolgreich zurückgesetzt.";
-
-  const errorMessage =
-    language.value === "en"
-      ? "Error resetting token. Please try again."
-      : "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut.";
-
   resetUserToken(
     selectedUser.value,
     () => {
       isTokenResetting.value = false;
       closeModal();
     },
-    successMessage,
-    errorMessage
+    t("tokenResetSuccess"),
+    t("tokenResetError")
   );
 };
 </script>
