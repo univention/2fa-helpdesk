@@ -1,5 +1,5 @@
-import { DefaultApi } from "../api";
-import { Configuration } from "../api/runtime";
+import { DefaultApi } from "../../api";
+import { Configuration } from "../../api/runtime";
 import type { UserData } from "../types";
 
 let isResetting = false;
