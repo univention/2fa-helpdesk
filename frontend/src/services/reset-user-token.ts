@@ -6,7 +6,9 @@ let isResetting = false;
 
 export const resetUserToken = (
   selectedUser: UserData,
-  callBackFn: () => void
+  callBackFn: () => void,
+  successMessage?: string,
+  errorMessage?: string
 ) => {
   if (isResetting || !selectedUser) {
     return;
@@ -29,12 +31,13 @@ export const resetUserToken = (
     })
     .then((result) => {
       console.log("Token reset successful:", result);
-      alert("Token wurde erfolgreich zurückgesetzt.");
+      alert(successMessage || "Token wurde erfolgreich zurückgesetzt.");
     })
     .catch((error) => {
       console.error("Error resetting token:", error);
       alert(
-        "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut."
+        errorMessage ||
+          "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut."
       );
     })
     .finally(() => {

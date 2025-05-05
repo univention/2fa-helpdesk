@@ -1,6 +1,9 @@
 <template>
   <div class="user-table">
-    <TableSearch v-model:value="searchQuery" />
+    <div class="table-header">
+      <TableSearch v-model:value="searchQuery" />
+      <LanguageSelector @change="handleLanguageChange" />
+    </div>
 
     <div class="table-wrapper">
       <table>
@@ -21,14 +24,14 @@
           <template v-if="loading">
             <tr>
               <td colspan="4" class="">
-                <div class="loading">Loading...</div>
+                <div class="loading">{{ loadingText }}</div>
               </td>
             </tr>
           </template>
           <template v-else-if="table.getRowModel().rows.length === 0">
             <tr>
               <td colspan="4" class="">
-                <div class="no-results">Keine Ergebnisse gefunden</div>
+                <div class="no-results">{{ noResultsText }}</div>
               </td>
             </tr>
           </template>
@@ -46,7 +49,7 @@
               <td v-for="cell in row.getVisibleCells()" :key="cell.id">
                 <template v-if="cell.column.id === 'action'">
                   <SimpleButton
-                    label="Action"
+                    :label="actionButtonText"
                     variant="primary"
                     @click="handleButtonClick(row.original)"
                   />
@@ -71,24 +74,24 @@
     <Modal :isOpen="isModalOpen" @close="closeModal">
       <template #header>
         <h3 class="modal-title">
-          Verlorener Token von {{ selectedUser?.firstname }}
+          {{ lostTokenTitleText }} {{ selectedUser?.firstname }}
           {{ selectedUser?.lastname }}
         </h3>
       </template>
       <div>
-        Das Gerät mit dem Zwei-Faktor-Token von {{ selectedUser?.firstname }}
-        {{ selectedUser?.lastname }} wird als verloren gemeldet.
+        {{ lostTokenMessageText }} {{ selectedUser?.firstname }}
+        {{ selectedUser?.lastname }} {{ willBeReportedText }}
       </div>
       <template #footer>
         <div class="modal-buttons">
           <SimpleButton
-            label="Abbrechen"
+            :label="cancelButtonText"
             variant="secondary"
             @click="closeModal"
             :disabled="isTokenResetting"
           />
           <SimpleButton
-            label="Token zurücksetzen"
+            :label="resetTokenButtonText"
             variant="primary"
             @click="resetToken"
             :loading="isTokenResetting"
@@ -100,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import {
   getCoreRowModel,
   getPaginationRowModel,
@@ -113,7 +116,73 @@ import TablePagination from "./TablePagination.vue";
 import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
 import Modal from "../Modal.vue";
+import LanguageSelector from "../LanguageSelector.vue";
 import { resetUserToken } from "../../services/reset-user-token";
+
+const currentLanguage = ref(localStorage.getItem("language") || "de");
+
+const translations = {
+  de: {
+    username: "Benutzername",
+    firstname: "Vorname",
+    lastname: "Nachname",
+    loading: "Lädt...",
+    noResults: "Keine Ergebnisse gefunden",
+    actionButton: "Aktion",
+    lostTokenTitle: "Verlorener Token von",
+    lostTokenMessage: "Das Gerät mit dem Zwei-Faktor-Token von",
+    willBeReported: "wird als verloren gemeldet.",
+    cancelButton: "Abbrechen",
+    resetTokenButton: "Token zurücksetzen",
+  },
+  en: {
+    username: "Username",
+    firstname: "First Name",
+    lastname: "Last Name",
+    loading: "Loading...",
+    noResults: "No results found",
+    actionButton: "Action",
+    lostTokenTitle: "Lost token of",
+    lostTokenMessage: "The device with the two-factor token of",
+    willBeReported: "will be reported as lost.",
+    cancelButton: "Cancel",
+    resetTokenButton: "Reset Token",
+  },
+};
+
+const usernameText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].username
+);
+const firstnameText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].firstname
+);
+const lastnameText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].lastname
+);
+const loadingText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].loading
+);
+const noResultsText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].noResults
+);
+const actionButtonText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].actionButton
+);
+const lostTokenTitleText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].lostTokenTitle
+);
+const lostTokenMessageText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].lostTokenMessage
+);
+const willBeReportedText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].willBeReported
+);
+const cancelButtonText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].cancelButton
+);
+const resetTokenButtonText = computed(
+  () => translations[currentLanguage.value as "de" | "en"].resetTokenButton
+);
 
 const props = withDefaults(
   defineProps<{
@@ -129,42 +198,70 @@ const props = withDefaults(
 );
 
 const searchQuery = ref("");
-
 const selectedRows = ref<UserData[]>([]);
-
 const isModalOpen = ref(false);
 const selectedUser = ref<UserData | null>(null);
 const isTokenResetting = ref(false);
 
-const columns = [
-  {
-    accessorKey: "username",
-    header: "Benutzername",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: "firstname",
-    header: "Vorname",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: "lastname",
-    header: "Nachname",
-    cell: (info) => info.getValue(),
-  },
-  {
-    id: "action",
-    header: "",
-    cell: () => null,
-  },
-] as ColumnDef<UserData>[];
+const handleLanguageChange = (lang: string) => {
+  currentLanguage.value = lang;
+  localStorage.setItem("language", lang);
+
+  updateColumns();
+};
+
+const getColumns = computed(
+  () =>
+    [
+      {
+        accessorKey: "username",
+        header: usernameText.value,
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: "firstname",
+        header: firstnameText.value,
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: "lastname",
+        header: lastnameText.value,
+        cell: (info) => info.getValue(),
+      },
+      {
+        id: "action",
+        header: "",
+        cell: () => null,
+      },
+    ] as ColumnDef<UserData>[]
+);
+
+const columns = ref(getColumns.value);
+
+const updateColumns = () => {
+  columns.value = getColumns.value;
+
+  table.value = useVueTable({
+    data: props.users || [],
+    columns: columns.value,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    state: {
+      globalFilter: searchQuery.value,
+    },
+  });
+};
 
 const table = ref(
   useVueTable({
     get data() {
       return props.users || [];
     },
-    columns,
+    get columns() {
+      return columns.value;
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -217,10 +314,26 @@ const closeModal = () => {
 const resetToken = () => {
   if (!selectedUser.value) return;
   isTokenResetting.value = true;
-  resetUserToken(selectedUser.value, () => {
-    isTokenResetting.value = false;
-    closeModal();
-  });
+
+  const successMessage =
+    currentLanguage.value === "en"
+      ? "Token has been successfully reset."
+      : "Token wurde erfolgreich zurückgesetzt.";
+
+  const errorMessage =
+    currentLanguage.value === "en"
+      ? "Error resetting token. Please try again."
+      : "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut.";
+
+  resetUserToken(
+    selectedUser.value,
+    () => {
+      isTokenResetting.value = false;
+      closeModal();
+    },
+    successMessage,
+    errorMessage
+  );
 };
 </script>
 
@@ -229,6 +342,13 @@ const resetToken = () => {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .table-wrapper {

@@ -1,10 +1,13 @@
 <template>
   <div class="self-service-page">
-    <h1>Self Service</h1>
+    <div class="page-header">
+      <h1>{{ selfServiceTitle }}</h1>
+      <LanguageSelector @change="handleLanguageChange" />
+    </div>
 
     <div class="token-reset-container">
       <div class="token-reset-text">
-        Wollen Sie ihren eigenen Token zurücksetzen?
+        {{ resetOwnTokenQuestion }}
       </div>
 
       <div class="checkbox-container">
@@ -14,13 +17,11 @@
           v-model="confirmReset"
           class="reset-checkbox"
         />
-        <label for="confirm-reset"
-          >Ja, ich möchte meinen Token zurücksetzen.</label
-        >
+        <label for="confirm-reset">{{ confirmResetLabel }}</label>
       </div>
 
       <SimpleButton
-        label="Token zurücksetzen"
+        :label="resetTokenButton"
         variant="primary"
         :disabled="!confirmReset"
         :loading="isResetting"
@@ -31,11 +32,58 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import SimpleButton from "../components/Button.vue";
+import LanguageSelector from "../components/LanguageSelector.vue";
 
 const confirmReset = ref(false);
 const isResetting = ref(false);
+
+const currentLanguage = ref(localStorage.getItem("language") || "de");
+
+const translations = {
+  de: {
+    selfServiceTitle: "Self Service",
+    resetOwnTokenQuestion: "Wollen Sie ihren eigenen Token zurücksetzen?",
+    confirmResetLabel: "Ja, ich möchte meinen Token zurücksetzen.",
+    resetTokenButton: "Token zurücksetzen",
+    tokenResetSuccess: "Ihr Token wurde erfolgreich zurückgesetzt.",
+    tokenResetError:
+      "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut.",
+  },
+  en: {
+    selfServiceTitle: "Self Service",
+    resetOwnTokenQuestion: "Do you want to reset your own token?",
+    confirmResetLabel: "Yes, I want to reset my token.",
+    resetTokenButton: "Reset Token",
+    tokenResetSuccess: "Your token has been successfully reset.",
+    tokenResetError: "Error resetting token. Please try again.",
+  },
+};
+
+const selfServiceTitle = computed(
+  () => translations[currentLanguage.value as "de" | "en"].selfServiceTitle
+);
+const resetOwnTokenQuestion = computed(
+  () => translations[currentLanguage.value as "de" | "en"].resetOwnTokenQuestion
+);
+const confirmResetLabel = computed(
+  () => translations[currentLanguage.value as "de" | "en"].confirmResetLabel
+);
+const resetTokenButton = computed(
+  () => translations[currentLanguage.value as "de" | "en"].resetTokenButton
+);
+const tokenResetSuccess = computed(
+  () => translations[currentLanguage.value as "de" | "en"].tokenResetSuccess
+);
+const tokenResetError = computed(
+  () => translations[currentLanguage.value as "de" | "en"].tokenResetError
+);
+
+const handleLanguageChange = (lang: string) => {
+  currentLanguage.value = lang;
+  localStorage.setItem("language", lang);
+};
 
 const resetOwnToken = () => {
   if (isResetting.value || !confirmReset.value) {
@@ -59,14 +107,12 @@ const resetOwnToken = () => {
     })
     .then((result) => {
       console.log("Token reset successful:", result);
-      alert("Ihr Token wurde erfolgreich zurückgesetzt.");
+      alert(tokenResetSuccess.value);
       confirmReset.value = false;
     })
     .catch((error) => {
       console.error("Error resetting token:", error);
-      alert(
-        "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut."
-      );
+      alert(tokenResetError.value);
     })
     .finally(() => {
       isResetting.value = false;
@@ -78,6 +124,14 @@ const resetOwnToken = () => {
 .self-service-page {
   text-align: center;
   margin-top: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .token-reset-container {
