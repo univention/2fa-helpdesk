@@ -68,12 +68,12 @@ const resetOwnToken = () => {
     })
     .then((result) => {
       console.log("Token reset successful:", result);
-      alert(t("tokenResetSuccess"));
+      alert(t.value("tokenResetSuccess"));
       confirmReset.value = false;
     })
     .catch((error) => {
       console.error("Error resetting token:", error);
-      alert(t("tokenResetError"));
+      alert(t.value("tokenResetError"));
     })
     .finally(() => {
       isResetting.value = false;

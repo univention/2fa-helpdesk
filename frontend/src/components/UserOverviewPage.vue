@@ -8,7 +8,8 @@ import { useUsers } from "../composables/useUsers";
 import { useTranslations } from "../composables/useTranslations";
 
 const { users, loading, fetchUsers } = useUsers();
-const { currentLanguage, setLanguage, t } = useTranslations();
+const { currentLanguage, setLanguage, t: tComputed } = useTranslations();
+const t = (key) => tComputed.value(key);
 
 const selectedUsers = ref<UserData[]>([]);
 
@@ -19,7 +20,6 @@ const handleSelectedUsers = (selected: UserData[]) => {
 
 const handleLanguageChange = (lang: string) => {
   setLanguage(lang);
-  localStorage.setItem("language", lang);
 };
 
 onMounted(fetchUsers);

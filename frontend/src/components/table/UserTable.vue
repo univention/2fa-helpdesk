@@ -116,7 +116,8 @@ const props = withDefaults(
   }
 );
 
-const { t } = useTranslations();
+const { t: tComputed } = useTranslations();
+const t = (key) => tComputed.value(key);
 
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -171,14 +172,17 @@ const resetToken = () => {
   if (!selectedUser.value) return;
   isTokenResetting.value = true;
 
+  const successMsg = t("tokenResetSuccess");
+  const errorMsg = t("tokenResetError");
+
   resetUserToken(
     selectedUser.value,
     () => {
       isTokenResetting.value = false;
       closeModal();
     },
-    t("tokenResetSuccess"),
-    t("tokenResetError")
+    successMsg,
+    errorMsg
   );
 };
 </script>
