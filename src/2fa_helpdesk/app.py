@@ -69,9 +69,6 @@ settings = Settings(
 jwks_client = jwt.PyJWKClient(settings.jwks_url)  # Caches JWKS
 
 
-def _not_2fa_admin_msg(user_token):
-    return f"You ({user_token['username']}) are not a 2FA admin."
-
 #
 # Dependencies
 #
@@ -82,6 +79,8 @@ oauth2_scheme = security.OAuth2AuthorizationCodeBearer(
     tokenUrl=str(settings.token_url),
 )
 
+def _not_2fa_admin_msg(user_token):
+    return f"You ({user_token['username']}) are not a 2FA admin."
 
 def user_token(
     token_str: Annotated[str, Security(oauth2_scheme)],
