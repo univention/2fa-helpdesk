@@ -46,6 +46,15 @@ class Settings(BaseSettings):
     client_id: str
     permitted_jwt_audiences: List[str] = ["account"]
 
+#
+# Constants
+#
+
+OIDC_DEFAULT_SCOPES = ["openid"]
+
+#
+# OIDC Settings
+#
 
 oidc_host = os.environ["OIDC_HOST"].rstrip("/")
 oidc_realm = os.environ["OIDC_REALM"].rstrip("/")
@@ -140,7 +149,7 @@ def is_2fa_admin(user_token: dict) -> bool:
 
 @backend_app.post(
     "/token/reset/own/",
-    dependencies=[Security(user_token, scopes=["openid"])],
+    dependencies=[Security(user_token, scopes=OIDC_DEFAULT_SCOPES)],
     response_model=ListUserResponse,
 )
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
@@ -155,7 +164,7 @@ def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)])
 
 @backend_app.post(
     "/token/reset/user/",
-    dependencies=[Security(user_token, scopes=["openid"])],
+    dependencies=[Security(user_token, scopes=OIDC_DEFAULT_SCOPES)],
     response_model=ResetResponse,
 )
 def reset_user_tokens(
@@ -184,7 +193,7 @@ def reset_user_tokens(
 
 @backend_app.post(
     "/list_users",
-    dependencies=[Security(user_token, scopes=["openid"])]
+    dependencies=[Security(user_token, scopes=OIDC_DEFAULT_SCOPES)],
     response_model=ListUserResponse,
 )
 def list_users(
@@ -216,7 +225,7 @@ def list_users(
 
 @backend_app.get(
     "/whoami",
-    dependencies=[Security(user_token, scopes=["openid"])]
+    dependencies=[Security(user_token, scopes=OIDC_DEFAULT_SCOPES)],
     response_model=WhoAmIResponse,
 )
 def whoami(
