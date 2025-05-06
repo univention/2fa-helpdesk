@@ -1,16 +1,22 @@
-# 2FA Admin Backend
+<!-- Generator: Widdershins v4.0.1 -->
 
-This container image provides an API and business logic to connect the 2FA Admin Frontend module to Keycloak.
+<h1 id="fastapi">FastAPI v0.1.0</h1>
 
-build with:
+> Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
 
-    docker build -f docker/backend/Dockerfile .
-    # --net=host is required if you use kubeproxy
-    # see .env sample file for environment help
-    # run helper_scripts/environment.sh to extract info from a deployment
-    docker run --net=host --env-file env.<yourfile> backend
+# Authentication
 
-# API
+- oAuth2 authentication. 
+
+    - Flow: authorizationCode
+    - Authorization URL = [https://id.ys-opendesk.test.rancher.falkenstein-2.potaris.de/realms/master/login-actions/authenticate](https://id.ys-opendesk.test.rancher.falkenstein-2.potaris.de/realms/master/login-actions/authenticate)
+    - Token URL = [https://id.ys-opendesk.test.rancher.falkenstein-2.potaris.de/realms/master/protocol/openid-connect/token](https://id.ys-opendesk.test.rancher.falkenstein-2.potaris.de/realms/master/protocol/openid-connect/token)
+
+|Scope|Scope Description|
+|---|---|
+
+<h1 id="fastapi-default">Default</h1>
+
 ## reset_own_token_token_reset_own__post
 
 <a id="opIdreset_own_token_token_reset_own__post"></a>
@@ -488,3 +494,4 @@ WhoAmIResponse
 |token|object|true|none|none|
 |success|boolean|true|none|none|
 |twofa_admin|boolean|true|none|none|
+
