@@ -13,7 +13,9 @@ WORKDIR ${WORKDIR}
 ARG USER=fastapi
 RUN useradd -m "$USER"
 
-COPY ./src ${WORKDIR}
+COPY ./src/poetry.lock ${WORKDIR}
+COPY ./src/pyproject.toml ${WORKDIR}
+
 RUN chown -R "$USER":"$USER" "${WORKDIR}"
 
 RUN chown "$USER":"$USER" "$WORKDIR" \
@@ -44,6 +46,8 @@ ENV \
 # install Poetry
 RUN pip3 install --break-system-packages --no-cache-dir poetry>=1.7.0
 RUN poetry --version
+
+COPY ./src ${WORKDIR}
 
 # copy source code and install project
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
