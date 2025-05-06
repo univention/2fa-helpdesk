@@ -21,6 +21,21 @@ class ResetUsersRequest(BaseModel):
 class ListUserQuery(BaseModel):
     query: Optional[str] = pydantic.Field("", description="Search for users matching this query")
 
+class ResetResponse(BaseModel):
+    success: bool
+    detail: str
+    resets_by_user: Dict[str, int] = pydantic.Field("", description="Map of usernames to reset counts")
+
+class WhoAmIResponse(BaseModel):
+    token: dict
+    success: bool
+    twofa_admin: bool
+
+class ListUserResponse(BaseModel):
+    users: List[adapters.keycloak.User]
+    succes: bool
+    detail: str
+
 class Settings(BaseSettings):
     oidc_host: str
     oidc_realm: str
@@ -126,18 +141,22 @@ def is_2fa_admin(user_token: dict) -> bool:
 @backend_app.post(
     "/token/reset/own/",
     dependencies=[Security(user_token, scopes=["openid"])],
+    response_model=ListUserResponse,
 )
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
 
-    adapters.keycloak.reset_2fa_token(user_token["username"])
-    return {
-        "success": True,
-        "detail": "",
-    }
+    user_id = user_token["user_id"]
+    results_count = adapters.keycloak.reset_2fa_token(user_id)
+    return ResetResponse(
+        success=True,
+        detail="",
+        resets_by_user={user_id: results_count}
+    )
 
 @backend_app.post(
     "/token/reset/user/",
     dependencies=[Security(user_token, scopes=["openid"])],
+    response_model=ResetResponse,
 )
 def reset_user_tokens(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
@@ -156,16 +175,17 @@ def reset_user_tokens(
         success = False
         detail = _not_2fa_admin_msg(user_token)
 
-    return {
-        "success": success,
-        "detail": detail,
-        "resets_by_user": results
-    }
+    return ResetResponse(
+        users=results,
+        success=success,
+        detail=detail,
+    )
 
 
 @backend_app.post(
     "/list_users",
     dependencies=[Security(user_token, scopes=["openid"])]
+    response_model=ListUserResponse,
 )
 def list_users(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
@@ -188,25 +208,26 @@ def list_users(
         success = False
         detail = _not_2fa_admin_msg(user_token)
 
-    return {
-        "users": users,
-        "success": success,
-        "detail": detail,
-    }
+    return ListUserResponse(
+        users=users,
+        success=success,
+        detail=detail,
+    )
 
 @backend_app.get(
     "/whoami",
     dependencies=[Security(user_token, scopes=["openid"])]
+    response_model=WhoAmIResponse,
 )
 def whoami(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
 ):
 
-    return {
-        "token" : user_token,
-        "success": "success",
-        "2fa_admin": is_2fa_admin(user_token)
-    }
+    return WhoAmIResponse(
+        token=user_token,
+        success=True, # FIXME
+        twofa_admin=is_2fa_admin(user_token)
+    )
 
 @backend_app.get("backend/openapi.json", include_in_schema=False)
 async def custom_openapi():

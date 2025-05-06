@@ -4,18 +4,15 @@
 import os
 import keycloak
 import fastapi
-import dataclasses
 import typing
+from pydantic import BaseModel
+class User(BaseModel):
 
-@dataclasses.dataclass
-class User:
-
-
-    keycloak_internal_id: typing.Optional[str]
-    username: typing.Optional[str]
-    email: typing.Optional[str]
-    firstname: typing.Optional[str]
-    lastname: typing.Optional[str]
+    keycloak_internal_id: str
+    username: str
+    email: typing.Optional[str] = None
+    firstname: typing.Optional[str] = None
+    lastname: typing.Optional[str] = None
 
 def _get_kc_admin():
     try:
