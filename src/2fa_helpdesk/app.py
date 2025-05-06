@@ -33,7 +33,7 @@ class WhoAmIResponse(BaseModel):
 
 class ListUserResponse(BaseModel):
     users: List[adapters.keycloak.User]
-    succes: bool
+    success: bool
     detail: str
 
 class Settings(BaseSettings):
