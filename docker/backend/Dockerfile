@@ -48,6 +48,7 @@ RUN pip3 install --break-system-packages --no-cache-dir poetry>=1.7.0
 RUN poetry --version
 
 COPY ./src ${WORKDIR}
+RUN chown -R "$USER":"$USER" "${WORKDIR}"
 
 # copy source code and install project
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
