@@ -13,6 +13,7 @@ class User(BaseModel):
     email: typing.Optional[str] = None
     firstname: typing.Optional[str] = None
     lastname: typing.Optional[str] = None
+    totp: typing.Optional[bool] = False
 
 def _get_kc_admin():
     try:
@@ -53,31 +54,43 @@ def reset_2fa_token(user_id: str) -> dict:
 
     return len(otp_creds)
 
-def list_users(query: str = "") -> list[User]:
-    '''List users based on a query'''
+def list_users(query: str, page: int, limit: int) -> typing.Tuple[list[User], int]:
+    '''List users based on a query (paginated)'''
 
     kc_admin = _get_kc_admin()
-    
+
+    # generate paginated query #
+    query_struct_with_pages = {
+        "search" : query or "*@*",
+        "first": page*limit,
+        "max": limit,
+    }
+
+    # generate user count query #
+    query_struct_user_count = {
+        "search" : query or "*@*",
+        "briefRepresentation": True
+    }
+
+    user_dicts = kc_admin.get_users(query=query_struct_with_pages)
+
+    # FIXME broken on keycloak-side
+    # total_for_this_query = kc_admin.users_count(query=query_struct)
+    total_for_this_query = len(kc_admin.get_users(query_struct_user_count))
+
+    # generate fastapi objects from users #
     users = []
-    query_struct = ""
-    if query:
-        query_struct = {"username": query}
-    else:
-        query_struct = None
-
-    for kc_user in kc_admin.get_users(query=query_struct):
-
-        if not kc_user.get("email"):
-            continue
+    for kc_user in user_dicts:
 
         users.append(
             User(
-                keycloak_internal_id=kc_user.get('id'),
+                keycloak_internal_id=kc_user.get("id"),
                 username=kc_user.get('username'),
                 email=kc_user.get('email'),
                 firstname=kc_user.get('firstName'),
-                lastname=kc_user.get('lastName')
+                lastname=kc_user.get('lastName'),
+                totp=kc_user.get('totp')
             )
         )
 
-    return users
+    return users, total_for_this_query
