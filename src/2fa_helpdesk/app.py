@@ -6,6 +6,7 @@ from typing import Annotated, Any, Dict, List, Optional
 
 import jwt
 import os
+import fastapi
 from fastapi import FastAPI, APIRouter, HTTPException, Security, security, status
 from fastapi.responses import JSONResponse
 import pydantic
@@ -35,6 +36,10 @@ class ListUserResponse(BaseModel):
     users: List[adapters.keycloak.User]
     success: bool
     detail: str
+    total: int
+    total_pages: int
+    page: int
+    limit: int
 
 class Settings(BaseSettings):
     oidc_host: str
@@ -198,6 +203,8 @@ def reset_user_tokens(
 )
 def list_users(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
+    page: Optional[int] = fastapi.Query(0),
+    limit: Optional[int] = fastapi.Query(20),
     body: ListUserQuery = None
 ):
 
@@ -210,7 +217,7 @@ def list_users(
         query = ""
 
     if is_2fa_admin(user_token):
-        users = adapters.keycloak.list_users(query)
+        users, total = adapters.keycloak.list_users(query, page, limit)
         success = True
         detail = ""
     else:
@@ -221,6 +228,10 @@ def list_users(
         users=users,
         success=success,
         detail=detail,
+        total=total,
+        total_pages=int(total/limit)+1,
+        page=page,
+        limit=limit
     )
 
 @backend_app.get(
