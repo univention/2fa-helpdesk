@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 const props = defineProps<{
   currentPage: number;
   totalPages: number;
@@ -14,24 +16,24 @@ const goToPage = (page: number) => {
   emit("page-change", page);
 };
 
+const pageNumbers = computed(() =>
+  Array.from({ length: props.totalPages }, (_, i) => i + 1)
+);
+
 const getVisiblePageNumbers = () => {
-  const maxButtons = props.maxPageButtons || 5;
-  const halfMaxButtons = Math.floor(maxButtons / 2);
+  const maxButtons = props.maxPageButtons ?? 5;
+  const half = Math.floor(maxButtons / 2);
 
-  let startPage = Math.max(props.currentPage - halfMaxButtons, 1);
-  let endPage = Math.min(startPage + maxButtons - 1, props.totalPages);
+  let start = Math.max(props.currentPage - half, 1);
+  let end = Math.min(start + maxButtons - 1, props.totalPages);
 
-  if (endPage - startPage + 1 < maxButtons) {
-    startPage = Math.max(endPage - maxButtons + 1, 1);
+  if (end - start + 1 < maxButtons) {
+    start = Math.max(end - maxButtons + 1, 1);
   }
 
-  const pages = [];
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
-
-  return pages;
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 };
+console.log(getVisiblePageNumbers());
 </script>
 
 <template>
@@ -44,14 +46,15 @@ const getVisiblePageNumbers = () => {
       Zurück
     </button>
     <div>
-      <template v-if="totalPages <= 7">
+      <!-- simple mode when few pages -->
+      <template v-if="props.totalPages <= (props.maxPageButtons ?? 7)">
         <button
-          v-for="page in totalPages"
+          v-for="page in pageNumbers"
           :key="page"
           :class="[
             'pagination-button',
             'page-number',
-            { active: page === currentPage },
+            { active: page === props.currentPage },
           ]"
           @click="goToPage(page)"
         >
@@ -59,38 +62,47 @@ const getVisiblePageNumbers = () => {
         </button>
       </template>
 
+      <!-- sliding window + ellipses when many pages -->
       <template v-else>
-        <template v-if="currentPage > 3">
-          <button class="pagination-button page-number" @click="goToPage(1)">
-            1
-          </button>
-          <span v-if="currentPage > 4" class="pagination-ellipsis">...</span>
-        </template>
+        <!-- first page + left ellipsis -->
+        <button
+          v-if="getVisiblePageNumbers()[0] > 1"
+          class="pagination-button page-number"
+          @click="goToPage(1)"
+        >
+          1
+        </button>
+        <span v-if="getVisiblePageNumbers()[0] > 2" class="pagination-ellipsis"
+          >…</span
+        >
 
+        <!-- middle pages -->
         <button
           v-for="page in getVisiblePageNumbers()"
           :key="page"
           :class="[
             'pagination-button',
             'page-number',
-            { active: page === currentPage },
+            { active: page === props.currentPage },
           ]"
           @click="goToPage(page)"
         >
           {{ page }}
         </button>
 
-        <template v-if="currentPage < totalPages - 2">
-          <span v-if="currentPage < totalPages - 3" class="pagination-ellipsis"
-            >...</span
-          >
-          <button
-            class="pagination-button page-number"
-            @click="goToPage(totalPages)"
-          >
-            {{ totalPages }}
-          </button>
-        </template>
+        <!-- right ellipsis + last page -->
+        <span
+          v-if="getVisiblePageNumbers().at(-1)! < props.totalPages - 1"
+          class="pagination-ellipsis"
+          >…</span
+        >
+        <button
+          v-if="getVisiblePageNumbers().at(-1)! < props.totalPages"
+          class="pagination-button page-number"
+          @click="goToPage(props.totalPages)"
+        >
+          {{ props.totalPages }}
+        </button>
       </template>
     </div>
 

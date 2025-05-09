@@ -7,7 +7,8 @@ import { type UserData } from "../types";
 import { useUsers } from "../composables/useUsers";
 import { useTranslations } from "../composables/useTranslations";
 
-const { users, loading, fetchUsers } = useUsers();
+const { users, loading, currentPage, totalPages, fetchUsers } = useUsers();
+
 const { currentLanguage, setLanguage, t: tComputed } = useTranslations();
 const t = (key) => tComputed.value(key);
 
@@ -15,14 +16,15 @@ const selectedUsers = ref<UserData[]>([]);
 
 const handleSelectedUsers = (selected: UserData[]) => {
   selectedUsers.value = selected;
-  console.log("Selected users:", selected);
 };
 
 const handleLanguageChange = (lang: string) => {
   setLanguage(lang);
 };
 
-onMounted(fetchUsers);
+onMounted(() => {
+  fetchUsers(0);
+});
 </script>
 
 <template>
@@ -37,9 +39,12 @@ onMounted(fetchUsers);
     <UserTable
       :users="users"
       :loading="loading"
-      :page-size="12"
+      :page-size="20"
+      :current-page="currentPage"
+      :total-pages="totalPages"
       @select-users="handleSelectedUsers"
       :language="currentLanguage"
+      :fetchUsers="fetchUsers"
     />
   </div>
 </template>
@@ -62,26 +67,5 @@ onMounted(fetchUsers);
   text-align: left;
   font-weight: 600;
   margin-bottom: 2.5rem;
-}
-
-.actions {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.action-button {
-  background-color: #42b883;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.action-button:hover {
-  background-color: #369e6c;
 }
 </style>
