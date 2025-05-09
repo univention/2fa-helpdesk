@@ -54,8 +54,9 @@
 
     <TablePagination
       :current-page="currentPage"
-      :total-pages="totalPages"
+      :total-pages="totalPages ?? 1"
       @page-change="handlePageChange"
+      :maxPageButtons="7"
     />
 
     <Modal :isOpen="isModalOpen" @close="closeModal">
@@ -108,19 +109,23 @@ const props = withDefaults(
     pageSize?: number;
     loading?: boolean;
     language?: string;
+    currentPage?: number;
+    totalPages?: number;
+    fetchUsers: (page: number) => void;
   }>(),
   {
-    pageSize: 10,
+    pageSize: 20,
     loading: false,
     language: "de",
   }
 );
 
 const { t: tComputed } = useTranslations();
+
 const t = (key) => tComputed.value(key);
 
 const searchQuery = ref("");
-const currentPage = ref(1);
+const currentPage = ref(props.currentPage || 1);
 const isModalOpen = ref(false);
 const selectedUser = ref<UserData | null>(null);
 const isTokenResetting = ref(false);
@@ -141,13 +146,11 @@ const filteredUsers = computed(() => {
 });
 
 const totalPages = computed(() => {
-  return Math.ceil(filteredUsers.value.length / props.pageSize);
+  return props.totalPages;
 });
 
 const paginatedUsers = computed(() => {
-  const startIndex = (currentPage.value - 1) * props.pageSize;
-  const endIndex = startIndex + props.pageSize;
-  return filteredUsers.value.slice(startIndex, endIndex);
+  return props.users;
 });
 
 watch(searchQuery, () => {
@@ -156,6 +159,7 @@ watch(searchQuery, () => {
 
 const handlePageChange = (page: number) => {
   currentPage.value = page;
+  props.fetchUsers(page);
 };
 
 const handleButtonClick = (user: UserData) => {

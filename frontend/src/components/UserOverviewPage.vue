@@ -7,7 +7,8 @@ import { type UserData } from "../types";
 import { useUsers } from "../composables/useUsers";
 import { useTranslations } from "../composables/useTranslations";
 
-const { users, loading, fetchUsers } = useUsers();
+const { users, loading, currentPage, totalPages, fetchUsers } = useUsers();
+
 const { currentLanguage, setLanguage, t: tComputed } = useTranslations();
 const t = (key) => tComputed.value(key);
 
@@ -15,14 +16,15 @@ const selectedUsers = ref<UserData[]>([]);
 
 const handleSelectedUsers = (selected: UserData[]) => {
   selectedUsers.value = selected;
-  console.log("Selected users:", selected);
 };
 
 const handleLanguageChange = (lang: string) => {
   setLanguage(lang);
 };
 
-onMounted(fetchUsers);
+onMounted(() => {
+  fetchUsers(0);
+});
 </script>
 
 <template>
@@ -37,9 +39,12 @@ onMounted(fetchUsers);
     <UserTable
       :users="users"
       :loading="loading"
-      :page-size="12"
+      :page-size="20"
+      :current-page="currentPage"
+      :total-pages="totalPages"
       @select-users="handleSelectedUsers"
       :language="currentLanguage"
+      :fetchUsers="fetchUsers"
     />
   </div>
 </template>
