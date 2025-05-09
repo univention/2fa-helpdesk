@@ -8,13 +8,14 @@
     "build": "yarn type-check && vite build",
     "preview": "vite preview",
     "type-check": "vue-tsc -p tsconfig.typecheck.json --noEmit",
-     "swagger": "vite & opn http://localhost:5173/ui/swagger"
+    "swagger": "vite & opn http://localhost:5173/ui/swagger"
   },
   "dependencies": {
     "@tanstack/vue-table": "^8.21.3",
     "@types/swagger-ui": "^3.52.4",
     "from": "^0.1.7",
     "import": "^0.0.6",
+    "lodash-es": "^4.17.21",
     "path": "^0.12.7",
     "pinia": "^3.0.2",
     "swagger-ui": "^5.21.0",

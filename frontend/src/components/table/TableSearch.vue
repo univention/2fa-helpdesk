@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useTranslations } from "../../composables/useTranslations";
-
+import { debounce } from "lodash-es";
+// Props and emits for v-model:value API
 const props = defineProps<{
   value: string;
   placeholder?: string;
@@ -22,11 +23,15 @@ const translatedPlaceholder = computed(() => {
     props.placeholder || translations[currentLanguage.value as "de" | "en"]
   );
 });
+const debouncedEmit = debounce((val: string) => {
+  emit("update:value", val);
+}, 300);
 
-const handleInput = (event: Event) => {
+// Emit updates on user input with debounce
+function onInput(event: Event) {
   const target = event.target as HTMLInputElement;
-  emit("update:value", target.value);
-};
+  debouncedEmit(target.value);
+}
 </script>
 
 <template>
@@ -34,7 +39,7 @@ const handleInput = (event: Event) => {
     <input
       type="text"
       :value="value"
-      @input="handleInput"
+      @input="onInput"
       :placeholder="translatedPlaceholder"
       class="search-input"
     />

@@ -7,7 +7,8 @@ import { type UserData } from "../types";
 import { useUsers } from "../composables/useUsers";
 import { useTranslations } from "../composables/useTranslations";
 
-const { users, loading, currentPage, totalPages, fetchUsers } = useUsers();
+const { users, searchQuery, loading, currentPage, totalPages, fetchUsers } =
+  useUsers();
 
 const { currentLanguage, setLanguage, t: tComputed } = useTranslations();
 const t = (key) => tComputed.value(key);
@@ -37,6 +38,7 @@ onMounted(() => {
       {{ t("adminPageDescription") }}
     </p>
     <UserTable
+      v-model:search-query="searchQuery"
       :users="users"
       :loading="loading"
       :page-size="20"
