@@ -47,6 +47,6 @@ const changeLanguage = () => {
 
 .language-dropdown:focus {
   outline: none;
-  border-color: var(--primary-color, #42b983);
+  border-color: var(--primary-color, var(--button-primary-bg));
 }
 </style>
