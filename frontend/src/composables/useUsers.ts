@@ -1,19 +1,22 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { type UserData } from "../types";
 
 export function useUsers() {
   const users = ref<UserData[]>([]);
   const loading = ref(true);
   const error = ref<Error | null>(null);
-
+  const searchQuery = ref(""); 
   const initialPerPage = 20;
   const currentPage = ref(1);
   const perPage = ref(initialPerPage);
   const totalPages = ref(1);
 
+  watch(searchQuery, () => {
+    fetchUsers(1);
+  });
+
   const fetchUsers = async (page = 0) => {
     loading.value = true;
-    console.log("Fetching users...", page);
     const params = new URLSearchParams({
       page:  String(page - 1),
       limit: String(perPage.value),
@@ -27,6 +30,9 @@ export function useUsers() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
         },
+        body: JSON.stringify({
+          query: searchQuery.value, 
+        }),
       });
 
       const data = await response.json();
@@ -46,6 +52,7 @@ export function useUsers() {
 
   return {
     users,
+    searchQuery,
     loading,
     error,
     currentPage,

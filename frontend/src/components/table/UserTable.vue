@@ -2,7 +2,8 @@
   <div class="user-table">
     <div class="table-header">
       <TableSearch
-        v-model:value="searchQuery"
+        :value="props.searchQuery"
+        @update:value="onSearchInput"
         :placeholder="t('searchPlaceholder')"
       />
     </div>
@@ -25,7 +26,7 @@
               </td>
             </tr>
           </template>
-          <template v-else-if="filteredUsers.length === 0">
+          <template v-else-if="users?.length === 0">
             <tr>
               <td colspan="4">
                 <div class="no-results">
@@ -106,6 +107,7 @@ const props = withDefaults(
   defineProps<{
     title?: string;
     users?: UserData[];
+    searchQuery?: string;
     pageSize?: number;
     loading?: boolean;
     language?: string;
@@ -124,26 +126,17 @@ const { t: tComputed } = useTranslations();
 
 const t = (key) => tComputed.value(key);
 
-const searchQuery = ref("");
+const emit = defineEmits<{
+  (e: "update:searchQuery", val: string): void;
+}>();
+
+function onSearchInput(val: string) {
+  emit("update:searchQuery", val);
+}
 const currentPage = ref(props.currentPage || 1);
 const isModalOpen = ref(false);
 const selectedUser = ref<UserData | null>(null);
 const isTokenResetting = ref(false);
-
-const filteredUsers = computed(() => {
-  if (!props.users || !searchQuery.value) {
-    return props.users || [];
-  }
-
-  const query = searchQuery.value.toLowerCase();
-  return props.users.filter((user) => {
-    return (
-      user.username.toLowerCase().includes(query) ||
-      user.firstname.toLowerCase().includes(query) ||
-      user.lastname.toLowerCase().includes(query)
-    );
-  });
-});
 
 const totalPages = computed(() => {
   return props.totalPages;
@@ -151,10 +144,6 @@ const totalPages = computed(() => {
 
 const paginatedUsers = computed(() => {
   return props.users;
-});
-
-watch(searchQuery, () => {
-  currentPage.value = 1;
 });
 
 const handlePageChange = (page: number) => {
