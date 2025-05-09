@@ -237,5 +237,7 @@ const onGo = () => {
   align-items: center;
   gap: 0.5rem;
   margin-left: auto;
+  background-color: var(--bgc-inputfield-on-container);
+  color: var(--font-color-contrast-high);
 }
 </style>
