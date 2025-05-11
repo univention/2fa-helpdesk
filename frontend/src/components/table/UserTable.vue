@@ -2,7 +2,7 @@
   <div class="user-table">
     <div class="table-header">
       <TableSearch
-        :value="props.searchQuery"
+        :value="props.searchQuery ?? ''"
         @update:value="onSearchInput"
         :placeholder="t('searchPlaceholder')"
       />
@@ -15,7 +15,7 @@
             <th>{{ t("username") }}</th>
             <th>{{ t("firstname") }}</th>
             <th>{{ t("lastname") }}</th>
-            <th></th>
+            <th>{{ t("actions") }}</th>
           </tr>
         </thead>
         <tbody>
@@ -42,9 +42,10 @@
               <td>{{ user.lastname }}</td>
               <td>
                 <SimpleButton
-                  :label="t('actionButtonLabel')"
+                  :label="t('resetTokenButton')"
                   variant="secondary"
                   @click="handleButtonClick(user)"
+                  :aria-label="`${user.firstname} ${user.lastname}, ${user.username} : ${t('resetTokenButton')}`"
                 />
               </td>
             </tr>
@@ -94,14 +95,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { type UserData } from "../../types";
 import TablePagination from "./TablePagination.vue";
 import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
 import Modal from "../Modal.vue";
 import { resetUserToken } from "../../services/reset-user-token";
-import { useTranslations } from "../../composables/useTranslations";
+import {
+  Locale,
+  Translations,
+  useTranslations,
+} from "../../composables/useTranslations";
 
 const props = withDefaults(
   defineProps<{
@@ -118,13 +123,13 @@ const props = withDefaults(
   {
     pageSize: 20,
     loading: false,
-    language: "de",
+    language: Locale.DE,
   }
 );
 
 const { t: tComputed } = useTranslations();
 
-const t = (key) => tComputed.value(key);
+const t = (key: keyof Translations[Locale]) => tComputed.value(key);
 
 const emit = defineEmits<{
   (e: "update:searchQuery", val: string): void;

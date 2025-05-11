@@ -5,13 +5,13 @@ import PageHeadline from "./PageHeadline.vue";
 import LanguageSelector from "./LanguageSelector.vue";
 import { type UserData } from "../types";
 import { useUsers } from "../composables/useUsers";
-import { useTranslations } from "../composables/useTranslations";
+import { Translations, useTranslations } from "../composables/useTranslations";
 
 const { users, searchQuery, loading, currentPage, totalPages, fetchUsers } =
   useUsers();
 
 const { currentLanguage, setLanguage, t: tComputed } = useTranslations();
-const t = (key) => tComputed.value(key);
+const t = (key: keyof Translations["de"]) => tComputed.value(key);
 
 const selectedUsers = ref<UserData[]>([]);
 

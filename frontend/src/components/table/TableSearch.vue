@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useTranslations } from "../../composables/useTranslations";
+import {
+  Locale,
+  Translations,
+  useTranslations,
+} from "../../composables/useTranslations";
 import { debounce } from "lodash-es";
-// Props and emits for v-model:value API
+
 const props = defineProps<{
   value: string;
   placeholder?: string;
@@ -12,16 +16,11 @@ const emit = defineEmits<{
   (e: "update:value", value: string): void;
 }>();
 
-const { currentLanguage } = useTranslations();
+const { t: tComputed } = useTranslations();
+const t = (key: keyof Translations[Locale]) => tComputed.value(key);
 
 const translatedPlaceholder = computed(() => {
-  const translations = {
-    de: "Nach Benutzer suchen",
-    en: "Search for user",
-  };
-  return (
-    props.placeholder || translations[currentLanguage.value as "de" | "en"]
-  );
+  return props.placeholder || t("searchPlaceholder");
 });
 const debouncedEmit = debounce((val: string) => {
   emit("update:value", val);
@@ -37,12 +36,13 @@ function onInput(event: Event) {
 <template>
   <div class="search-container">
     <input
-      type="text"
+      type="search"
       :value="value"
       @input="onInput"
       :placeholder="translatedPlaceholder"
       class="search-input"
     />
+
     <span class="search-icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"
