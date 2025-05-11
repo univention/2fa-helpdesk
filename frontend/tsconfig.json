@@ -6,8 +6,8 @@
   ],
   "compilerOptions": {
     "strict": true,
-    "target": "es5",           // you can keep an older output target…
-    "lib": ["es2015", "dom"],  // …but include ES2015 APIs
+    "target": "es5",    
+    "lib": ["es2015", "dom"],
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]

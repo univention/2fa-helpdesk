@@ -212,18 +212,10 @@ const onGo = () => {
   align-items: center;
   gap: 1rem;
 }
-.pagination {
-  &--button-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-  }
-  &--input {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-left: auto;
-  }
+.pagination--input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
 }
 </style>
