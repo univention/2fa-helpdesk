@@ -41,7 +41,7 @@ import { Configuration, DefaultApi } from "../../api";
 const confirmReset = ref(false);
 const isResetting = ref(false);
 
-const { currentLanguage, setLanguage, t } = useTranslations();
+const { setLanguage, t } = useTranslations();
 
 const handleLanguageChange = (lang: string) => {
   setLanguage(lang);
