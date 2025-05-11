@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import {
+  Locale,
+  Translations,
+  useTranslations,
+} from "../../composables/useTranslations";
 
 const props = defineProps<{
   currentPage: number;
@@ -10,6 +15,11 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "page-change", page: number): void;
 }>();
+
+const { t: tComputed } = useTranslations();
+const t = (key: keyof Translations[Locale]) => tComputed.value(key);
+
+const pageInput = ref<number | null>(null);
 
 const goToPage = (page: number) => {
   if (page < 1 || page > props.totalPages) return;
@@ -33,7 +43,13 @@ const getVisiblePageNumbers = () => {
 
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 };
-console.log(getVisiblePageNumbers());
+
+const onGo = () => {
+  if (pageInput.value != null) {
+    goToPage(Math.floor(pageInput.value));
+    pageInput.value = null;
+  }
+};
 </script>
 
 <template>
@@ -43,7 +59,7 @@ console.log(getVisiblePageNumbers());
       @click="goToPage(currentPage - 1)"
       :disabled="currentPage <= 1"
     >
-      Zurück
+      {{ t("previous") }}
     </button>
     <div>
       <!-- simple mode when few pages -->
@@ -63,47 +79,77 @@ console.log(getVisiblePageNumbers());
       </template>
 
       <!-- sliding window + ellipses when many pages -->
-      <template v-else>
-        <!-- first page + left ellipsis -->
-        <button
-          v-if="getVisiblePageNumbers()[0] > 1"
-          class="pagination-button page-number"
-          @click="goToPage(1)"
-        >
-          1
-        </button>
-        <span v-if="getVisiblePageNumbers()[0] > 2" class="pagination-ellipsis"
-          >…</span
-        >
+      <div v-else class="pagination--button-wrapper">
+        <div>
+          <!-- first page + left ellipsis -->
+          <button
+            v-if="getVisiblePageNumbers()[0] > 1"
+            class="pagination-button page-number"
+            @click="goToPage(1)"
+          >
+            1
+          </button>
+          <span
+            v-if="getVisiblePageNumbers()[0] > 2"
+            class="pagination-ellipsis"
+            >…</span
+          >
 
-        <!-- middle pages -->
-        <button
-          v-for="page in getVisiblePageNumbers()"
-          :key="page"
-          :class="[
-            'pagination-button',
-            'page-number',
-            { active: page === props.currentPage },
-          ]"
-          @click="goToPage(page)"
-        >
-          {{ page }}
-        </button>
+          <!-- middle pages -->
+          <button
+            v-for="page in getVisiblePageNumbers()"
+            :key="page"
+            :class="[
+              'pagination-button',
+              'page-number',
+              { active: page === props.currentPage },
+            ]"
+            @click="goToPage(page)"
+          >
+            {{ page }}
+          </button>
 
-        <!-- right ellipsis + last page -->
-        <span
-          v-if="getVisiblePageNumbers().at(-1)! < props.totalPages - 1"
-          class="pagination-ellipsis"
-          >…</span
-        >
-        <button
-          v-if="getVisiblePageNumbers().at(-1)! < props.totalPages"
-          class="pagination-button page-number"
-          @click="goToPage(props.totalPages)"
-        >
-          {{ props.totalPages }}
-        </button>
-      </template>
+          <!-- right ellipsis + last page -->
+          <span
+            v-if="
+              getVisiblePageNumbers()[getVisiblePageNumbers().length - 1] <
+              props.totalPages - 1
+            "
+            class="pagination-ellipsis"
+            >…</span
+          >
+          <button
+            v-if="
+              getVisiblePageNumbers()[getVisiblePageNumbers().length - 1] <
+              props.totalPages
+            "
+            class="pagination-button page-number"
+            @click="goToPage(props.totalPages)"
+          >
+            {{ props.totalPages }}
+          </button>
+        </div>
+        <div class="pagination--input">
+          <input
+            type="number"
+            v-model.number="pageInput"
+            @keyup.enter="onGo"
+            :min="1"
+            :max="props.totalPages"
+            placeholder="…"
+            class="pagination-input-field"
+          />
+          <button
+            class="pagination-button"
+            @click="onGo"
+            :disabled="
+              !pageInput || pageInput < 1 || pageInput > props.totalPages
+            "
+          >
+            {{ t("go") }}
+          </button>
+        </div>
+      </div>
     </div>
 
     <button
@@ -111,7 +157,7 @@ console.log(getVisiblePageNumbers());
       @click="goToPage(currentPage + 1)"
       :disabled="currentPage >= totalPages"
     >
-      Vor
+      {{ t("next") }}
     </button>
   </div>
 </template>
@@ -158,5 +204,26 @@ console.log(getVisiblePageNumbers());
 
 .pagination-ellipsis {
   margin: 0 0.25rem;
+}
+
+.pagination--button-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+.pagination {
+  &--button-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+  &--input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
 }
 </style>

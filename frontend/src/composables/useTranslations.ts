@@ -1,7 +1,12 @@
 import { ref, computed } from "vue";
 
+export enum Locale {
+  DE = "de",
+  EN = "en",
+}
+
 const translations = {
-  de: {
+  [Locale.DE]: {
     // Self-Service Page
     selfServiceTitle: "Self Service",
     resetOwnTokenQuestion: "Wollen Sie ihren eigenen Token zurücksetzen?",
@@ -15,6 +20,7 @@ const translations = {
     username: "Benutzername",
     firstname: "Vorname",
     lastname: "Nachname",
+    actions: "Aktionen",
     loading: "Lädt...",
     noResults: "Keine Ergebnisse gefunden",
     action: "Aktion",
@@ -29,8 +35,13 @@ const translations = {
     adminPageTitle: "Administration Zwei-Faktor-Authentifizierung",
     adminPageDescription:
       "Auf eine Schaltfläche klicken, um einen Token zurückzusetzen.",
+
+    // Pagination
+    previous: "Zurück",
+    next: "Vor",
+    go: "Gehe zu",
   },
-  en: {
+  [Locale.EN]: {
     // Self-Service Page
     selfServiceTitle: "Self Service",
     resetOwnTokenQuestion: "Do you want to reset your own token?",
@@ -43,6 +54,7 @@ const translations = {
     username: "Username",
     firstname: "First Name",
     lastname: "Last Name",
+    actions: "Actions",
     loading: "Loading...",
     noResults: "No results found",
     action: "Action",
@@ -56,10 +68,17 @@ const translations = {
     // User Overview Page
     adminPageTitle: "Two-Factor Authentication Administration",
     adminPageDescription: "Click on one of the buttons to reset a token.",
+
+    // Pagination
+    previous: "Previous",
+    next: "Next",
+    go: "Go to",
   },
 };
 
-const currentLanguage = ref(localStorage.getItem("language") || "de");
+const currentLanguage = ref(localStorage.getItem("language") || Locale.DE);
+
+export type Translations = typeof translations;
 
 export function useTranslations() {
   const setLanguage = (lang: string) => {
@@ -68,8 +87,8 @@ export function useTranslations() {
   };
 
   const t = computed(() => {
-    return (key: keyof (typeof translations)["de"]) => {
-      return translations[currentLanguage.value as "de" | "en"][key] || key;
+    return (key: keyof Translations[Locale]) => {
+      return translations[currentLanguage.value as Locale][key] || key;
     };
   });
 

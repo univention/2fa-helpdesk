@@ -6,7 +6,7 @@ export function useUsers() {
   const loading = ref(true);
   const error = ref<Error | null>(null);
   const searchQuery = ref(""); 
-  const initialPerPage = 20;
+  const initialPerPage = 2;
   const currentPage = ref(1);
   const perPage = ref(initialPerPage);
   const totalPages = ref(1);
@@ -42,7 +42,7 @@ export function useUsers() {
       totalPages.value = data.total_pages ?? 1;
       currentPage.value = page;
 
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line
       error.value = err;
       console.error("Error fetching users:", err);
     } finally {
