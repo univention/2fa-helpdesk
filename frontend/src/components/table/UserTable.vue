@@ -304,7 +304,7 @@ td:nth-child(4) .button {
 }
 
 .modal-title {
-  color: var(--modal-title-text);
+  color: var(--font-color-contrast-high);
   font-weight: 500;
 }
 </style>

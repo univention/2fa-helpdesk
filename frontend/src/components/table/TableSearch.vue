@@ -93,6 +93,6 @@ const handleInput = (event: Event) => {
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--input-icon-color);
+  color: var(-font-color-contrast-high);
 }
 </style>
