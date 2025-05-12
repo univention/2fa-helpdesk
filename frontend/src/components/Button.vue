@@ -78,7 +78,6 @@ export default {
 
 .primary {
   background-color: var(--button-primary-bgc);
-  /* color: var(--font-color-contrast-high); */
 }
 
 .primary:hover {

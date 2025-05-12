@@ -105,7 +105,7 @@ const resetOwnToken = () => {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: var(--text-color-default);
+  color: var(--font-color-contrast-high);
 }
 
 .checkbox-container {
@@ -123,6 +123,6 @@ const resetOwnToken = () => {
 
 label {
   cursor: pointer;
-  color: var(--text-color-default);
+  color: var(--font-color-contrast-high);
 }
 </style>
