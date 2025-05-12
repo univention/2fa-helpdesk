@@ -128,9 +128,9 @@ twofaHelpdeskBackend:
     imagePullPolicy: "Always"
     imagePullSecrets: []
 
-    registry: "docker.software-univention.de"
-    repository: "twofa-backend-api"
-    tag: "3.0.0"
+    registry: ""
+    repository: "nubus-dev/images/twofa-helpdesk-frontend"
+    tag: ""
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 
@@ -224,9 +224,9 @@ twofaHelpdeskFrontend:
     imagePullPolicy: "Always"
     imagePullSecrets: []
 
-    registry: "docker.software-univention.de"
-    repository: "twofa-frontend-ui"
-    tag: "3.0.0"
+    registry: ""
+    repository: "nubus-dev/images/twofa-helpdesk-frontend"
+    tag: ""
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 
