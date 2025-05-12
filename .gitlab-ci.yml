@@ -18,7 +18,7 @@ include:
   - IMAGE_NAME:
       - "twofa-helpdesk-backend"
       - "twofa-helpdesk-frontend"
-      - "twofa-helpdesk-exentions"
+      - "twofa-helpdesk-extensions"
 .publish-matrix: &publish-matrix
   - IMAGE_NAME:
       - "twofa-helpdesk-backend"
