@@ -4,7 +4,7 @@
  */
 
 // Default location for custom CSS file
-const DEFAULT_CUSTOM_CSS_PATH = "/custom/styles.css";
+const DEFAULT_CUSTOM_CSS_PATH = "/ui/css/custom.css";
 
 /**
  * Loads custom CSS styles from the specified path
@@ -22,14 +22,12 @@ export function loadCustomStyles(
       return;
     }
 
-    // Create link element
     const link = document.createElement("link");
     link.id = "custom-styles";
     link.rel = "stylesheet";
     link.type = "text/css";
     link.href = path;
 
-    // Set up event listeners
     link.onload = () => {
       console.log("Custom styles loaded successfully");
       resolve();
@@ -40,12 +38,10 @@ export function loadCustomStyles(
         "Failed to load custom styles, using default theme only:",
         error
       );
-      // We resolve instead of reject since this is optional
-      // and the app should continue with the default theme
+
       resolve();
     };
 
-    // Append to head - this will be loaded after theme.css since it's added later
     document.head.appendChild(link);
   });
 }
@@ -59,6 +55,5 @@ export async function initCustomStyles(): Promise<void> {
     await loadCustomStyles();
   } catch (error) {
     console.error("Error initializing custom styles:", error);
-    // Continue with the application even if custom styles fail to load
   }
 }

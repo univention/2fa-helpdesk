@@ -63,25 +63,4 @@ onMounted(fetchUsers);
   font-weight: 600;
   margin-bottom: 2.5rem;
 }
-
-.actions {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.action-button {
-  background-color: #42b883;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.action-button:hover {
-  background-color: #369e6c;
-}
 </style>
