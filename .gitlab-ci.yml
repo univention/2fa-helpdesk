@@ -1,17 +1,35 @@
+
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2023-2025 Univention GmbH
 ---
 include:
-  project: "bmi/opendesk/tooling/gitlab-config"
-  ref: "v2.4.8"
-  file:
-    - "ci/common/lint.yml"
-    - "ci/container/container-build-semantic.yml"
-    - "ci/container/container-build.yml"
+  - project: "univention/customers/dataport/upx/common-ci"
+    ref: "main"
+    file:
+      - "defaults/stages.yaml"
+      - "defaults/nubus-workflow.yaml"
+      - "jobs/lint-pre-commit.yaml"
+      - "jobs/lint-commit-messages.yaml"
+      - "jobs/semantic-release-env.yaml"
+      - "jobs/container-build-external.yaml"
+      - "jobs/package-and-publish-helm-charts-external.yaml"
 
-stages:
-  - ".pre"
-  - "lint"
-  - "build"
-  - "scan"
-  - "release"
-  - ".post"
-...
+.build-matrix: &build-matrix
+  - IMAGE_NAME:
+      - "twofa-helpdesk-backend"
+.publish-matrix: &publish-matrix
+  - IMAGE_NAME:
+      - "twofa-helpdesk-backend"
+container-build:
+  parallel:
+    matrix: *build-matrix
+container-malware-scan:
+  parallel:
+    matrix: *publish-matrix
+container-sign-external:
+  parallel:
+    matrix: *build-matrix
+
+push-image-external:
+  parallel:
+    matrix: *publish-matrix
