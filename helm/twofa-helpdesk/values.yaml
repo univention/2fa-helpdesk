@@ -6,6 +6,7 @@ global:
   nodeSelector: {}
   podAnnotations: {}
   podSecurityContext: {}
+  host: twofa
   replicaCount: 1
   securityContext: {}
   tolerations: []
