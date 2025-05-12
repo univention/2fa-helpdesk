@@ -6,7 +6,7 @@ ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-ba
 
 ARG WORKDIR="/src"
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} as build
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
 ARG WORKDIR
 WORKDIR ${WORKDIR}
 
