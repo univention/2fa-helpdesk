@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import AdminPage from "@/pages/AdminPage.vue";
 import SelfServicePage from "@/pages/SelfServicePage.vue";
 import SwaggerPage from "@/pages/SwaggerPage.vue";
+import keycloak from "../services/keycloak";
 
 const routes = [
   {
@@ -9,6 +10,7 @@ const routes = [
     component: AdminPage,
     meta: {
       title: "Administrator: 2FA zurücksetzen",
+      requiresAuth: true,
     },
   },
   {
@@ -16,6 +18,7 @@ const routes = [
     component: SelfServicePage,
     meta: {
       title: "Self-Service: 2FA zurücksetzen",
+      requiresAuth: true,
     },
   },
   {
@@ -33,10 +36,19 @@ const router = createRouter({
 });
 
 // Navigation guard to update document title
-router.beforeEach((to, from, next) => {
-  // Set the page title based on the route's meta title
+router.beforeEach((to, _from, next) => {
   document.title = (to.meta.title as string) || "Vite + Vue + TS";
-  next();
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (keycloak.authenticated) {
+      next();
+    } else {
+      const loginOptions = { redirectUri: window.location.href };
+      keycloak.login(loginOptions);
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
