@@ -2,7 +2,8 @@
   <div class="user-table">
     <div class="table-header">
       <TableSearch
-        v-model:value="searchQuery"
+        :value="props.searchQuery ?? ''"
+        @update:value="onSearchInput"
         :placeholder="t('searchPlaceholder')"
       />
     </div>
@@ -14,7 +15,7 @@
             <th>{{ t("username") }}</th>
             <th>{{ t("firstname") }}</th>
             <th>{{ t("lastname") }}</th>
-            <th></th>
+            <th>{{ t("actions") }}</th>
           </tr>
         </thead>
         <tbody>
@@ -25,7 +26,7 @@
               </td>
             </tr>
           </template>
-          <template v-else-if="filteredUsers.length === 0">
+          <template v-else-if="users?.length === 0">
             <tr>
               <td colspan="4">
                 <div class="no-results">
@@ -41,9 +42,10 @@
               <td>{{ user.lastname }}</td>
               <td>
                 <SimpleButton
-                  :label="t('actionButtonLabel')"
-                  variant="primary"
+                  :label="t('resetTokenButton')"
+                  variant="secondary"
                   @click="handleButtonClick(user)"
+                  :aria-label="`${user.firstname} ${user.lastname}, ${user.username} : ${t('resetTokenButton')}`"
                 />
               </td>
             </tr>
@@ -54,8 +56,9 @@
 
     <TablePagination
       :current-page="currentPage"
-      :total-pages="totalPages"
+      :total-pages="totalPages ?? 1"
       @page-change="handlePageChange"
+      :maxPageButtons="7"
     />
 
     <Modal :isOpen="isModalOpen" @close="closeModal">
@@ -92,70 +95,65 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { type UserData } from "../../types";
 import TablePagination from "./TablePagination.vue";
 import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
 import Modal from "../Modal.vue";
 import { resetUserToken } from "../../services/reset-user-token";
-import { useTranslations } from "../../composables/useTranslations";
+import {
+  Locale,
+  Translations,
+  useTranslations,
+} from "../../composables/useTranslations";
 
 const props = withDefaults(
   defineProps<{
     title?: string;
     users?: UserData[];
+    searchQuery?: string;
     pageSize?: number;
     loading?: boolean;
     language?: string;
+    currentPage?: number;
+    totalPages?: number;
+    fetchUsers: (page: number) => void;
   }>(),
   {
-    pageSize: 10,
+    pageSize: 20,
     loading: false,
-    language: "de",
+    language: Locale.DE,
   }
 );
 
 const { t: tComputed } = useTranslations();
-const t = (key) => tComputed.value(key);
 
-const searchQuery = ref("");
-const currentPage = ref(1);
+const t = (key: keyof Translations[Locale]) => tComputed.value(key);
+
+const emit = defineEmits<{
+  (e: "update:searchQuery", val: string): void;
+}>();
+
+function onSearchInput(val: string) {
+  emit("update:searchQuery", val);
+}
+const currentPage = ref(props.currentPage || 1);
 const isModalOpen = ref(false);
 const selectedUser = ref<UserData | null>(null);
 const isTokenResetting = ref(false);
 
-const filteredUsers = computed(() => {
-  if (!props.users || !searchQuery.value) {
-    return props.users || [];
-  }
-
-  const query = searchQuery.value.toLowerCase();
-  return props.users.filter((user) => {
-    return (
-      user.username.toLowerCase().includes(query) ||
-      user.firstname.toLowerCase().includes(query) ||
-      user.lastname.toLowerCase().includes(query)
-    );
-  });
-});
-
 const totalPages = computed(() => {
-  return Math.ceil(filteredUsers.value.length / props.pageSize);
+  return props.totalPages;
 });
 
 const paginatedUsers = computed(() => {
-  const startIndex = (currentPage.value - 1) * props.pageSize;
-  const endIndex = startIndex + props.pageSize;
-  return filteredUsers.value.slice(startIndex, endIndex);
-});
-
-watch(searchQuery, () => {
-  currentPage.value = 1;
+  return props.users;
 });
 
 const handlePageChange = (page: number) => {
   currentPage.value = page;
+  props.fetchUsers(page);
 };
 
 const handleButtonClick = (user: UserData) => {

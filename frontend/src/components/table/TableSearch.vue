@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useTranslations } from "../../composables/useTranslations";
+import {
+  Locale,
+  Translations,
+  useTranslations,
+} from "../../composables/useTranslations";
+import { debounce } from "lodash-es";
 
 const props = defineProps<{
   value: string;
@@ -11,33 +16,33 @@ const emit = defineEmits<{
   (e: "update:value", value: string): void;
 }>();
 
-const { currentLanguage } = useTranslations();
+const { t: tComputed } = useTranslations();
+const t = (key: keyof Translations[Locale]) => tComputed.value(key);
 
 const translatedPlaceholder = computed(() => {
-  const translations = {
-    de: "Nach Benutzer suchen",
-    en: "Search for user",
-  };
-  return (
-    props.placeholder || translations[currentLanguage.value as "de" | "en"]
-  );
+  return props.placeholder || t("searchPlaceholder");
 });
+const debouncedEmit = debounce((val: string) => {
+  emit("update:value", val);
+}, 300);
 
-const handleInput = (event: Event) => {
+// Emit updates on user input with debounce
+function onInput(event: Event) {
   const target = event.target as HTMLInputElement;
-  emit("update:value", target.value);
-};
+  debouncedEmit(target.value);
+}
 </script>
 
 <template>
   <div class="search-container">
     <input
-      type="text"
+      type="search"
       :value="value"
-      @input="handleInput"
+      @input="onInput"
       :placeholder="translatedPlaceholder"
       class="search-input"
     />
+
     <span class="search-icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"

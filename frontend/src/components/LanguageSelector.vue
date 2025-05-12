@@ -5,21 +5,22 @@
       @change="changeLanguage"
       class="language-dropdown"
     >
-      <option value="de">Deutsch</option>
-      <option value="en">English</option>
+      <option :value="Locale.DE">Deutsch</option>
+      <option :value="Locale.EN">English</option>
     </select>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { Locale } from "../composables/useTranslations";
 
 const emit = defineEmits(["change"]);
-const selectedLanguage = ref("de");
+const selectedLanguage = ref(Locale.DE);
 
 onMounted(() => {
-  const storedLang = localStorage.getItem("language") || "de";
-  selectedLanguage.value = storedLang;
+  const storedLang = localStorage.getItem("language") || Locale.DE;
+  selectedLanguage.value = storedLang as Locale;
 });
 
 const changeLanguage = () => {
@@ -47,6 +48,6 @@ const changeLanguage = () => {
 
 .language-dropdown:focus {
   outline: none;
-  border-color: var(--primary-color, #42b983);
+  border-color: var(--primary-color, var(--button-primary-bg));
 }
 </style>

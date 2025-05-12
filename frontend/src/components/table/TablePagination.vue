@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { computed, ref } from "vue";
+import {
+  Locale,
+  Translations,
+  useTranslations,
+} from "../../composables/useTranslations";
+
 const props = defineProps<{
   currentPage: number;
   totalPages: number;
@@ -9,28 +16,39 @@ const emit = defineEmits<{
   (e: "page-change", page: number): void;
 }>();
 
+const { t: tComputed } = useTranslations();
+const t = (key: keyof Translations[Locale]) => tComputed.value(key);
+
+const pageInput = ref<number | null>(null);
+
 const goToPage = (page: number) => {
   if (page < 1 || page > props.totalPages) return;
   emit("page-change", page);
 };
 
+const pageNumbers = computed(() =>
+  Array.from({ length: props.totalPages }, (_, i) => i + 1)
+);
+
 const getVisiblePageNumbers = () => {
-  const maxButtons = props.maxPageButtons || 5;
-  const halfMaxButtons = Math.floor(maxButtons / 2);
+  const maxButtons = props.maxPageButtons ?? 5;
+  const half = Math.floor(maxButtons / 2);
 
-  let startPage = Math.max(props.currentPage - halfMaxButtons, 1);
-  let endPage = Math.min(startPage + maxButtons - 1, props.totalPages);
+  let start = Math.max(props.currentPage - half, 1);
+  let end = Math.min(start + maxButtons - 1, props.totalPages);
 
-  if (endPage - startPage + 1 < maxButtons) {
-    startPage = Math.max(endPage - maxButtons + 1, 1);
+  if (end - start + 1 < maxButtons) {
+    start = Math.max(end - maxButtons + 1, 1);
   }
 
-  const pages = [];
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+};
 
-  return pages;
+const onGo = () => {
+  if (pageInput.value != null) {
+    goToPage(Math.floor(pageInput.value));
+    pageInput.value = null;
+  }
 };
 </script>
 
@@ -41,17 +59,18 @@ const getVisiblePageNumbers = () => {
       @click="goToPage(currentPage - 1)"
       :disabled="currentPage <= 1"
     >
-      Zurück
+      {{ t("previous") }}
     </button>
     <div>
-      <template v-if="totalPages <= 7">
+      <!-- simple mode when few pages -->
+      <template v-if="props.totalPages <= (props.maxPageButtons ?? 7)">
         <button
-          v-for="page in totalPages"
+          v-for="page in pageNumbers"
           :key="page"
           :class="[
             'pagination-button',
             'page-number',
-            { active: page === currentPage },
+            { active: page === props.currentPage },
           ]"
           @click="goToPage(page)"
         >
@@ -59,39 +78,78 @@ const getVisiblePageNumbers = () => {
         </button>
       </template>
 
-      <template v-else>
-        <template v-if="currentPage > 3">
-          <button class="pagination-button page-number" @click="goToPage(1)">
+      <!-- sliding window + ellipses when many pages -->
+      <div v-else class="pagination--button-wrapper">
+        <div>
+          <!-- first page + left ellipsis -->
+          <button
+            v-if="getVisiblePageNumbers()[0] > 1"
+            class="pagination-button page-number"
+            @click="goToPage(1)"
+          >
             1
           </button>
-          <span v-if="currentPage > 4" class="pagination-ellipsis">...</span>
-        </template>
+          <span
+            v-if="getVisiblePageNumbers()[0] > 2"
+            class="pagination-ellipsis"
+            >…</span
+          >
 
-        <button
-          v-for="page in getVisiblePageNumbers()"
-          :key="page"
-          :class="[
-            'pagination-button',
-            'page-number',
-            { active: page === currentPage },
-          ]"
-          @click="goToPage(page)"
-        >
-          {{ page }}
-        </button>
+          <!-- middle pages -->
+          <button
+            v-for="page in getVisiblePageNumbers()"
+            :key="page"
+            :class="[
+              'pagination-button',
+              'page-number',
+              { active: page === props.currentPage },
+            ]"
+            @click="goToPage(page)"
+          >
+            {{ page }}
+          </button>
 
-        <template v-if="currentPage < totalPages - 2">
-          <span v-if="currentPage < totalPages - 3" class="pagination-ellipsis"
-            >...</span
+          <!-- right ellipsis + last page -->
+          <span
+            v-if="
+              getVisiblePageNumbers()[getVisiblePageNumbers().length - 1] <
+              props.totalPages - 1
+            "
+            class="pagination-ellipsis"
+            >…</span
           >
           <button
+            v-if="
+              getVisiblePageNumbers()[getVisiblePageNumbers().length - 1] <
+              props.totalPages
+            "
             class="pagination-button page-number"
-            @click="goToPage(totalPages)"
+            @click="goToPage(props.totalPages)"
           >
-            {{ totalPages }}
+            {{ props.totalPages }}
           </button>
-        </template>
-      </template>
+        </div>
+        <div class="pagination--input">
+          <input
+            type="number"
+            v-model.number="pageInput"
+            @keyup.enter="onGo"
+            :min="1"
+            :max="props.totalPages"
+            placeholder="…"
+            class="pagination-input-field"
+          />
+          <button
+            class="pagination-button"
+            @click="onGo"
+            :disabled="
+              !pageInput || pageInput < 1 || pageInput > props.totalPages
+            "
+          >
+            {{ t("go") }}
+          </button>
+        </div>
+      </div>
     </div>
 
     <button
@@ -99,7 +157,7 @@ const getVisiblePageNumbers = () => {
       @click="goToPage(currentPage + 1)"
       :disabled="currentPage >= totalPages"
     >
-      Vor
+      {{ t("next") }}
     </button>
   </div>
 </template>
@@ -146,5 +204,18 @@ const getVisiblePageNumbers = () => {
 
 .pagination-ellipsis {
   margin: 0 0.25rem;
+}
+
+.pagination--button-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+.pagination--input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
 }
 </style>

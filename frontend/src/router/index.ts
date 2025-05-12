@@ -33,9 +33,9 @@ const router = createRouter({
 });
 
 // Navigation guard to update document title
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   // Set the page title based on the route's meta title
-  document.title = (to.meta.title as string) || "Vite + Vue + TS";
+  document.title = (to.meta.title as string) || "Reset 2FA Token";
   next();
 });
 
