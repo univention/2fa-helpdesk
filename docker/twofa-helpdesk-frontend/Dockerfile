@@ -3,7 +3,7 @@ FROM node:20 AS builder
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY ./frontend/package.json ./frontend/yarn.lock ./frontend/
 RUN yarn install
 
 COPY . .

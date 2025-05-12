@@ -6,6 +6,7 @@ global:
   nodeSelector: {}
   podAnnotations: {}
   podSecurityContext: {}
+  host: twofa
   replicaCount: 1
   securityContext: {}
   tolerations: []
@@ -91,7 +92,7 @@ ingress:
         # enabled: true
         secretName: ""
 
-twofaBackendApi:
+twofaHelpdeskBackend:
   affinity: {}
   environment: {}
   fullnameOverride: ""
@@ -127,9 +128,9 @@ twofaBackendApi:
     imagePullPolicy: "Always"
     imagePullSecrets: []
 
-    registry: "docker.software-univention.de"
-    repository: "twofa-backend-api"
-    tag: "3.0.0"
+    registry: ""
+    repository: "nubus-dev/images/twofa-helpdesk-frontend"
+    tag: ""
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 
@@ -187,7 +188,7 @@ twofaBackendApi:
       storageClass: ""
       size: "1Gi"
 
-twofaFrontendUi:
+twofaHelpdeskFrontend:
   affinity: {}
   environment: {}
   fullnameOverride: ""
@@ -223,9 +224,9 @@ twofaFrontendUi:
     imagePullPolicy: "Always"
     imagePullSecrets: []
 
-    registry: "docker.software-univention.de"
-    repository: "twofa-frontend-ui"
-    tag: "3.0.0"
+    registry: ""
+    repository: "nubus-dev/images/twofa-helpdesk-frontend"
+    tag: ""
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 
