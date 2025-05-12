@@ -10,7 +10,7 @@ metadata:
     {{- $mergedLabels := merge $otherLabels $commonLabels}}
     {{- toYaml $mergedLabels | nindent 4 }}
 spec:
-  replicas: {{ .Values.twofaFrontendUi.replicaCount }}
+  replicas: {{ .Values.twofaHelpdeskFrontend.replicaCount }}
   selector:
     matchLabels:
       app: {{ printf "%s" (include "common.names.fullname" .) }}
@@ -26,21 +26,21 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
-      {{- with .Values.twofaFrontendUi.affinity }}
+      {{- with .Values.twofaHelpdeskFrontend.affinity }}
       affinity:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- with .Values.twofaFrontendUi.tolerations }}
+      {{- with .Values.twofaHelpdeskFrontend.tolerations }}
       tolerations:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- with .Values.twofaFrontendUi.nodeSelector }}
+      {{- with .Values.twofaHelpdeskFrontend.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- if .Values.twofaFrontendUi.imagePullSecrets }}
+      {{- if .Values.twofaHelpdeskFrontend.imagePullSecrets }}
       imagePullSecrets:
-        {{- range .Values.twofaFrontendUi.imagePullSecrets }}
+        {{- range .Values.twofaHelpdeskFrontend.imagePullSecrets }}
         - name: "{{ . }}"
         {{- end }}
       {{- end }}
@@ -50,12 +50,12 @@ spec:
           medium: Memory
       containers:
       - name: "twofa-backend-api"
-        {{- if .Values.twofaFrontendUi.securityContext.enabled }}
+        {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
         securityContext:
-          {{- omit .Values.twofaFrontendUi.securityContext "enabled" | toYaml  | nindent 12 }}
+          {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
         {{- end }}
-        image: "{{ coalesce .Values.twofaFrontendUi.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaFrontendUi.image.repository }}{{ if .Values.twofaFrontendUi.image.sha256 }}@sha256:{{ .Values.twofaFrontendUi.image.sha256 }}{{ else }}:{{ .Values.twofaFrontendUi.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.twofaFrontendUi.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
+        image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
         ports:
         - containerPort: 80
         volumeMounts:
@@ -65,29 +65,29 @@ spec:
         envFrom:
           - configMapRef:
               name: {{ printf "%s-config" (include "common.names.fullname" .) }}
-        {{- if .Values.twofaFrontendUi.probes.liveness.enabled }}
+        {{- if .Values.twofaHelpdeskFrontend.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
             path: /ui/
             port: 80
-          initialDelaySeconds: {{ .Values.twofaFrontendUi.probes.liveness.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.twofaFrontendUi.probes.liveness.timeoutSeconds }}
-          periodSeconds: {{ .Values.twofaFrontendUi.probes.liveness.periodSeconds }}
-          failureThreshold: {{ .Values.twofaFrontendUi.probes.liveness.failureThreshold }}
-          successThreshold: {{ .Values.twofaFrontendUi.probes.liveness.successThreshold }}
+          initialDelaySeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskFrontend.probes.liveness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskFrontend.probes.liveness.successThreshold }}
         {{- end }}
-        {{- if .Values.twofaFrontendUi.probes.readiness.enabled }}
+        {{- if .Values.twofaHelpdeskFrontend.probes.readiness.enabled }}
         readinessProbe:
           httpGet:
             path: /ui/
             port: 80
-          initialDelaySeconds: {{ .Values.twofaFrontendUi.probes.readiness.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.twofaFrontendUi.probes.readiness.timeoutSeconds }}
-          periodSeconds: {{ .Values.twofaFrontendUi.probes.readiness.periodSeconds }}
-          failureThreshold: {{ .Values.twofaFrontendUi.probes.readiness.failureThreshold }}
-          successThreshold: {{ .Values.twofaFrontendUi.probes.readiness.successThreshold }}
+          initialDelaySeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskFrontend.probes.readiness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskFrontend.probes.readiness.successThreshold }}
         {{- end }}
         resources:
-          {{- toYaml .Values.twofaFrontendUi.resources | nindent 10 }}
+          {{- toYaml .Values.twofaHelpdeskFrontend.resources | nindent 10 }}
 
 ...

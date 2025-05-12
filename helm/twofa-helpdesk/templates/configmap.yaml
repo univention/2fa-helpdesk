@@ -6,28 +6,28 @@ metadata:
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
-    {{- if .Values.twofaBackendApi.extraLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.twofaBackendApi.extraLabels "context" . ) | nindent 4 }}
+    {{- if .Values.twofaHelpdeskBackend.extraLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.twofaHelpdeskBackend.extraLabels "context" . ) | nindent 4 }}
     {{- end }}
-  {{- if .Values.twofaBackendApi.extraAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.twofaBackendApi.extraAnnotations "context" . ) | nindent 4 }}
+  {{- if .Values.twofaHelpdeskBackend.extraAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.twofaHelpdeskBackend.extraAnnotations "context" . ) | nindent 4 }}
   {{- end }}
 data:
-  OIDC_HOST: "{{ .Values.twofaBackendApi.config.oidc_host }}"
-  OIDC_REALM: "{{ .Values.twofaBackendApi.config.oidc_realm }}"
-  OIDC_CLIENT_ID: "{{ .Values.twofaBackendApi.config.oidc_client }}"
+  OIDC_HOST: "{{ .Values.twofaHelpdeskBackend.config.oidc_host }}"
+  OIDC_REALM: "{{ .Values.twofaHelpdeskBackend.config.oidc_realm }}"
+  OIDC_CLIENT_ID: "{{ .Values.twofaHelpdeskBackend.config.oidc_client }}"
 
   UDM_USERNAME: ""
   UDM_PASSWORD: ""
   UDM_HOST: "http://ums-udm-rest-api:9979" # FIXME
 
   # Keycloak configuration
-  KEYCLOAK_URL: "{{ .Values.twofaBackendApi.config.keycloak_url }}"
-  KEYCLOAK_USERNAME: "{{ .Values.twofaBackendApi.config.keycloak_admin_user }}"
-  KEYCLOAK_REALM_NAME: "{{ .Values.twofaBackendApi.config.keycloak_user_realm }}"
+  KEYCLOAK_URL: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
+  KEYCLOAK_USERNAME: "{{ .Values.twofaHelpdeskBackend.config.keycloak_admin_user }}"
+  KEYCLOAK_REALM_NAME: "{{ .Values.twofaHelpdeskBackend.config.keycloak_user_realm }}"
   KEYCLOAK_ADMIN_REALM_NAME: master
 
-  TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaBackendApi.config.twofa_admin_groups }}
+  TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaHelpdeskBackend.config.twofa_admin_groups }}
 
   PREFIX: "/backend"
 ...
