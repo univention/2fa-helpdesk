@@ -23,6 +23,10 @@ include:
 container-build:
   parallel:
     matrix: *build-matrix
+  variables:
+    KANIKO_BUILD_CONTEXT: "$CI_PROJECT_DIR"
+    DOCKERFILE_PATH: "docker/${IMAGE_NAME}/Dockerfile"
+
 container-malware-scan:
   parallel:
     matrix: *publish-matrix
