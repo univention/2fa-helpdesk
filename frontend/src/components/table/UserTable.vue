@@ -213,21 +213,21 @@ table {
 }
 
 thead {
-  background-color: var(--table-header-bg);
-  border-bottom: 2px solid var(--table-border-color);
+  background-color: var(--bgc-table-row-bg);
+  border-bottom: 2px solid var(--bgc-table-seperator);
 }
 
 th {
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
-  color: var(--table-header-text);
+  color: var(--font-color-contrast-high);
   white-space: nowrap;
 }
 
 td {
   padding: 0.75rem 1rem;
-  border-bottom: 2px solid var(--table-border-color);
+  border-bottom: 2px solid var(--bgc-table-seperator);
   text-align: left;
   vertical-align: middle;
   overflow: hidden;
@@ -240,21 +240,25 @@ tbody tr:last-child td {
 }
 
 tbody tr:hover {
-  background-color: var(--table-row-hover-bg);
+  background-color: color-mix(
+    in srgb,
+    var(--bgc-content-container) 80%,
+    var(--font-color-contrast-high) 5%
+  );
 }
 
 tr {
   height: 3.75rem;
   max-height: 3.75rem;
   box-sizing: border-box;
-  background-color: var(--table-row-bg);
+  background-color: var(--bgc-content-container);
 }
 
 .loading,
 .no-results {
   padding: 2rem 0;
   text-align: center;
-  color: var(--text-color-muted);
+  color: var(---font-color-contrast-middle);
 }
 
 th:nth-child(1),

@@ -167,7 +167,7 @@ const onGo = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--pagination-bg);
+  background-color: var(--bgc-table-row-bg);
   padding: 0.75rem 1.5rem;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -181,7 +181,7 @@ const onGo = () => {
   cursor: pointer;
   transition: all 0.2s;
   font-size: 0.875rem;
-  color: var(--pagination-text);
+  color: var(--font-color-contrast-high);
 }
 .pagination-button:hover:not(.page-number) {
   text-decoration: underline;
@@ -194,12 +194,32 @@ const onGo = () => {
 
 .page-number {
   border: 1px solid transparent;
-  color: var(--pagination-text);
+  color: var(--font-color-contrast-high);
 }
 .page-number.active {
   background-color: var(--pagination-active-bg);
-  color: var(--pagination-active-text);
-  border-color: var(--pagination-active-border);
+  background-color: color-mix(
+    in srgb,
+    var(--bgc-pagination-button-bg) 80%,
+    var(--font-color-contrast-high) 20%
+  );
+  color: var(--font-color-contrast-high);
+  border-color: color-mix(
+    in srgb,
+    var(--bgc-pagination-button-bg) 80%,
+    var(--font-color-contrast-high) 50%
+  );
+}
+.page-number:focus {
+  border: 1px solid var(--color-focus);
+  outline: 1px solid var(--color-focus);
+}
+.page-number:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--bgc-pagination-button-bg) 80%,
+    var(--font-color-contrast-high) 10%
+  );
 }
 
 .pagination-ellipsis {

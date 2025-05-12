@@ -3,95 +3,13 @@
  * This file combines theme variables and base styling
  */
 
-/* ===== THEME VARIABLES ===== */
-:root {
-  /* Gray Scale */
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-gray-100: #f9f9f9;
-  --color-gray-200: #f6f7f9;
-  --color-gray-300: #eeeff2;
-  --color-gray-400: #e5e7eb;
-  --color-gray-500: #d1d5db;
-  --color-gray-600: #d3d7de;
-  --color-gray-700: #64748b;
-  --color-gray-800: #242424;
-  --color-gray-900: #213547;
-  --color-gray-950: #111827;
-
-  /* Blues / Primary */
-  --color-indigo-100: #f1eeff;
-  --color-indigo-200: #dcd2fe;
-  --color-indigo-600: #4f46e5;
-  --color-indigo-700: #4338ca;
-  --color-indigo-800: #2f1088;
-  --color-indigo-900: #203257;
-
-  /* Links */
-  --color-link-base: #646cff;
-  --color-link-hover-base: #535bf2;
-  --color-link-light-hover-base: #747bff;
-
-  /* Transparent */
-  --color-black-t-10: rgba(0, 0, 0, 0.1);
-  --color-black-t-50: rgba(0, 0, 0, 0.5);
-  --color-white-t-87: rgba(255, 255, 255, 0.87);
-
-  /* Base */
-  --color-background-base: var(--color-gray-300);
-
-  /* Brand/Primary Colors */
-  --color-primary: var(--color-indigo-700);
-  --color-primary-hover: var(--color-indigo-600);
-  --color-secondary: var(--color-indigo-900);
-
-  /* UI Element Colors */
-  --modal-backdrop-bg: var(--color-black-t-50);
-  --modal-content-bg: var(--color-white);
-  --modal-content-shadow: var(--color-black-t-10);
-  --modal-body-text: var(--color-secondary);
-  --modal-title-text: var(--color-primary);
-
-  --button-primary-bg: var(--color-primary-hover);
-  --button-primary-hover-bg: var(--color-primary);
-  --button-primary-text: var(--color-white);
-  --button-secondary-bg: var(--color-gray-400);
-  --button-secondary-hover-bg: var(--color-gray-500);
-  --button-secondary-text: var(--color-gray-950);
-  --button-light-bg: var(--color-gray-100);
-
-  --input-border-color: var(--color-gray-600);
-  --input-focus-outline: var(--color-secondary);
-  --input-placeholder-color: var(--color-secondary);
-  --input-icon-color: var(--color-secondary);
-
-  --table-header-bg: var(--color-white);
-  --table-header-text: var(--color-secondary);
-  --table-border-color: var(--color-background-base);
-  --table-row-bg: var(--color-white);
-  --table-row-hover-bg: var(--color-indigo-100);
-  --table-row-selected-bg: var(--table-row-hover-bg);
-
-  --pagination-bg: var(--color-white);
-  --pagination-text: var(--color-secondary);
-  --pagination-active-bg: var(--color-gray-200);
-  --pagination-active-text: var(--color-indigo-800);
-  --pagination-active-border: var(--color-indigo-200);
-
-  /* Text Colors */
-  --text-color-default: var(--color-secondary);
-  --text-color-heading: var(--color-primary);
-  --text-color-muted: var(--color-gray-700);
-  --text-color-light-high-contrast: var(--color-white-t-87);
-  --text-color-dark-high-contrast: var(--color-gray-800);
-  --text-color-light-primary: var(--color-gray-900);
-
-  /* Link Colors */
-  --color-link: var(--color-link-base);
-  --color-link-hover: var(--color-link-hover-base);
-  --color-link-light-hover: var(--color-link-light-hover-base);
+/* ===== IMPORT THEME VARIABLES ===== */
+@import url(./styles/portal-theme.css);
+:root{
+  --bgc-table-seperator: var(--bgc-content-body);
+  --bgc-table-row-bg: var(--bgc-content-container);
+  --bgc-pagination-button-bg: var(--bgc-content-container);
 }
-
 /* ===== BASE STYLES ===== */
 *,
 *:before,
@@ -103,11 +21,9 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light;
-  /* Default to light theme variables */
-  color: var(--text-color-dark-high-contrast);
-  background-color: var(--color-background-base);
+  
+  color: var(--font-color-contrast-high);
+  background-color: var(--bgc-content-body);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -117,7 +33,6 @@
 
 a {
   font-weight: 500;
-  color: var(--color-link);
   text-decoration: inherit;
 }
 a:hover {

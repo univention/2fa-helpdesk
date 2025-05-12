@@ -93,7 +93,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--modal-backdrop-bg);
+  background-color: var(--bgc-underlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -101,11 +101,11 @@ export default {
 }
 
 .modal-content {
-  background-color: var(--modal-content-bg);
+  background-color: var(--bgc-content-container);
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
-  box-shadow: 0 4px 6px var(--modal-content-shadow);
+  box-shadow: 0 4px 6px var(--box-shadow);
   overflow: hidden;
   padding: 24px;
 }
@@ -118,7 +118,7 @@ export default {
 .modal-body {
   padding: 0;
   font-size: 1rem;
-  color: var(--modal-body-text);
+  color: var(--font-color-contrast-high);
   line-height: 1.5;
   margin-top: 12px;
   margin-bottom: 24px;
@@ -134,7 +134,7 @@ export default {
 }
 
 h3.modal-title {
-  color: var(--modal-title-text);
+  color: var(--font-color-contrast-high);
   font-size: 1.5rem;
   display: block;
 }
