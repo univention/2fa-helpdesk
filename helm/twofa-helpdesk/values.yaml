@@ -92,7 +92,7 @@ ingress:
         # enabled: true
         secretName: ""
 
-twofaBackendApi:
+twofaHelpdeskBackend:
   affinity: {}
   environment: {}
   fullnameOverride: ""
@@ -188,7 +188,7 @@ twofaBackendApi:
       storageClass: ""
       size: "1Gi"
 
-twofaFrontendUi:
+twofaHelpdeskFrontend:
   affinity: {}
   environment: {}
   fullnameOverride: ""

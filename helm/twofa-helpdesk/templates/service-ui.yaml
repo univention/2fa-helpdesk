@@ -1,4 +1,4 @@
-{{- if .Values.twofaFrontendUi.service.enabled }}
+{{- if .Values.twofaHelpdeskFrontend.service.enabled }}
 ---
 
 apiVersion: "v1"
@@ -12,20 +12,20 @@ metadata:
     {{- $mergedLabels := merge $uiLabels $commonLabels}}
     {{- toYaml $mergedLabels | nindent 4 }}
 spec:
-  type: {{ .Values.twofaFrontendUi.service.type }}
-  {{- if .Values.twofaFrontendUi.service.sessionAffinity.enabled }}
+  type: {{ .Values.twofaHelpdeskFrontend.service.type }}
+  {{- if .Values.twofaHelpdeskFrontend.service.sessionAffinity.enabled }}
   sessionAffinity: "ClientIP"
   sessionAffinityConfig:
     clientIP:
-      timeoutSeconds: {{ .Values.twofaFrontendUi.service.sessionAffinity.timeoutSeconds }}
+      timeoutSeconds: {{ .Values.twofaHelpdeskFrontend.service.sessionAffinity.timeoutSeconds }}
   {{- end }}
   ports:
-    {{- range $key, $value := .Values.twofaFrontendUi.service.ports }}
+    {{- range $key, $value := .Values.twofaHelpdeskFrontend.service.ports }}
     - port: {{ $value.port }}
       targetPort: 80
       protocol: {{ $value.protocol }}
       name: {{ $key }}
-      {{- if and (eq $.Values.twofaFrontendUi.service.type "NodePort") $value.nodePort }}
+      {{- if and (eq $.Values.twofaHelpdeskFrontend.service.type "NodePort") $value.nodePort }}
       nodePort: {{ $value.nodePort }}
       {{- end }}
     {{- end }}

@@ -10,7 +10,7 @@ metadata:
     {{- $mergedLabels := merge $otherLabels $commonLabels}}
     {{- toYaml $mergedLabels | nindent 4 }}
 spec:
-  replicas: {{ .Values.twofaBackendApi.replicaCount }}
+  replicas: {{ .Values.twofaHelpdeskBackend.replicaCount }}
   selector:
     matchLabels:
       app: {{ printf "%s" (include "common.names.fullname" .) }}
@@ -26,32 +26,32 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
-      {{- with .Values.twofaBackendApi.affinity }}
+      {{- with .Values.twofaHelpdeskBackend.affinity }}
       affinity:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- with .Values.twofaBackendApi.tolerations }}
+      {{- with .Values.twofaHelpdeskBackend.tolerations }}
       tolerations:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- with .Values.twofaBackendApi.nodeSelector }}
+      {{- with .Values.twofaHelpdeskBackend.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- if .Values.twofaBackendApi.imagePullSecrets }}
+      {{- if .Values.twofaHelpdeskBackend.imagePullSecrets }}
       imagePullSecrets:
-        {{- range .Values.twofaBackendApi.imagePullSecrets }}
+        {{- range .Values.twofaHelpdeskBackend.imagePullSecrets }}
         - name: "{{ . }}"
         {{- end }}
       {{- end }}
       containers:
       - name: "twofa-backend-api"
-        {{- if .Values.twofaBackendApi.securityContext.enabled }}
+        {{- if .Values.twofaHelpdeskBackend.securityContext.enabled }}
         securityContext:
-          {{- omit .Values.twofaBackendApi.securityContext "enabled" | toYaml  | nindent 12 }}
+          {{- omit .Values.twofaHelpdeskBackend.securityContext "enabled" | toYaml  | nindent 12 }}
         {{- end }}
-        image: "{{ coalesce .Values.twofaBackendApi.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaBackendApi.image.repository }}{{ if .Values.twofaBackendApi.image.sha256 }}@sha256:{{ .Values.twofaBackendApi.image.sha256 }}{{ else }}:{{ .Values.twofaBackendApi.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.twofaBackendApi.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
+        image: "{{ coalesce .Values.twofaHelpdeskBackend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskBackend.image.repository }}{{ if .Values.twofaHelpdeskBackend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskBackend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskBackend.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskBackend.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
 
         ports:
         - containerPort: 8080
@@ -65,29 +65,29 @@ spec:
               secretKeyRef:
                 name: ums-opendesk-keycloak-credentials # FIXME: use nubus-common.secrets?? where docs, were banana
                 key: admin_password
-        {{- if .Values.twofaBackendApi.probes.liveness.enabled }}
+        {{- if .Values.twofaHelpdeskBackend.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
             path: /backend/
             port: 8080
-          initialDelaySeconds: {{ .Values.twofaBackendApi.probes.liveness.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.twofaBackendApi.probes.liveness.timeoutSeconds }}
-          periodSeconds: {{ .Values.twofaBackendApi.probes.liveness.periodSeconds }}
-          failureThreshold: {{ .Values.twofaBackendApi.probes.liveness.failureThreshold }}
-          successThreshold: {{ .Values.twofaBackendApi.probes.liveness.successThreshold }}
+          initialDelaySeconds: {{ .Values.twofaHelpdeskBackend.probes.liveness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskBackend.probes.liveness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskBackend.probes.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskBackend.probes.liveness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskBackend.probes.liveness.successThreshold }}
         {{- end }}
-        {{- if .Values.twofaBackendApi.probes.readiness.enabled }}
+        {{- if .Values.twofaHelpdeskBackend.probes.readiness.enabled }}
         readinessProbe:
           httpGet:
             path: /backend/
             port: 8080
-          initialDelaySeconds: {{ .Values.twofaBackendApi.probes.readiness.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.twofaBackendApi.probes.readiness.timeoutSeconds }}
-          periodSeconds: {{ .Values.twofaBackendApi.probes.readiness.periodSeconds }}
-          failureThreshold: {{ .Values.twofaBackendApi.probes.readiness.failureThreshold }}
-          successThreshold: {{ .Values.twofaBackendApi.probes.readiness.successThreshold }}
+          initialDelaySeconds: {{ .Values.twofaHelpdeskBackend.probes.readiness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskBackend.probes.readiness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskBackend.probes.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskBackend.probes.readiness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskBackend.probes.readiness.successThreshold }}
         {{- end }}
         resources:
-          {{- toYaml .Values.twofaBackendApi.resources | nindent 10 }}
+          {{- toYaml .Values.twofaHelpdeskBackend.resources | nindent 10 }}
 
 ...
