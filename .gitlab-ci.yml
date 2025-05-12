@@ -40,6 +40,6 @@ push-image-external:
   parallel:
     matrix: *publish-matrix
 
-package-helm-charts:
-  variables:
-    SKIP_UPDATE_HELM_VALUES: 1
+# package-helm-charts:
+#   variables:
+#     SKIP_UPDATE_HELM_VALUES: 1
