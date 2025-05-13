@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ums-twofa-backend
+  namespace: yschmidt-opendesk
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod-http
+  labels:
+    app.kubernetes.io/name: twofa-helpdesk-backend
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: twofa-backend.yschmidt-opendesk.univention.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: twofa-helpdesk-service
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - twofa-backend.yschmidt-opendesk.univention.dev
+      secretName: twofa-backend-tls

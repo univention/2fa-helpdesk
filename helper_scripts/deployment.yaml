@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 2fa-helpdesk-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 2fa-helpdesk-backend
+  template:
+    metadata:
+      labels:
+        app: 2fa-helpdesk-backend
+    spec:
+      containers:
+      - name: 2fa-helpdesk-backend
+        image: harbor-registry.atlantishq.de/atlantishq/2fa-backend
+        envFrom:
+        - configMapRef:
+            name: 2fa-helpdesk-env

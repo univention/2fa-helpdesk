@@ -1,0 +1,93 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ printf "%s-ui" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
+    {{- $mergedLabels := merge $otherLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
+spec:
+  replicas: {{ .Values.twofaHelpdeskFrontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ printf "%s" (include "common.names.fullname" .) }}
+      {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+  template:
+    metadata:
+      labels:
+        app: {{ printf "%s" (include "common.names.fullname" .) }}
+        {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+        {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
+        {{- $mergedLabels := merge $otherLabels $commonLabels}}
+        {{- toYaml $mergedLabels | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      {{- with .Values.twofaHelpdeskFrontend.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.twofaHelpdeskFrontend.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.twofaHelpdeskFrontend.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- if .Values.twofaHelpdeskFrontend.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.twofaHelpdeskFrontend.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+      {{- end }}
+      volumes:
+      - name: cache-tmpfs
+        emptyDir:
+          medium: Memory
+      containers:
+      - name: "twofa-backend-api"
+        {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
+        securityContext:
+          {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
+        {{- end }}
+        image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: cache-tmpfs
+            mountPath: /var/cache/nginx
+        env:
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
+        {{- if .Values.twofaHelpdeskFrontend.probes.liveness.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /ui/
+            port: 80
+          initialDelaySeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskFrontend.probes.liveness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskFrontend.probes.liveness.successThreshold }}
+        {{- end }}
+        {{- if .Values.twofaHelpdeskFrontend.probes.readiness.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /ui/
+            port: 80
+          initialDelaySeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskFrontend.probes.readiness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskFrontend.probes.readiness.successThreshold }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.twofaHelpdeskFrontend.resources | nindent 10 }}
+
+...

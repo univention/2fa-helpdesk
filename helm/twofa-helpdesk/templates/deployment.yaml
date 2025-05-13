@@ -1,0 +1,93 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ printf "%s" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+    {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
+    {{- $mergedLabels := merge $otherLabels $commonLabels}}
+    {{- toYaml $mergedLabels | nindent 4 }}
+spec:
+  replicas: {{ .Values.twofaHelpdeskBackend.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ printf "%s" (include "common.names.fullname" .) }}
+      {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+  template:
+    metadata:
+      labels:
+        app: {{ printf "%s" (include "common.names.fullname" .) }}
+        {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
+        {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
+        {{- $mergedLabels := merge $otherLabels $commonLabels}}
+        {{- toYaml $mergedLabels | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      {{- with .Values.twofaHelpdeskBackend.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.twofaHelpdeskBackend.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- with .Values.twofaHelpdeskBackend.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 | trim }}
+      {{- end }}
+      {{- if .Values.twofaHelpdeskBackend.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.twofaHelpdeskBackend.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+      {{- end }}
+      containers:
+      - name: "twofa-backend-api"
+        {{- if .Values.twofaHelpdeskBackend.securityContext.enabled }}
+        securityContext:
+          {{- omit .Values.twofaHelpdeskBackend.securityContext "enabled" | toYaml  | nindent 12 }}
+        {{- end }}
+        image: "{{ coalesce .Values.twofaHelpdeskBackend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskBackend.image.repository }}{{ if .Values.twofaHelpdeskBackend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskBackend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskBackend.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskBackend.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
+
+        ports:
+        - containerPort: 8080
+        env:
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
+        env:
+          - name: KEYCLOAK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ums-opendesk-keycloak-credentials # FIXME: use nubus-common.secrets?? where docs, were banana
+                key: admin_password
+        {{- if .Values.twofaHelpdeskBackend.probes.liveness.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /backend/
+            port: 8080
+          initialDelaySeconds: {{ .Values.twofaHelpdeskBackend.probes.liveness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskBackend.probes.liveness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskBackend.probes.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskBackend.probes.liveness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskBackend.probes.liveness.successThreshold }}
+        {{- end }}
+        {{- if .Values.twofaHelpdeskBackend.probes.readiness.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /backend/
+            port: 8080
+          initialDelaySeconds: {{ .Values.twofaHelpdeskBackend.probes.readiness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.twofaHelpdeskBackend.probes.readiness.timeoutSeconds }}
+          periodSeconds: {{ .Values.twofaHelpdeskBackend.probes.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.twofaHelpdeskBackend.probes.readiness.failureThreshold }}
+          successThreshold: {{ .Values.twofaHelpdeskBackend.probes.readiness.successThreshold }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.twofaHelpdeskBackend.resources | nindent 10 }}
+
+...
