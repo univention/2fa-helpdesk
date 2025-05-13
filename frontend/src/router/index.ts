@@ -3,6 +3,7 @@ import AdminPage from "@/pages/AdminPage.vue";
 import SelfServicePage from "@/pages/SelfServicePage.vue";
 import SwaggerPage from "@/pages/SwaggerPage.vue";
 import keycloak from "../services/keycloak";
+import { fetchWhoAmI } from "../services/whoami";
 
 const routes = [
   {
@@ -11,6 +12,7 @@ const routes = [
     meta: {
       title: "Administrator: 2FA zurücksetzen",
       requiresAuth: true,
+      adminOnly: true,   
     },
   },
   {
@@ -36,19 +38,31 @@ const router = createRouter({
 });
 
 // Navigation guard to update document title
-router.beforeEach((to, _from, next) => {
-  document.title = (to.meta.title as string) || "Vite + Vue + TS";
+router.beforeEach(async(to, _from, next) => {
+  document.title = (to.meta.title as string) || "2FA Reset";
 
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (keycloak.authenticated) {
-      next();
-    } else {
-      const loginOptions = { redirectUri: window.location.href };
-      keycloak.login(loginOptions);
+ if (to.meta.requiresAuth) {
+    if (!keycloak.authenticated) {
+      return keycloak.login({ redirectUri: window.location.href });
     }
-  } else {
-    next();
+
+    let info;
+    try {
+      info = await fetchWhoAmI();
+      console.log("Fetched whoami:", info);
+    } catch (err) {
+      console.error("Could not fetch whoami:", err);
+      return next(false);
+    }
+
+    if (to.meta.adminOnly && !info.twofa_admin) {
+      return next("/self-service");
+    }
+
+    return next();
   }
+
+  return next();
 });
 
 export default router;

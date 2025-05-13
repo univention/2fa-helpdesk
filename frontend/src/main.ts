@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import axios from "axios";
 import router from "./router";
 import { createPinia } from "pinia";
 import { loadCustomStyles } from "./utils/customStyles";
@@ -14,10 +15,12 @@ const app = createApp(App);
 app.use(createPinia());
 
 keycloak
-  .init({ onLoad: "login-required", checkLoginIframe: false })
+  .init({ onLoad: "login-required", checkLoginIframe: true })
   .then((authenticated) => {
     if (authenticated) {
-      console.log("Authenticated");
+  
+      axios.defaults.headers.common["Authorization"] = `Bearer ${keycloak.token}`;
+     
       app.use(router);
       app.mount("#app");
     } else {
