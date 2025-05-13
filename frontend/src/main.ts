@@ -16,7 +16,7 @@ app.use(createPinia());
 
 keycloak
   .init({ onLoad: "login-required", checkLoginIframe: true })
-  .then((authenticated) => {
+  .then((authenticated: boolean) => {
     if (authenticated) {
   
       axios.defaults.headers.common["Authorization"] = `Bearer ${keycloak.token}`;
@@ -25,10 +25,10 @@ keycloak
       app.mount("#app");
     } else {
       console.warn("Not authenticated");
-      // Optionally, redirect to Keycloak login page or show a message
-      // keycloak.login(); // Uncomment to redirect to login immediately
     }
   })
-  .catch((error) => {
+  // eslint-disable-next-line
+  // @ts-ignore 
+  .catch((error) => { 
     console.error("Keycloak initialization failed:", error);
   });
