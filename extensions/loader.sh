@@ -10,7 +10,7 @@ for source in /plugins/*; do
   target="/target/${plugin_type}"
   if [ -d "${target}" ]; then
     echo "COPY - Plugin type ${plugin_type} in /target, copying files."
-    cp -av --no-preserve=all "${source}" /target
+    cp -rv "${source}" /target
   else
     echo "SKIP - Plugin type ${plugin_type} not in /target, skipping."
   fi
