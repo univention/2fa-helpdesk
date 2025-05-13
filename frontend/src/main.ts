@@ -2,12 +2,11 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import { createPinia } from "pinia";
-import { initCustomStyles } from "./utils/customStyles";
+import { loadCustomStyles } from "./utils/customStyles";
 
 import "./base-styles.css";
 
-// Initialize custom styles
-await initCustomStyles();
+loadCustomStyles();
 
 const app = createApp(App);
 
