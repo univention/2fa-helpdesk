@@ -8,14 +8,16 @@ FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
 WORKDIR /
 
 # Copy plugins of the packaged integration to the Docker image
-COPY plugins /plugins
+COPY ./extensions/plugins /plugins
 # Copy the plugin loader to the Docker image
-COPY docker/loader.sh /bin/loader
+COPY /extensions/loader.sh /bin/loader
 
-RUN chmod -R a+rX /plugins
+RUN chmod -R a+rwX /plugins
 RUN chmod a+rx /bin/loader
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN addgroup -S appgroup
+RUN adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /plugins
 USER appuser
 
 CMD ["/bin/loader"]
