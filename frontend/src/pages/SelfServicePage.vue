@@ -36,7 +36,6 @@ import { ref } from "vue";
 import SimpleButton from "../components/Button.vue";
 import LanguageSelector from "../components/LanguageSelector.vue";
 import { useTranslations } from "../composables/useTranslations";
-import { Configuration, DefaultApi } from "../../api";
 
 const confirmReset = ref(false);
 const isResetting = ref(false);
@@ -47,33 +46,22 @@ const handleLanguageChange = (lang: string) => {
   setLanguage(lang);
 };
 
-const resetOwnToken = () => {
+const resetOwnToken = async () => {
   if (isResetting.value || !confirmReset.value) {
     return;
   }
 
   isResetting.value = true;
-  const config = new Configuration({
-    basePath: import.meta.env.VITE_API_URL,
-    accessToken: () => `Bearer ${import.meta.env.VITE_API_TOKEN || ""}`,
-  });
-
-  const apiClient = new DefaultApi(config);
-
-  apiClient
-    .resetOwnTokenTokenResetOwnPost()
-    .then((result) => {
-      console.log("Token reset successful:", result);
-      alert(t.value("tokenResetSuccess"));
-      confirmReset.value = false;
-    })
-    .catch((error) => {
-      console.error("Error resetting token:", error);
-      alert(t.value("tokenResetError"));
-    })
-    .then(() => {
-      isResetting.value = false;
-    });
+  try {
+    await resetOwnToken();
+    alert(t.value("tokenResetSuccess"));
+    confirmReset.value = false;
+  } catch (err) {
+    console.error("Error resetting token:", err);
+    alert(t.value("tokenResetError"));
+  } finally {
+    isResetting.value = false;
+  }
 };
 </script>
 
