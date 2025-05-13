@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     buttonClass() {
-      return `button btn-${this.variant} ${this.loading ? "" : ""}`;
+      return `button ${this.variant} ${this.loading ? "" : ""}`;
     },
   },
   methods: {
@@ -76,22 +76,25 @@ export default {
   height: 100%;
 }
 
-.btn-primary {
-  background-color: var(--button-primary-bg);
-  color: var(--button-primary-text);
+.primary {
+  background-color: var(--button-primary-bgc);
 }
 
-.btn-primary:hover {
-  background-color: var(--button-primary-hover-bg);
+.primary:hover {
+  background-color: var(--button-primary-bgc-hover);
 }
 
-.btn-secondary {
-  background-color: var(--button-secondary-bg);
-  color: var(--button-secondary-text);
+.secondary {
+  background-color: var(--button-bgc);
+  color: var(--font-color-contrast-high);
 }
 
-.btn-secondary:hover {
-  background-color: var(--button-secondary-hover-bg);
+.secondary:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--button-bgc) 80%,
+    var(--font-color-contrast-high) 10%
+  );
 }
 
 .button:disabled {
@@ -103,9 +106,9 @@ export default {
   display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--font-color-contrast-medium);
   border-radius: 50%;
-  border-top-color: #fff;
+  border-top-color: var(--font-color-contrast-high);
   animation: spin 1s ease-in-out infinite;
   margin-right: 0.5rem;
   flex-shrink: 0;

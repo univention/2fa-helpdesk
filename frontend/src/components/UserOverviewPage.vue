@@ -41,7 +41,6 @@ onMounted(() => {
       v-model:search-query="searchQuery"
       :users="users"
       :loading="loading"
-      :page-size="20"
       :current-page="currentPage"
       :total-pages="totalPages"
       @select-users="handleSelectedUsers"

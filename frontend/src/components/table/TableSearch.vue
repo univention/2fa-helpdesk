@@ -76,20 +76,21 @@ function onInput(event: Event) {
   display: block;
   padding: 0.5rem 0.75rem;
   padding-right: 2rem;
-  border: 1px solid var(--input-border-color);
+  border: 1px solid var(--font-color-contrast-low);
+  background-color: var(--bgc-inputfield-on-body);
   border-radius: 8px;
   font-weight: 500;
   outline: none;
   transition: border-color 0.2s;
-  color: var(--text-color-default);
+  color: var(--font-color-contrast-high);
 }
 
 .search-input:focus {
-  outline: 2px solid var(--input-focus-outline);
+  outline: 2px solid var(--color-focus);
 }
 
 .search-input::placeholder {
-  color: var(--input-placeholder-color);
+  color: var(---font-color-contrast-medium);
 }
 .search-icon {
   display: block;
@@ -97,6 +98,6 @@ function onInput(event: Event) {
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--input-icon-color);
+  color: var(-font-color-contrast-high);
 }
 </style>

@@ -39,15 +39,15 @@ const changeLanguage = () => {
 .language-dropdown {
   padding: 0.5rem;
   border-radius: 4px;
-  border: 1px solid var(--border-color, #ccc);
-  background-color: var(--input-bg, #fff);
-  color: var(--text-color-default, #333);
+  border: 1px solid var(--font-color-contrast-low);
+  background-color: var(--bgc-inputfield-on-body);
+  color: var(--font-color-contrast-high);
   cursor: pointer;
   font-size: 0.9rem;
 }
 
 .language-dropdown:focus {
   outline: none;
-  border-color: var(--primary-color, var(--button-primary-bg));
+  border-color: var(--color-focus);
 }
 </style>

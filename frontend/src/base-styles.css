@@ -1,3 +1,16 @@
+/**
+ * Base Styles for 2FA Helpdesk
+ * This file combines theme variables and base styling
+ */
+
+/* ===== IMPORT THEME VARIABLES ===== */
+@import url(./styles/portal-theme.css);
+:root{
+  --bgc-table-seperator: var(--bgc-content-body);
+  --bgc-table-row-bg: var(--bgc-content-container);
+  --bgc-pagination-button-bg: var(--bgc-content-container);
+}
+/* ===== BASE STYLES ===== */
 *,
 *:before,
 *:after {
@@ -8,11 +21,9 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  /* Default to light theme variables */
-  color: var(--text-color-dark-high-contrast);
-  background-color: var(--color-background-base);
+  
+  color: var(--font-color-contrast-high);
+  background-color: var(--bgc-content-body);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,26 +31,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Apply dark theme variables when system preference is dark */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Variables are now defined in theme.css, just ensure base colors are set */
-    color: var(--text-color-light-high-contrast);
-    background-color: var(--color-background-base);
-  }
-}
-
-/* Apply light theme variables explicitly for light scheme */
-@media (prefers-color-scheme: light) {
-  :root {
-    color: var(--text-color-dark-high-contrast);
-    background-color: var(--color-background-base);
-  }
-}
-
 a {
   font-weight: 500;
-  color: var(--color-link);
   text-decoration: inherit;
 }
 a:hover {
@@ -87,16 +80,4 @@ button:focus-visible {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
-
-/* Specific overrides for light theme button (if needed, Button.vue handles variants) */
-@media (prefers-color-scheme: light) {
-  /* :root variables already set base colors */
-  a:hover {
-    color: var(--color-link-light-hover);
-  }
-  /* Default button style might need adjustment if not using variants */
-  /* button {
-    background-color: var(--button-light-bg);
-  } */
 }
