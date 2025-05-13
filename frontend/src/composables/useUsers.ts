@@ -6,7 +6,7 @@ export function useUsers() {
   const loading = ref(true);
   const error = ref<Error | null>(null);
   const searchQuery = ref(""); 
-  const initialPerPage = 2;
+  const initialPerPage = 20;
   const currentPage = ref(1);
   const perPage = ref(initialPerPage);
   const totalPages = ref(1);
