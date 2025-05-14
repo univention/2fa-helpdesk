@@ -22,6 +22,9 @@ include:
 .publish-matrix: &publish-matrix
   - IMAGE_NAME:
       - "twofa-helpdesk-backend"
+      - "twofa-helpdesk-frontend"
+      - "twofa-helpdesk-extensions"
+
 container-build:
   parallel:
     matrix: *build-matrix
