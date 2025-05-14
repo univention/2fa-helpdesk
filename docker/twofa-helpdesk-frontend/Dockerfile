@@ -1,21 +1,12 @@
-# Stage 1: Build the app
-FROM node:20 AS builder
-
+# Step 1: Build the app
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-COPY ./frontend/package.json ./frontend/yarn.lock ./
-RUN yarn install
-
 COPY ./frontend .
-RUN yarn build
+RUN yarn install --frozen-lockfile && yarn build
 
-# Stage 2: Serve the app
+# Step 2: Serve with nginx
 FROM nginx:stable-alpine
+COPY --from=builder /app/dist /usr/share/nginx/html/ui
 
-# Copy built assets from the previous stage
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy our custom nginx config
-COPY ./frontend/nginx.conf /etc/nginx/nginx.conf
-
-CMD ["nginx", "-g", "daemon off;"]
+# Set up nginx config
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
