@@ -10,6 +10,10 @@ import "./base-styles.css";
 
 loadCustomStyles();
 
+;(window as any).__ENV = Object.fromEntries(
+  Object.entries(import.meta.env).filter(([k]) => k.startsWith("VITE_"))
+)
+console.log((window as any).__ENV)
 const app = createApp(App);
 
 app.use(createPinia());

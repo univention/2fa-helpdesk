@@ -1,5 +1,6 @@
 import { ref, watch } from "vue";
 import { type UserData } from "../types";
+import { getFreshToken } from "@/services/getFreshToken";
 
 export function useUsers() {
   const users = ref<UserData[]>([]);
@@ -23,12 +24,14 @@ export function useUsers() {
     }).toString();
     
     const endpoint = `${import.meta.env.VITE_API_URL}/list_users?${params}`;
+    const token = await getFreshToken();
+    
     try {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           query: searchQuery.value, 

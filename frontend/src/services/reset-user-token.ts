@@ -1,6 +1,6 @@
 import axios from "axios";
-// import { getFreshToken } from "./getFreshToken";
 import type { UserData } from "../types";
+import { getFreshToken } from "./getFreshToken";
 
 let isResetting = false;
 

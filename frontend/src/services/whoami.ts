@@ -1,6 +1,6 @@
 // src/services/user.ts
 import axios from "axios";
-// import { getFreshToken } from "./getFreshToken";
+import { getFreshToken } from "./getFreshToken";
 
 interface WhoAmI {
   success: boolean;
@@ -11,7 +11,7 @@ let _whoami: Promise<WhoAmI> | null = null;
 
 export async function fetchWhoAmI(): Promise<WhoAmI> {
 
-  const token = "test" // await getFreshToken();
+  const token = await getFreshToken();
 
   if (!_whoami) {
     _whoami = axios
