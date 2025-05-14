@@ -24,7 +24,7 @@ properties:
 ---
 action: ensure_list_contains
 module: portals/category
-position: cn=domain-service,cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
+position: cn=od.applications,cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
 properties:
   entries:
   - cn=twofaSelfservice,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
