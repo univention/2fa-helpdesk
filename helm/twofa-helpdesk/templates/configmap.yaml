@@ -30,4 +30,10 @@ data:
   TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaHelpdeskBackend.config.twofa_admin_groups }}
 
   PREFIX: "/backend"
+
+  VITE_API_URL: /backend
+  VITE_API_TOKEN: test
+  VITE_KEYCLOAK_URL: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
+  VITE_KEYCLOAK_REALM: "{{ .Values.twofaHelpdeskBackend.config.keycloak_user_realm }}"
+  VITE_KEYCLOAK_CLIENT_ID: "chrissytest"
 ...

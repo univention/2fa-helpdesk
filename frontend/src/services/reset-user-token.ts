@@ -18,7 +18,7 @@ export async function resetUserToken(
   console.log("Resetting token for user:", selectedUser);
 
   try {
-    const token = "test" //await getFreshToken();
+    const token = await getFreshToken();
     const url =
       `${import.meta.env.VITE_API_URL || "/backend"}` +
       `/token/reset/user/`;
