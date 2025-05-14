@@ -4,35 +4,40 @@ import axios from "axios";
 import router from "./router";
 import { createPinia } from "pinia";
 import { loadCustomStyles } from "./utils/customStyles";
-import keycloak from "./services/keycloak";
+
+import {
+  initKeycloak,
+  //  getToken
+} from "./services/keycloak";
 
 import "./base-styles.css";
+import { loadConfig } from "./services/loadConfig";
 
 loadCustomStyles();
 
-;(window as any).__ENV = Object.fromEntries(
-  Object.entries(import.meta.env).filter(([k]) => k.startsWith("VITE_"))
-)
-console.log((window as any).__ENV)
-const app = createApp(App);
+loadConfig()
+  .then(() => {
+    const cfg = window.__APP_CONFIG__!;
+    axios.defaults.baseURL = cfg.VITE_API_URL;
 
-app.use(createPinia());
-
-keycloak
-  .init({ onLoad: "login-required", checkLoginIframe: true })
-  .then((authenticated: boolean) => {
-    if (authenticated) {
-  
-      axios.defaults.headers.common["Authorization"] = `Bearer ${keycloak.token}`;
-     
-      app.use(router);
-      app.mount("#app");
-    } else {
-      console.warn("Not authenticated");
-    }
+    return initKeycloak({
+      onLoad: "login-required",
+      checkLoginIframe: true,
+    });
   })
-  // eslint-disable-next-line
-  // @ts-ignore 
-  .catch((error) => { 
-    console.error("Keycloak initialization failed:", error);
+  .then((authenticated) => {
+    if (!authenticated) {
+      console.warn("Not authenticated");
+      return;
+    }
+    //  axios.defaults.headers.common["Authorization"] = `Bearer ${getToken()}`;
+    axios.defaults.headers.common["Authorization"] = `Bearer test`;
+
+    const app = createApp(App);
+    app.use(createPinia());
+    app.use(router);
+    app.mount("#app");
+  })
+  .catch((err) => {
+    console.error("❌ Startup failed:", err);
   });

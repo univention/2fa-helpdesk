@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import AdminPage from "@/pages/AdminPage.vue";
 import SelfServicePage from "@/pages/SelfServicePage.vue";
 import SwaggerPage from "@/pages/SwaggerPage.vue";
-import keycloak from "../services/keycloak";
 import { fetchWhoAmI } from "../services/whoami";
+import { isAuthenticated, login } from "@/services/keycloak";
 
 const routes = [
   {
@@ -12,7 +12,7 @@ const routes = [
     meta: {
       title: "Administrator: 2FA zurücksetzen",
       requiresAuth: true,
-      adminOnly: true,   
+      adminOnly: true,
     },
   },
   {
@@ -38,12 +38,12 @@ const router = createRouter({
 });
 
 // Navigation guard to update document title
-router.beforeEach(async(to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   document.title = (to.meta.title as string) || "2FA Reset";
 
- if (to.meta.requiresAuth) {
-    if (!keycloak.authenticated) {
-      return keycloak.login({ redirectUri: window.location.href });
+  if (to.meta.requiresAuth) {
+    if (!isAuthenticated()) {
+      return login({ redirectUri: window.location.href });
     }
 
     let info;

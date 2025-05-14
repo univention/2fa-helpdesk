@@ -1,7 +1,5 @@
 import axios from "axios";
 import type { UserData } from "../types";
-import { getFreshToken } from "./getFreshToken";
-
 let isResetting = false;
 
 export async function resetUserToken(
@@ -15,13 +13,9 @@ export async function resetUserToken(
   }
 
   isResetting = true;
-  console.log("Resetting token for user:", selectedUser);
 
   try {
-    const token = await getFreshToken();
-    const url =
-      `${import.meta.env.VITE_API_URL || "/backend"}` +
-      `/token/reset/user/`;
+    const url = "/token/reset/user/";
 
     await axios.post(
       url,
@@ -29,7 +23,6 @@ export async function resetUserToken(
       {
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${token}`,
         },
       }
     );

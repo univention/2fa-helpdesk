@@ -36,6 +36,7 @@ import { ref } from "vue";
 import SimpleButton from "../components/Button.vue";
 import LanguageSelector from "../components/LanguageSelector.vue";
 import { useTranslations } from "../composables/useTranslations";
+import { resetSelfServiceToken } from "@/services/resetOwnToken";
 
 const confirmReset = ref(false);
 const isResetting = ref(false);
@@ -53,7 +54,7 @@ const resetOwnToken = async () => {
 
   isResetting.value = true;
   try {
-    await resetOwnToken();
+    await resetSelfServiceToken();
     alert(t.value("tokenResetSuccess"));
     confirmReset.value = false;
   } catch (err) {
