@@ -7,7 +7,7 @@ import { loadCustomStyles } from "./utils/customStyles";
 
 import {
   initKeycloak,
-  //  getToken
+  getToken
 } from "./services/keycloak";
 
 import "./base-styles.css";
@@ -30,8 +30,8 @@ loadConfig()
       console.warn("Not authenticated");
       return;
     }
-    //  axios.defaults.headers.common["Authorization"] = `Bearer ${getToken()}`;
-    axios.defaults.headers.common["Authorization"] = `Bearer test`;
+    axios.defaults.headers.common["Authorization"] = `Bearer ${getToken()}`;
+    //axios.defaults.headers.common["Authorization"] = `Bearer test`;
 
     const app = createApp(App);
     app.use(createPinia());
