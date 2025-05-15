@@ -15,6 +15,7 @@ from pydantic_settings import BaseSettings
 import os
 import adapters.keycloak
 import adapters.udm
+import logging
 
 class ResetUsersRequest(BaseModel):
     user_ids: List[str]
@@ -50,6 +51,11 @@ class Settings(BaseSettings):
     jwks_url: pydantic.HttpUrl
     client_id: str
     permitted_jwt_audiences: List[str] = ["account"]
+
+
+# init logger #
+LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.DEBUG)
 
 #
 # Constants
@@ -92,6 +98,7 @@ def user_token(
     required_scopes: security.SecurityScopes,
 ):
 
+    LOG.debug(token_str)
     # Parse & validate token
     try:
         token = jwt.decode(
@@ -160,6 +167,7 @@ def is_2fa_admin(user_token: dict) -> bool:
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
 
     user_id = user_token["user_id"]
+    print(file=sys.stderr)
     results_count = adapters.keycloak.reset_2fa_token(user_id)
     return ResetResponse(
         success=True,
