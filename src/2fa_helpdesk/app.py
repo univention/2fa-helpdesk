@@ -162,12 +162,11 @@ def is_2fa_admin(user_token: dict) -> bool:
 @backend_app.post(
     "/token/reset/own/",
     dependencies=[Security(user_token, scopes=OIDC_DEFAULT_SCOPES)],
-    response_model=ListUserResponse,
+    response_model=ResetResponse,
 )
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
 
     user_id = user_token["user_id"]
-    print(file=sys.stderr)
     results_count = adapters.keycloak.reset_2fa_token(user_id)
     return ResetResponse(
         success=True,
