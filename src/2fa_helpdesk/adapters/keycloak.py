@@ -57,6 +57,9 @@ def reset_2fa_token(user_id: str) -> dict:
 def list_users(query: str, page: int, limit: int) -> typing.Tuple[list[User], int]:
     '''List users based on a query (paginated)'''
 
+    # FIXME: frontend current 1-indexes pages, is that correct?
+    page -= 1
+
     kc_admin = _get_kc_admin()
 
     # generate paginated query #
