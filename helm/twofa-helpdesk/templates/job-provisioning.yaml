@@ -76,21 +76,63 @@ spec:
           - /bin/bash
           - -c
           - |
-            echo wtf $KEYCLOAK_USERNAME $KEYCLOAK_PASSWORD && \
-            univention-keycloak \
-            --keycloak-url $KEYCLOAK_URL \
-            --realm $KEYCLOAK_REALM \
-            --binduser $KEYCLOAK_USERNAME \
-            --bindpwd $KEYCLOAK_PASSWORD \
-            oidc/rp create twofa-helpdesk \
-            --app-url https://$KEYCLOAK_APP_BASE_URL \
-            --redirect-uri $KEYCLOAK_APP_BASE_URL/frontend/* \
-            --audience-to-map guardian \
-            --admin-url $KEYCLOAK_APP_BASE_URL \
-            --host-fqdn $KEYCLOAK_HOST \
-            --public-client \
-            --default-scopes "basic" \
-            --web-origins $KEYCLOAK_APP_BASE_URL
+              univention-keycloak \
+                --keycloak-url "$KEYCLOAK_URL" \
+                --realm "$KEYCLOAK_REALM" \
+                --binduser "$KEYCLOAK_USERNAME" \
+                --bindpwd "$KEYCLOAK_PASSWORD" \
+                oidc/rp create twofa-helpdesk \
+                --app-url "https://$KEYCLOAK_APP_BASE_URL" \
+                --redirect-uri "$KEYCLOAK_APP_BASE_URL/frontend/*" \
+                --audience-to-map guardian \
+                --admin-url "$KEYCLOAK_APP_BASE_URL" \
+                --host-fqdn "$KEYCLOAK_HOST" \
+                --public-client \
+                --default-scopes "basic" \
+                --web-origins "$KEYCLOAK_APP_BASE_URL" \
+              && \
+              univention-keycloak \
+                --keycloak-url "$KEYCLOAK_URL" \
+                --realm "$KEYCLOAK_REALM" \
+                --binduser "$KEYCLOAK_USERNAME" \
+                --bindpwd "$KEYCLOAK_PASSWORD" \
+                oidc/scope create twofa-default \
+              && \
+              univention-keycloak \
+                --keycloak-url "$KEYCLOAK_URL" \
+                --realm "$KEYCLOAK_REALM" \
+                --binduser "$KEYCLOAK_USERNAME" \
+                --bindpwd "$KEYCLOAK_PASSWORD" \
+                oidc/scope/mapper create twofa-default \
+                --name groups-mapper \
+                --type GroupMembership \
+                --claim-name groups \
+                --full-path false \
+                --add-to-id-token true \
+                --add-to-access-token true \
+                --add-to-userinfo true \
+              && \
+              univention-keycloak \
+                --keycloak-url "$KEYCLOAK_URL" \
+                --realm "$KEYCLOAK_REALM" \
+                --binduser "$KEYCLOAK_USERNAME" \
+                --bindpwd "$KEYCLOAK_PASSWORD" \
+                oidc/scope/mapper create twofa-default \
+                --name user-id-mapper \
+                --type UserAttribute \
+                --user-attribute id \
+                --claim-name user_id \
+                --claim-type String \
+                --add-to-id-token true \
+                --add-to-access-token true \
+                --add-to-userinfo true \
+              && \
+              univention-keycloak \
+                --keycloak-url "$KEYCLOAK_URL" \
+                --realm "$KEYCLOAK_REALM" \
+                --binduser "$KEYCLOAK_USERNAME" \
+                --bindpwd "$KEYCLOAK_PASSWORD" \
+                oidc/rp/scope assign twofa-helpdesk twofa-default --optional
         envFrom:
           - configMapRef:
               name: {{ printf "%s-provisioning-env" (include "common.names.fullname" .) }}

@@ -23,7 +23,7 @@ spec:
   {{- if or .tls.enabled $.Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.global.host }}{{ tpl .host $ | quote }}
+        - twofa{{ tpl .host $ | quote }}
       secretName: "twofa-tls" # FIXME
   {{- end }}
   rules:
