@@ -37,7 +37,7 @@ provisioning:
     sha256: ""  # Optional
     imagePullPolicy: IfNotPresent
     pullSecrets: []
-  
+
   provisioningImage:
     registry: ""
     repository: "nubus/images/keycloak-bootstrap"
@@ -124,7 +124,7 @@ ingress:
       tls:
         # enabled: true
         secretName: ""
-  
+
   keycloak:
     realm: ""
 

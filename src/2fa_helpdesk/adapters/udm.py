@@ -14,7 +14,7 @@ class User:
     lastname: typing.Optional[str]
 
 def _get_udm_module(udm_module: str = "users/user"):
-    
+
     username = os.environ["UDM_USERNAME"]
     password = os.environ["UDM_PASSWORD"]
     hostname = os.environ["UDM_HOST"]

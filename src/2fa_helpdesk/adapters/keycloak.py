@@ -44,12 +44,12 @@ def reset_2fa_token(user_id: str) -> dict:
     kc_admin = _get_kc_admin()
 
     credentials = kc_admin.get_credentials(user_id=user_id)
-    
+
     otp_creds = [i for i in credentials if i["type"] == "otp"]
     for cred in otp_creds:
         kc_admin.delete_credential(user_id=user_id, credential_id=cred["id"])
 
-    # logout all user sessions #    
+    # logout all user sessions #
     _logout_user_sessions(kc_admin, user_id)
 
     return len(otp_creds)
