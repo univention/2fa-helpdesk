@@ -49,7 +49,7 @@ spec:
         emptyDir:
           medium: Memory
       containers:
-      - name: "twofa-backend-api"
+      - name: "twofa-helpdesk-frontend-ui"
         {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
         securityContext:
           {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}

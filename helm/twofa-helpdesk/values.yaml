@@ -124,6 +124,9 @@ ingress:
       tls:
         # enabled: true
         secretName: ""
+  
+  keycloak:
+    realm: ""
 
 twofaHelpdeskBackend:
   affinity: {}
@@ -163,7 +166,7 @@ twofaHelpdeskBackend:
 
     registry: ""
     repository: "nubus-dev/images/twofa-helpdesk-backend"
-    tag: "0.0.1-pre-ys-dev-may-14"
+    tag: ""
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 
@@ -173,8 +176,8 @@ twofaHelpdeskBackend:
     oidc_client: ""
     keycloak_url: ""
     keycloak_admin_user: kcadmin
-    keycloak_user_realm: opendesk
     twofa_admin_groups: ["twofa_admins"]
+    app_path: "/backend"
 
   service:
     enabled: true
@@ -259,7 +262,7 @@ twofaHelpdeskFrontend:
 
     registry: ""
     repository: "nubus-dev/images/twofa-helpdesk-frontend"
-    tag: "0.0.1-pre-ys-dev-may-14"
+    tag: ""
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 

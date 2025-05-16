@@ -13,19 +13,20 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.twofaHelpdeskBackend.extraAnnotations "context" . ) | nindent 4 }}
   {{- end }}
 data:
-  OIDC_HOST: "{{ .Values.twofaHelpdeskBackend.config.oidc_host }}"
-  OIDC_REALM: "{{ .Values.twofaHelpdeskBackend.config.oidc_realm }}"
+  OIDC_HOST: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
+  OIDC_REALM: "{{ .Values.global.keycloak.realm }}"
   OIDC_CLIENT_ID: "{{ .Values.twofaHelpdeskBackend.config.oidc_client }}"
 
+  # currently unused #
   UDM_USERNAME: ""
   UDM_PASSWORD: ""
-  UDM_HOST: "http://ums-udm-rest-api:9979" # FIXME
+  UDM_HOST: ""
 
   # Keycloak configuration
   KEYCLOAK_URL: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
-  KEYCLOAK_USERNAME: "{{ .Values.twofaHelpdeskBackend.config.keycloak_admin_user }}"
-  KEYCLOAK_REALM_NAME: "{{ .Values.twofaHelpdeskBackend.config.keycloak_user_realm }}"
-  KEYCLOAK_ADMIN_REALM_NAME: master
+  KEYCLOAK_USERNAME: "{{ .Values.twofaHelpdeskBackend.auth.username }}"
+  KEYCLOAK_REALM_NAME: "{{ .Values.global.keycloak.realm }}"
+  KEYCLOAK_ADMIN_REALM_NAME: "{{ .Values.twofaHelpdeskBackend.auth.admin_realm | default master }}"
 
   TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaHelpdeskBackend.config.twofa_admin_groups }}
 
@@ -34,6 +35,6 @@ data:
   VITE_API_URL: /backend
   VITE_API_TOKEN: test
   VITE_KEYCLOAK_URL: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
-  VITE_KEYCLOAK_REALM: "{{ .Values.twofaHelpdeskBackend.config.keycloak_user_realm }}"
-  VITE_KEYCLOAK_CLIENT_ID: "chrissytest"
+  VITE_KEYCLOAK_REALM: "{{ .Values.global.keycloak.realm  }}"
+  VITE_KEYCLOAK_CLIENT_ID: "{{ .Values.twofaHelpdeskBackend.config.oidc_client }}"
 ...
