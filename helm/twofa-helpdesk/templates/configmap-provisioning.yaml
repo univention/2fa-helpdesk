@@ -19,7 +19,6 @@ metadata:
 
 data:
   KEYCLOAK_URL: {{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . | quote }}
-...
 ---
 kind: "ConfigMap"
 apiVersion: "v1"
@@ -44,7 +43,7 @@ data:
   UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR: "/tmp"
   UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START: {{ .Values.provisioning.config.debug.pauseBeforeScriptStart  | quote }}
   KEYCLOAK_APP_BASE_URL: {{ tpl .Values.twofaHelpdeskBackend.config.app_path . | quote }}
-...
+---
 kind: ConfigMap
 apiVersion: v1
 metadata:
