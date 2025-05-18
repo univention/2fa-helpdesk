@@ -11,8 +11,8 @@ metadata:
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" $ ) | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   ttlSecondsAfterFinished: {{ .Values.provisioning.ttlSecondsAfterFinished }}
   template:
