@@ -96,7 +96,7 @@ spec:
                 --realm "$KEYCLOAK_REALM" \
                 --binduser "$KEYCLOAK_USERNAME" \
                 --bindpwd "$KEYCLOAK_PASSWORD" \
-                oidc/scope create twofa-default
+                oidc/scope create twofa-default \
               && \
               python3 /run.py
         envFrom:
