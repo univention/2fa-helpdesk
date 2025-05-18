@@ -109,7 +109,7 @@ ingress:
       tls:
         # enabled: true
         secretName: ""
-    - name: twofa-backend-backend
+    - name: twofa-backend
       host: ""
       paths:
         - path: /backend
