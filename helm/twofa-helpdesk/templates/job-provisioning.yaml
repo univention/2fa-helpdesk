@@ -143,7 +143,6 @@ spec:
         - name: "temp-dir"
           emptyDir:
             sizeLimit: "20Mi"
-      volumes:
         - name: provisioning-script
           configMap:
             name: {{ printf "%s-provisioning-script" (include "common.names.fullname" .) }}
