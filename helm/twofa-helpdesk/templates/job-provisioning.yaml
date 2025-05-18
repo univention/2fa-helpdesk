@@ -96,43 +96,9 @@ spec:
                 --realm "$KEYCLOAK_REALM" \
                 --binduser "$KEYCLOAK_USERNAME" \
                 --bindpwd "$KEYCLOAK_PASSWORD" \
-                oidc/scope create twofa-default \
+                oidc/scope create twofa-default
               && \
-              univention-keycloak \
-                --keycloak-url "$KEYCLOAK_URL" \
-                --realm "$KEYCLOAK_REALM" \
-                --binduser "$KEYCLOAK_USERNAME" \
-                --bindpwd "$KEYCLOAK_PASSWORD" \
-                oidc/scope/mapper create twofa-default \
-                --name groups-mapper \
-                --type GroupMembership \
-                --claim-name groups \
-                --full-path false \
-                --add-to-id-token true \
-                --add-to-access-token true \
-                --add-to-userinfo true \
-              && \
-              univention-keycloak \
-                --keycloak-url "$KEYCLOAK_URL" \
-                --realm "$KEYCLOAK_REALM" \
-                --binduser "$KEYCLOAK_USERNAME" \
-                --bindpwd "$KEYCLOAK_PASSWORD" \
-                oidc/scope/mapper create twofa-default \
-                --name user-id-mapper \
-                --type UserAttribute \
-                --user-attribute id \
-                --claim-name user_id \
-                --claim-type String \
-                --add-to-id-token true \
-                --add-to-access-token true \
-                --add-to-userinfo true \
-              && \
-              univention-keycloak \
-                --keycloak-url "$KEYCLOAK_URL" \
-                --realm "$KEYCLOAK_REALM" \
-                --binduser "$KEYCLOAK_USERNAME" \
-                --bindpwd "$KEYCLOAK_PASSWORD" \
-                oidc/rp/scope assign twofa-helpdesk twofa-default --optional
+              python3 /run.py
         envFrom:
           - configMapRef:
               name: {{ printf "%s-provisioning-env" (include "common.names.fullname" .) }}
@@ -155,6 +121,9 @@ spec:
         volumeMounts:
           - name: "temp-dir"
             mountPath: "/tmp"
+          - name: "provisioning-script"
+            mountPath: "/run.py"
+            subPath: run.py
           {{- if .Values.provisioning.extraVolumeMounts }}
           {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 10 }}
           {{- end }}
@@ -174,6 +143,10 @@ spec:
         - name: "temp-dir"
           emptyDir:
             sizeLimit: "20Mi"
+      volumes:
+        - name: provisioning-script
+          configMap:
+            name: {{ printf "%s-provisioning-script" (include "common.names.fullname" .) }}
         {{- if .Values.provisioning.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumes  "context" .) | nindent 8 }}
         {{- end }}
