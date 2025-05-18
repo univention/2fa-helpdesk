@@ -70,7 +70,7 @@ ingress:
   # Request certificates via cert-manager.io annotation
   certManager:
     # -- Enable cert-manager.io annotaion.
-    enabled: true
+    enabled: false # careful with enabling this and using the same secret as nubus-portal
 
     # Issuer reference.
     issuerRef:
