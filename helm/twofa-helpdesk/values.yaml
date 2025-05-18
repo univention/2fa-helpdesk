@@ -173,7 +173,7 @@ twofaHelpdeskBackend:
   config:
     oidc_host: ""
     oidc_realm: ""
-    oidc_client: ""
+    oidc_client: "twofa-helpdesk"
     keycloak_url: ""
     keycloak_admin_realm: "master"
     keycloak_admin_user: kcadmin
