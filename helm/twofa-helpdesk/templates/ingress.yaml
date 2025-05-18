@@ -24,7 +24,7 @@ spec:
   tls:
     - hosts:
         - "{{ $.Values.nubusBaseUrl }}"
-      secretName: "twofa-tls" # FIXME
+      secretName: "{{ $.Values.tls.secretName }}"
   {{- end }}
   rules:
     - host: "{{ $.Values.nubusBaseUrl }}"
