@@ -33,17 +33,6 @@ metadata:
   {{- if .Values.provisioning.additionalAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.provisioning.additionalAnnotations "context" . ) | nindent 4 }}
   {{- end }}
-    checksum/config: {{ dict
-    "DEBUG" .Values.provisioning.config.debug.enabled
-    "DOMAIN" .Values.global.domain
-    "KEYCLOAK_USERNAME" (tpl .Values.twofaHelpdeskBackend.config.keycloak_admin_user .)
-    "KEYCLOAK_HOST" (tpl .Values.twofaHelpdeskBackend.config.oidc_host .)
-    "KEYCLOAK_REALM" (tpl .Values.twofaHelpdeskBackend.config.oidc_realm .)
-    "KEYCLOAK_URL" (tpl .Values.twofaHelpdeskBackend.config.keycloak_url .)
-    "UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR" "/tmp"
-    "UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START" .Values.provisioning.config.debug.pauseBeforeScriptStart
-    "KEYCLOAK_APP_BASE_URL" (tpl .Values.twofaHelpdeskBackend.config.app_path .)
-    | toYaml | sha256sum }}
 data:
   DEBUG: {{ .Values.provisioning.config.debug.enabled | quote }}
   DOMAIN: {{ .Values.global.domain | quote }}
