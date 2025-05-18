@@ -35,35 +35,6 @@ spec:
       securityContext:
         {{- omit .Values.provisioning.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
-      initContainers:
-      - name: "wait-for-keycloak-container"
-        image: "{{ coalesce .Values.provisioning.image.registry .Values.global.imageRegistry }}/{{ .Values.provisioning.image.repository }}{{ if .Values.provisioning.image.sha256 }}@sha256:{{ .Values.provisioning.image.sha256 }}{{ else }}:{{ .Values.provisioning.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.provisioning.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
-        {{- if .Values.provisioning.containerSecurityContext.enabled }}
-        securityContext:
-          {{- omit .Values.provisioning.containerSecurityContext "enabled" | toYaml | nindent 10 }}
-        {{- end }}
-        env:
-          - name: KEYCLOAK_URL # FIXME do not hardcode
-            value: http://ums-keycloak:8080/realms/master
-#        envFrom:
-#          - configMapRef:
-#              name: {{ printf "%s-provisioning-init" (include "common.names.fullname" .) }}
-        {{- with .Values.provisioning.extraEnvVars }}
-          {{- . | toYaml | nindent 10 }}
-        {{- end }}
-        command: ["wait-for-keycloak.py"]
-        {{- if .Values.provisioning.args }}
-        args: {{ .Values.provisioning.args }}
-        {{- end }}
-        {{- with .Values.provisioning.resources }}
-        resources:
-        {{ toYaml . | indent 10 }}
-        {{- end }}
-        volumeMounts:
-          {{- if .Values.provisioning.extraVolumeMounts }}
-          {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 10 }}
-          {{- end }}
       containers:
       - name: "keycloak-provisioning"
         {{- if .Values.provisioning.containerSecurityContext.enabled }}
@@ -119,8 +90,6 @@ spec:
         {{ toYaml . | indent 10 }}
         {{- end }}
         volumeMounts:
-          - name: "temp-dir"
-            mountPath: "/tmp"
           - name: "provisioning-script"
             mountPath: "/run.py"
             subPath: run.py

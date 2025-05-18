@@ -255,10 +255,6 @@ twofaHelpdeskFrontend:
       type: RuntimeDefault
   tolerations: []
 
-  ingress:
-    tls:
-      secretName: "twofa-backend-api-tls"
-
   image:
     imagePullPolicy: "Always"
     imagePullSecrets: []
