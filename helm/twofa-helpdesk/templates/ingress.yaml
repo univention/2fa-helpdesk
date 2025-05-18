@@ -37,13 +37,13 @@ spec:
             {{- if .backend }}
             backend:
               service:
-                name: "{{ default "" $.Release.Name }}{{ if $.Release.Name }}-{{ end }}{{ .backend.service.name }}"
+                name: "{{ printf "%s" (include "common.names.fullname" .) }}"
                 port:
                   {{- toYaml .backend.service.port | nindent 18 }}
             {{- else }}
             frontend:
               service:
-                name: {{ default "" $.Release.Name }}{{ if $.Release.Name }}-{{ end }}{{ include "common.names.fullname" $ }}
+                name: "{{ printf "%s-ui" (include "common.names.fullname" .) }}"
                 port:
                   name: http
             {{- end }}
