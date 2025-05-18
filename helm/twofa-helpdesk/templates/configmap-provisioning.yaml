@@ -63,7 +63,6 @@ data:
     import os
     import sys
 
-    # validate required environment variables
     required_vars = ["KEYCLOAK_URL", "KEYCLOAK_REALM", "KEYCLOAK_USERNAME", "KEYCLOAK_PASSWORD"]
     missing = [var for var in required_vars if not os.environ.get(var)]
     if missing:
@@ -105,7 +104,6 @@ data:
             print("Failed to create or find client scope")
             sys.exit(1)
 
-    # add group membership mapper
     group_mapper_payload = {
         "name": "groups-mapper",
         "protocol": "openid-connect",
@@ -146,7 +144,6 @@ data:
     except Exception as e:
         print("User-id mapper may already exist or failed: " + str(e))
 
-    # assign scope to client as optional
     clients = kc.get_clients()
     client = next((c for c in clients if c["clientId"] == CLIENT_ID), None)
     if not client:
