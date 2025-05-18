@@ -23,11 +23,11 @@ spec:
   {{- if or .tls.enabled $.Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - "{{ nubusBaseUrl }}"
+        - "{{ $.Values.nubusBaseUrl }}"
       secretName: "twofa-tls" # FIXME
   {{- end }}
   rules:
-    - host: "{{ nubusBaseUrl }}"
+    - host: "{{ $.Values.nubusBaseUrl }}"
       {{- if .paths }}
       http:
         paths:
