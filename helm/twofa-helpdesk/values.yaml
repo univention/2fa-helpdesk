@@ -104,6 +104,7 @@ ingress:
               name: 2fa-helpdesk-backend-ui
               port:
                 number: 80
+              suffix: "-ui"
       ingressClassName: ""
       annotations: {}
       tls:
@@ -119,6 +120,7 @@ ingress:
               name: 2fa-helpdesk-backend
               port:
                 number: 8080
+              suffix: ""
       ingressClassName: ""
       annotations: {}
       tls:
