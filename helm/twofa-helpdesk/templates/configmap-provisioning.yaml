@@ -59,5 +59,103 @@ metadata:
   {{- end }}
 data:
   run.py: |
-    print("Lol")
+    from keycloak import KeycloakAdmin
+    import os
+    import sys
+
+    required_vars = ["KEYCLOAK_URL", "KEYCLOAK_REALM", "KEYCLOAK_USERNAME", "KEYCLOAK_PASSWORD"]
+    missing = [var for var in required_vars if not os.environ.get(var)]
+    if missing:
+        print("Missing environment variables: " + ", ".join(missing))
+        sys.exit(1)
+
+    KEYCLOAK_URL = os.environ["KEYCLOAK_URL"]
+    KEYCLOAK_REALM = os.environ["KEYCLOAK_REALM"]
+    KEYCLOAK_USERNAME = os.environ["KEYCLOAK_USERNAME"]
+    KEYCLOAK_PASSWORD = os.environ["KEYCLOAK_PASSWORD"]
+    CLIENT_ID = "twofa-helpdesk"
+    SCOPE_NAME = "twofa-default"
+
+    kc = KeycloakAdmin(
+        server_url=KEYCLOAK_URL,
+        username=KEYCLOAK_USERNAME,
+        password=KEYCLOAK_PASSWORD,
+        realm_name=KEYCLOAK_REALM,
+        user_realm_name="master",
+        verify=True
+    )
+
+    kc.realm_name = KEYCLOAK_REALM
+
+    # create client scope
+    scope_id = None
+    try:
+        scope_id = kc.create_client_scope({
+            "name": SCOPE_NAME,
+            "protocol": "openid-connect"
+        })
+        print(f"Created client scope '{SCOPE_NAME}'")
+    except:
+        scopes = kc.get_client_scopes()
+        scope_id = next((s['id'] for s in scopes if s['name'] == SCOPE_NAME), None)
+        if scope_id:
+            print(f"Scope '{SCOPE_NAME}' already exists")
+        else:
+            print("Failed to create or find client scope")
+            sys.exit(1)
+
+    group_mapper_payload = {
+        "name": "groups-mapper",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-group-membership-mapper",
+        "config": {
+            "claim.name": "groups",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+        }
+    }
+
+    try:
+        kc.connection.raw_post(f"admin/realms/{KEYCLOAK_REALM}/client-scopes/{scope_id}/protocol-mappers/models", data=group_mapper_payload)
+        print("Added group membership mapper")
+    except Exception as e:
+        print("Group mapper may already exist or failed: " + str(e))
+
+    # add user-id attribute mapper
+    user_id_mapper_payload = {
+        "name": "user-id-mapper",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-attribute-mapper",
+        "config": {
+            "user.attribute": "id",
+            "claim.name": "user_id",
+            "claim.type": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+        }
+    }
+
+    try:
+        kc.connection.raw_post(f"admin/realms/{KEYCLOAK_REALM}/client-scopes/{scope_id}/protocol-mappers/models", data=user_id_mapper_payload)
+        print("Added user-id attribute mapper")
+    except Exception as e:
+        print("User-id mapper may already exist or failed: " + str(e))
+
+    clients = kc.get_clients()
+    client = next((c for c in clients if c["clientId"] == CLIENT_ID), None)
+    if not client:
+        print(f"Client '{CLIENT_ID}' not found")
+        sys.exit(1)
+
+    try:
+        kc.connection.raw_put(
+            f"admin/realms/{KEYCLOAK_REALM}/clients/{client['id']}/optional-client-scopes/{scope_id}",
+            data={}
+        )
+        print(f"Assigned scope '{SCOPE_NAME}' to client '{CLIENT_ID}' as optional")
+    except Exception as e:
+        print("Failed to assign scope to client: " + str(e))
 {{- end }}
