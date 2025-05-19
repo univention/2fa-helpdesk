@@ -8,7 +8,7 @@ properties:
   icon: ""
   link:
     - - en_US
-      - {{ nubusBaseUrl }}/ui/self-service
+      - {{ portalTwoFaLinkBase }}/ui/self-service
   allowedGroups:
     - 'cn=Domain Users,cn=groups,{{ ldapBaseDn }}'
     - 'cn=Domain Admin,cn=groups,{{ ldapBaseDn }}'
@@ -37,7 +37,7 @@ properties:
   icon: ""
   link:
     - - en_US
-      - {{ nubusBaseUrl }}/ui/admin
+      - {{ portalTwoFaLinkBase }}/ui/admin
   allowedGroups:
     - 'cn=2fa_admin,cn=groups,{{ ldapBaseDn }}'
   linkTarget: newwindow
