@@ -62,13 +62,6 @@ spec:
                 --default-scopes "basic" \
                 --web-origins "$KEYCLOAK_APP_BASE_URL" \
               && \
-              univention-keycloak \
-                --keycloak-url "$KEYCLOAK_URL" \
-                --realm "$KEYCLOAK_REALM" \
-                --binduser "$KEYCLOAK_USERNAME" \
-                --bindpwd "$KEYCLOAK_PASSWORD" \
-                oidc/scope create twofa-default \
-              && \
               python3 /run.py
         envFrom:
           - configMapRef:
