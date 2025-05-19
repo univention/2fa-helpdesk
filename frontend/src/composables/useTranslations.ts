@@ -47,7 +47,7 @@ const translations = {
     resetOwnTokenQuestion: "Do you want to reset your own token?",
     confirmResetLabel: "Yes, I want to reset my token.",
     resetTokenButton: "Reset Token",
-    tokenResetSuccess: "T token has been successfully reset.",
+    tokenResetSuccess: "The token has been successfully reset.",
     tokenResetError: "Error resetting token. Please try again.",
 
     // User Table

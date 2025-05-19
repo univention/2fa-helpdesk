@@ -1,47 +1,42 @@
-import { DefaultApi } from "../../api";
-import { Configuration } from "../../api/runtime";
+import axios from "axios";
 import type { UserData } from "../types";
-
 let isResetting = false;
 
-export const resetUserToken = (
+export async function resetUserToken(
   selectedUser: UserData,
   callBackFn: () => void,
   successMessage?: string,
   errorMessage?: string
-) => {
+): Promise<void> {
   if (isResetting || !selectedUser) {
     return;
   }
 
   isResetting = true;
-  console.log("Resetting token for user:", selectedUser);
 
-  const config = new Configuration({
-    basePath: `${import.meta.env.VITE_API_URL || "/backend"}`,
-    accessToken: () => `Bearer ${import.meta.env.VITE_API_TOKEN || ""}`,
-  });
-  const apiClient = new DefaultApi(config);
+  try {
+    const url = "/token/reset/user/";
 
-  apiClient
-    .resetUserTokensTokenResetUserPost({
-      resetUsersRequest: {
-        userIds: [selectedUser.keycloak_internal_id],
-      },
-    })
-    .then((result) => {
-      console.log("Token reset successful:", result);
-      alert(successMessage || "Token wurde erfolgreich zurückgesetzt.");
-    })
-    .catch((error) => {
-      console.error("Error resetting token:", error);
-      alert(
-        errorMessage ||
-          "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut."
-      );
-    })
-    .finally(() => {
-      isResetting = false;
-      callBackFn();
-    });
-};
+    await axios.post(
+      url,
+      { user_ids: [selectedUser.keycloak_internal_id] },
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+
+    console.log("Token reset successful");
+    alert(successMessage ?? "Token wurde erfolgreich zurückgesetzt.");
+  } catch (err) {
+    console.error("Error resetting token:", err);
+    alert(
+      errorMessage ??
+        "Fehler beim Zurücksetzen des Tokens. Bitte versuchen Sie es erneut."
+    );
+  } finally {
+    isResetting = false;
+    callBackFn();
+  }
+}

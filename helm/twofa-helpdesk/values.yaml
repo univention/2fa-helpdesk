@@ -11,6 +11,7 @@ global:
   securityContext: {}
   tolerations: []
   imageRegistry: "artifacts.software-univention.de"
+  restartPolicy: OnFailure
   postgresql:
     connection:
       host: ""
@@ -22,6 +23,38 @@ global:
     portal: "portal"
 
 extraIngresses: []
+
+provisioning:
+  enabled: true
+  config:
+    debug:
+      enabled: true
+
+  image:
+    registry: ""
+    repository: "nubus-dev/images/wait-for-dependency"
+    tag: 0.31.0
+    sha256: ""  # Optional
+    imagePullPolicy: IfNotPresent
+    pullSecrets: []
+
+  provisioningImage:
+    registry: ""
+    repository: "nubus/images/keycloak-bootstrap"
+    tag: "0.11.0@sha256:55ad741e01dd91bb9b0332fd602a6262d3618abdf97a86c13f1e6148b36bd242"
+    sha256: ""  # Optional
+    imagePullPolicy: IfNotPresent
+
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1000
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  containerSecurityContext:
+    enabled: false
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
 
 ingress:
 
@@ -37,7 +70,7 @@ ingress:
   # Request certificates via cert-manager.io annotation
   certManager:
     # -- Enable cert-manager.io annotaion.
-    enabled: true
+    enabled: false # careful with enabling this and using the same secret as nubus-portal
 
     # Issuer reference.
     issuerRef:
@@ -46,7 +79,7 @@ ingress:
       # -- Type of Issuer, f.e. "Issuer" or "ClusterIssuer".
       kind: "ClusterIssuer"
 
-  # -- The Ingress controller class name. (This will be the default for all Ingresses)
+  # -- The Ingress controlledebugr class name. (This will be the default for all Ingresses)
   ingressClassName: "nginx"
 
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
@@ -71,12 +104,13 @@ ingress:
               name: 2fa-helpdesk-backend-ui
               port:
                 number: 80
+              suffix: "-ui"
       ingressClassName: ""
       annotations: {}
       tls:
         # enabled: true
         secretName: ""
-    - name: twofa-backend-api
+    - name: twofa-backend
       host: ""
       paths:
         - path: /backend
@@ -86,11 +120,15 @@ ingress:
               name: 2fa-helpdesk-backend
               port:
                 number: 8080
+              suffix: ""
       ingressClassName: ""
       annotations: {}
       tls:
         # enabled: true
         secretName: ""
+
+  keycloak:
+    realm: ""
 
 twofaHelpdeskBackend:
   affinity: {}
@@ -129,7 +167,7 @@ twofaHelpdeskBackend:
     imagePullSecrets: []
 
     registry: ""
-    repository: "nubus-dev/images/twofa-helpdesk-frontend"
+    repository: "nubus-dev/images/twofa-helpdesk-backend"
     tag: ""
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
@@ -137,11 +175,12 @@ twofaHelpdeskBackend:
   config:
     oidc_host: ""
     oidc_realm: ""
-    oidc_client: ""
+    oidc_client: "twofa-helpdesk"
     keycloak_url: ""
+    keycloak_admin_realm: "master"
     keycloak_admin_user: kcadmin
-    keycloak_user_realm: opendesk
     twofa_admin_groups: ["twofa_admins"]
+    app_path: "/backend"
 
   service:
     enabled: true
@@ -215,10 +254,6 @@ twofaHelpdeskFrontend:
     seccompProfile:
       type: RuntimeDefault
   tolerations: []
-
-  ingress:
-    tls:
-      secretName: "twofa-backend-api-tls"
 
   image:
     imagePullPolicy: "Always"

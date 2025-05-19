@@ -1,5 +1,4 @@
 ---
-# Create Nextcloud portal tile
 action: create_or_modify
 module: portals/entry
 position: cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
@@ -9,7 +8,7 @@ properties:
   icon: ""
   link:
     - - en_US
-      - {{ portalTwoFaLinkBase }}/backend/selfservice
+      - {{ portalTwoFaLinkBase }}/ui/self-service
   allowedGroups:
     - 'cn=Domain Users,cn=groups,{{ ldapBaseDn }}'
     - 'cn=Domain Admin,cn=groups,{{ ldapBaseDn }}'
@@ -24,8 +23,35 @@ properties:
 ---
 action: ensure_list_contains
 module: portals/category
-position: cn=domain-service,cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
+position: cn=od.applications,cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
 properties:
   entries:
   - cn=twofaSelfservice,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
+---
+action: create_or_modify
+module: portals/entry
+position: cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
+properties:
+  name: "twofaAdmin"
+  backgroundColor: "#ffffff"
+  icon: ""
+  link:
+    - - en_US
+      - {{ portalTwoFaLinkBase }}/ui/admin
+  allowedGroups:
+    - 'cn=2fa_admin,cn=groups,{{ ldapBaseDn }}'
+  linkTarget: newwindow
+  description:
+    de_DE: 2FA Settings Verwalten
+    en_US: Manage 2FA Settings
+  displayName:
+    de_DE: 2FA Admin Helpdesk
+    en_US: 2FA Admin Helpdesk
+---
+action: ensure_list_contains
+module: portals/category
+position: cn=self-service-profile,cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
+properties:
+  entries:
+  - cn=twofaAdmin,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
 ...

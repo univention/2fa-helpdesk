@@ -44,18 +44,21 @@ def reset_2fa_token(user_id: str) -> dict:
     kc_admin = _get_kc_admin()
 
     credentials = kc_admin.get_credentials(user_id=user_id)
-    
+
     otp_creds = [i for i in credentials if i["type"] == "otp"]
     for cred in otp_creds:
         kc_admin.delete_credential(user_id=user_id, credential_id=cred["id"])
 
-    # logout all user sessions #    
+    # logout all user sessions #
     _logout_user_sessions(kc_admin, user_id)
 
     return len(otp_creds)
 
 def list_users(query: str, page: int, limit: int) -> typing.Tuple[list[User], int]:
     '''List users based on a query (paginated)'''
+
+    # FIXME: frontend current 1-indexes pages, is that correct?
+    page -= 1
 
     kc_admin = _get_kc_admin()
 

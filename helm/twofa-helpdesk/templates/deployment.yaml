@@ -23,8 +23,8 @@ spec:
         {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
         {{- $mergedLabels := merge $otherLabels $commonLabels}}
         {{- toYaml $mergedLabels | nindent 8 }}
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      #annotations:
+      #  checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       {{- with .Values.twofaHelpdeskBackend.affinity }}
       affinity:
@@ -45,7 +45,7 @@ spec:
         {{- end }}
       {{- end }}
       containers:
-      - name: "twofa-backend-api"
+      - name: "twofa-helpdesk-backend-api"
         {{- if .Values.twofaHelpdeskBackend.securityContext.enabled }}
         securityContext:
           {{- omit .Values.twofaHelpdeskBackend.securityContext "enabled" | toYaml  | nindent 12 }}
