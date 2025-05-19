@@ -45,8 +45,8 @@ properties:
     de_DE: 2FA Settings Verwalten
     en_US: Manage 2FA Settings
   displayName:
-    de_DE: 2FA Selfservice
-    en_US: 2FA Selfservice
+    de_DE: 2FA Admin Helpdesk
+    en_US: 2FA Admin Helpdesk
 ---
 action: ensure_list_contains
 module: portals/category
