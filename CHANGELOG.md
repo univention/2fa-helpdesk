@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.1.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.0.1...v0.1.0) (2025-05-19)
+
+
+### Features
+
+* add keycloak provisioning in-chart ([0c99e11](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/0c99e115983b8b5f89efd16cb74ad97d971976ff))
+* autogenerate config.json with env ([376d2e4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/376d2e42b226a569b377de5d191c14e0e8cf9a7f))
+* cleanup for self-service and general ([29f9ab8](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/29f9ab84317431e372feed50c0decfbebcfdd378))
+* enable token retrival in frontend ([f3f47d0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/f3f47d059a02e0ead890936a379964b5e228f310))
+* full client scope provisioning ([244274e](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/244274e216dba129f9531ce0fa540195ee3b4646))
+* integrate Keycloak for authentication and add route guards ([2e7730b](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/2e7730b36d803fc7623dc599981d14d2d86a2fe7))
+* integrate Keycloak for authentication and add route guards ([7153640](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/7153640995e8f03ba2fc93f056829a8fb5c3f4c0))
+* make keycloak work for admin ([e3b2114](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e3b2114a413c6624fe96e099a5cd7116c2f68069))
+* refactor and structure code so that is fetches and uses config ([4a50b77](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/4a50b7747a7f35196451b8f4b6748db2f5ca4d5e))
+
+
+### Bug Fixes
+
+* add actual token in fetches ([dbc7eb5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/dbc7eb5f8c48247ddefd11be758e7a73c542a364))
+* add loading icon ([8bb2366](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/8bb23666d659bdbed3b477c0237dfb21e9ceb2e3))
+* add missing line escape ([707902a](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/707902adb7e94e5cf7b1fbb8a0314dde28c43ef2))
+* admin interface description ([9e66515](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/9e665159c939bd554c917d86fd8273446633a7be))
+* change backend & service to portal ([d2010d7](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/d2010d7c5150f334e21268f5227fc2c071408e83))
+* change ingress service account target template ([b28cc1e](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/b28cc1e3881d57e4415e774adee8d7713a0f5587))
+* change kc-provisioning to pre-upgrade ([ebed8c3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/ebed8c3fcb0c97dac5b14cc8a2937c7704e07232))
+* change to yaml-correct seperators ([637399f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/637399fcedeecaecb487e70a461f2e4af3cd0177))
+* correctly quote default fallback realm ([45e849b](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/45e849bf1694535b2519b2d1dbdd6eb3fb19e2a1))
+* disable cert by default (using nubus cert) ([e3f0b1c](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e3f0b1c803047ab67f5db2aa6194e2526755cfa1))
+* double volume definition ([3c83464](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/3c83464c3a063904459edb4bd74b7e7006215df1))
+* frontend token debug line ([6eb51eb](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/6eb51eb8b52edde25156a038dc13ff91d365768b))
+* implement service name suffix ([6af6d77](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/6af6d774f933d47f913d0b6ee6f29848f52f784b))
+* install getting stuck if dependency is not rdy ([84ff6ad](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/84ff6ad251573eece68581ed16615f4d9ae94b24))
+* move admin_realm default to values ([5046110](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/5046110fea6a4f04813aa027c85ea6aae0b518e4))
+* pendantic response type ([6c78823](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/6c78823769f62c79cb1ded6014dc27bee6958a01))
+* reduce size ([d4e86f6](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/d4e86f6766f2d5be8adda3b15b6bf59630e75a86))
+* reduce size ([ef27719](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/ef277194259c180eef74517edbfe41f40044b2e7))
+* remove checksum test ([685f2b1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/685f2b1f62ebed24c07f1f122da97936b8a9812b))
+* remove comments to reduce size ([7d7229c](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/7d7229c6219af8aebc47baafdef63c4022332695))
+* remove duplicated scope creation ([3ce954f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/3ce954f4f9c0b785dbea834e746129d620b938af))
+* replace old dockerfile ([695fbc3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/695fbc32dd355ec7129015f11b3fdf57250cea0a))
+* set a default value for keycloak-client name ([0d1b667](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/0d1b667b72df1b2530aab4dbb56d731666689aaa))
+* set nubus url for KEYCLOAK_BASE_APP ([8d85f4f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/8d85f4fca11727d35167c905aacd19b6f99f09ce))
+* switch pages starting at 1 ([76eb688](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/76eb68852d5be777a9640c9c620161a7afcf0f54))
+* template tls secretName ([dc74b6f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/dc74b6f6861ded8189c4a96ab6fbd86dd5c4693c))
+* ts issues ([9949443](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/9949443f6a60dfd66bd3501b177b633ce6c8c9fa))
+* unify naming scheme further ([89de669](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/89de6693d60edf6fcc5c3f99514b9e6728ecb578))
+* use correct self-service url ([40ffc16](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/40ffc16bfe2c31da9010dc10e98823cdaf405c89))
+* use nubusBaseUrl ([3b77ab1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/3b77ab1b00dc63470c15e7a38fb8c8b7b139d85e))
+* use portalTwoFaLinkBase-template in links ([8f78228](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/8f78228948dd666e10e30636bbe6f0c80fb0b5a3))
+* various value related improvements & fixes ([cbef1f5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/cbef1f578c3a50feafe513cf98dca08b49cb95da))
+
 ## 0.0.1 (2025-05-13)
 
 
