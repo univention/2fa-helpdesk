@@ -23,8 +23,8 @@ spec:
         {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
         {{- $mergedLabels := merge $otherLabels $commonLabels}}
         {{- toYaml $mergedLabels | nindent 8 }}
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      #annotations:
+      #  checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       {{- with .Values.twofaHelpdeskFrontend.affinity }}
       affinity:
