@@ -158,4 +158,7 @@ data:
         print(f"Assigned scope '{SCOPE_NAME}' to client '{CLIENT_ID}' as optional")
     except Exception as e:
         print("Failed to assign scope to client: " + str(e))
+
+    import time
+    time.sleep(1000) # wait for debugging
 {{- end }}
