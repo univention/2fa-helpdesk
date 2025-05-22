@@ -54,13 +54,13 @@ spec:
                 --bindpwd "$KEYCLOAK_PASSWORD" \
                 oidc/rp create twofa-helpdesk \
                 --app-url "https://$KEYCLOAK_APP_BASE_URL" \
-                --redirect-uri "$KEYCLOAK_APP_BASE_URL/frontend/*" \
+                --redirect-uri "https://$KEYCLOAK_APP_BASE_URL/*" \
                 --audience-to-map guardian \
                 --admin-url "$KEYCLOAK_APP_BASE_URL" \
                 --host-fqdn "$KEYCLOAK_HOST" \
                 --public-client \
                 --default-scopes "basic" \
-                --web-origins "$KEYCLOAK_APP_BASE_URL" \
+                --web-origins "https://$KEYCLOAK_APP_BASE_URL" \
               && \
               python3 /run.py
         envFrom:
