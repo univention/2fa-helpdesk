@@ -54,11 +54,11 @@ position: cn={{ twofaAdminTileCategory }},cn=category,cn=portals,cn=univention,{
 properties:
   entries:
   - cn=twofaAdmin,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
-#---
-#action: ensure_list_contains
-#module: portals/portal
-#dn: cn=portal,cn=portals,cn=univention,{{ ldapBaseDn }}
-#properties:
-#  univentionNewPortalUserLinks:
-#    - cn=twofaSelfservice,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
+---
+action: ensure_list_contains
+module: portals/portal
+dn: cn=domain,cn=portal,cn=portals,cn=univention,{{ ldapBaseDn }}
+properties:
+  univentionNewPortalUserLinks:
+    - cn=twofaSelfservice,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
 ...
