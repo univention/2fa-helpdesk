@@ -23,7 +23,7 @@ properties:
 ---
 action: ensure_list_contains
 module: portals/category
-position: cn=od.applications,cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
+position: cn={{ twofaSelfserviceTileCategory }},cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
 properties:
   entries:
   - cn=twofaSelfservice,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
@@ -50,8 +50,15 @@ properties:
 ---
 action: ensure_list_contains
 module: portals/category
-position: cn=self-service-profile,cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
+position: cn={{ twofaAdminTileCategory }},cn=category,cn=portals,cn=univention,{{ ldapBaseDn }}
 properties:
   entries:
   - cn=twofaAdmin,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
+---
+action: ensure_list_contains
+module: portals/portal
+dn: cn=portal,cn=portals,cn=univention,{{ ldapBaseDn }}
+properties:
+  univentionNewPortalUserLinks:
+    - cn=twofaSelfservice,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
 ...
