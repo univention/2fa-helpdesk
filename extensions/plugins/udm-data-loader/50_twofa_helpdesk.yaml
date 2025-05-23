@@ -59,6 +59,6 @@ action: ensure_list_contains
 module: portals/portal
 dn: cn=portal,cn=portals,cn=univention,{{ ldapBaseDn }}
 properties:
-  univentionNewPortalUserLinks::
+  univentionNewPortalUserLinks:
     - cn=twofaSelfservice,cn=entry,cn=portals,cn=univention,{{ ldapBaseDn }}
 ...
