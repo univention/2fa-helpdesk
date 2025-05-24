@@ -59,7 +59,7 @@ data:
     import sys
     import os
 
-    keycloak_url = os.environ.get('KEYCLOAK_URL')
+    keycloak_url = os.environ.get('KEYCLOAK_URL') + "/realms/" + os.environ.get('OIDC_CLIENT_ID')
     max_retries = 300
     retries = 0
 

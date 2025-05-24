@@ -97,6 +97,8 @@ spec:
         envFrom:
           - configMapRef:
               name: {{ printf "%s-provisioning-env" (include "common.names.fullname" .) }}
+          - configMapRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
         env:
           - name: KEYCLOAK_PASSWORD
             valueFrom:
