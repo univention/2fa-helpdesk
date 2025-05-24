@@ -37,8 +37,8 @@ spec:
       {{- end }}
       initContainers:
       - name: "wait-for-keycloak-container"
-        image: "{{ coalesce .Values.provisioning.image.registry .Values.global.imageRegistry }}/{{ .Val
-        imagePullPolicy: {{ coalesce .Values.provisioning.image.imagePullPolicy .Values.global.imagePul
+        image: "{{ coalesce .Values.provisioning.image.registry .Values.global.imageRegistry }}/{{ .Values.provisioning.image.repository }}{{ if .Values.provisioning.image.sha256 }}@sha256:{{ .Values.provisioning.image.sha256 }}{{ else }}:{{ .Values.provisioning.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.provisioning.provisioningImage.imagePullPolicy .Values.global.imagePullPolicy | quote }}
         {{- if .Values.provisioning.containerSecurityContext.enabled }}
         securityContext:
           {{- omit .Values.provisioning.containerSecurityContext "enabled" | toYaml | nindent 10 }}
@@ -62,7 +62,7 @@ spec:
         {{- end }}
         volumeMounts:
           {{- if .Values.provisioning.extraVolumeMounts }}
-          {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "c
+          {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 10 }}
           {{- end }}
       containers:
       - name: "keycloak-provisioning"
