@@ -52,7 +52,7 @@ spec:
         {{- with .Values.provisioning.extraEnvVars }}
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        command: ["wait-for-keycloak.py"]
+        command: ["/usr/bin/python3", "/scripts/wait-for-keycloak.py"]
         {{- if .Values.provisioning.args }}
         args: {{ .Values.provisioning.args }}
         {{- end }}
@@ -61,6 +61,8 @@ spec:
         {{ toYaml . | indent 10 }}
         {{- end }}
         volumeMounts:
+          - name: "wait-for-keycloak"
+            mountPath: "/scripts"
           {{- if .Values.provisioning.extraVolumeMounts }}
           {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 10 }}
           {{- end }}
@@ -137,6 +139,9 @@ spec:
         - name: provisioning-script
           configMap:
             name: {{ printf "%s-provisioning-script" (include "common.names.fullname" .) }}
+        - name: "wait-for-keycloak"
+          configMap:
+            name: {{ printf "%s-init" (include "common.names.fullname" .) }}
         {{- if .Values.provisioning.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumes  "context" .) | nindent 8 }}
         {{- end }}
