@@ -52,7 +52,6 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
   {{- end }}
 data:
-  KEYCLOAK_URL: {{ include "keycloak-bootstrap.keycloak.connection.master.url" . | quote }}
   wait-for-keycloak.py: |
     #!/usr/bin/python3
     import requests
