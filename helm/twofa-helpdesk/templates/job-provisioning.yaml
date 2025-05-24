@@ -35,6 +35,35 @@ spec:
       securityContext:
         {{- omit .Values.provisioning.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
+      initContainers:
+      - name: "wait-for-keycloak-container"
+        image: "{{ coalesce .Values.provisioning.image.registry .Values.global.imageRegistry }}/{{ .Val
+        imagePullPolicy: {{ coalesce .Values.provisioning.image.imagePullPolicy .Values.global.imagePul
+        {{- if .Values.provisioning.containerSecurityContext.enabled }}
+        securityContext:
+          {{- omit .Values.provisioning.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
+        env:
+        - name: KEYCLOAK_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
+              key: KEYCLOAK_URL
+        {{- with .Values.provisioning.extraEnvVars }}
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        command: ["wait-for-keycloak.py"]
+        {{- if .Values.provisioning.args }}
+        args: {{ .Values.provisioning.args }}
+        {{- end }}
+        {{- with .Values.provisioning.resources }}
+        resources:
+        {{ toYaml . | indent 10 }}
+        {{- end }}
+        volumeMounts:
+          {{- if .Values.provisioning.extraVolumeMounts }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "c
+          {{- end }}
       containers:
       - name: "keycloak-provisioning"
         {{- if .Values.provisioning.containerSecurityContext.enabled }}
