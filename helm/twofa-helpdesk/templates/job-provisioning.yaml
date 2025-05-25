@@ -43,12 +43,11 @@ spec:
         securityContext:
           {{- omit .Values.provisioning.containerSecurityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
-        env:
-        - name: KEYCLOAK_URL
-          valueFrom:
-            configMapKeyRef:
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-provisioning-env" (include "common.names.fullname" .) }}
+          - configMapRef:
               name: {{ printf "%s-config" (include "common.names.fullname" .) }}
-              key: KEYCLOAK_URL
         {{- with .Values.provisioning.extraEnvVars }}
           {{- . | toYaml | nindent 10 }}
         {{- end }}
