@@ -37,4 +37,44 @@ data:
   VITE_KEYCLOAK_URL: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
   VITE_KEYCLOAK_REALM: "{{ .Values.global.keycloak.realm  }}"
   VITE_KEYCLOAK_CLIENT_ID: "{{ .Values.twofaHelpdeskBackend.config.oidc_client }}"
+---
+apiVersion: "v1"
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-init" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.additionalLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.additionalAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+  {{- end }}
+data:
+  wait-for-keycloak.py: |
+    #!/usr/bin/python3
+    import requests
+    import time
+    import sys
+    import os
+
+    keycloak_url = os.environ.get('KEYCLOAK_URL') + "/realms/" + os.environ.get('OIDC_REALM')
+    max_retries = 300
+    retries = 0
+
+    for retry in range(max_retries):
+        try:
+            response = requests.get(keycloak_url)
+            if response.status_code == 200:
+                print('Keycloak is available')
+                sys.exit(0)
+            elif response.status_code == 404:
+                print('Realm not ready')
+            else:
+                print('Unexpected response code: ', response.status_code)
+        except requests.exceptions.ConnectionError:
+            print('Could not reach keycloak, retrying...')
+        time.sleep(1)
+    sys.exit(1)
 ...

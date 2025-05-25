@@ -21,7 +21,7 @@ spec:
       labels:
         {{- include "common.labels.standard" . | nindent 8 }}
       annotations:
-        #checksum/config: '{{ include (print $.Template.BasePath "/configmap-provisioning.yaml") . | sha256sum }}'
+        checksum/config: '{{ include (print $.Template.BasePath "/configmap-provisioning.yaml") . | sha256sum }}'
         {{- if .Values.provisioning.extraAnnotations }}
         {{ toYaml .Values.provisioning.extraAnnotations | nindent 8 }}
         {{- end }}
@@ -35,6 +35,36 @@ spec:
       securityContext:
         {{- omit .Values.provisioning.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
+      initContainers:
+      - name: "wait-for-keycloak-container"
+        image: "{{ coalesce .Values.provisioning.image.registry .Values.global.imageRegistry }}/{{ .Values.provisioning.image.repository }}{{ if .Values.provisioning.image.sha256 }}@sha256:{{ .Values.provisioning.image.sha256 }}{{ else }}:{{ .Values.provisioning.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.provisioning.provisioningImage.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+        {{- if .Values.provisioning.containerSecurityContext.enabled }}
+        securityContext:
+          {{- omit .Values.provisioning.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-provisioning-env" (include "common.names.fullname" .) }}
+          - configMapRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
+        {{- with .Values.provisioning.extraEnvVars }}
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        command: ["/usr/bin/python3", "/scripts/wait-for-keycloak.py"]
+        {{- if .Values.provisioning.args }}
+        args: {{ .Values.provisioning.args }}
+        {{- end }}
+        {{- with .Values.provisioning.resources }}
+        resources:
+        {{ toYaml . | indent 10 }}
+        {{- end }}
+        volumeMounts:
+          - name: "wait-for-keycloak"
+            mountPath: "/scripts"
+          {{- if .Values.provisioning.extraVolumeMounts }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 10 }}
+          {{- end }}
       containers:
       - name: "keycloak-provisioning"
         {{- if .Values.provisioning.containerSecurityContext.enabled }}
@@ -54,18 +84,20 @@ spec:
                 --bindpwd "$KEYCLOAK_PASSWORD" \
                 oidc/rp create twofa-helpdesk \
                 --app-url "https://$KEYCLOAK_APP_BASE_URL" \
-                --redirect-uri "$KEYCLOAK_APP_BASE_URL/frontend/*" \
+                --redirect-uri "https://$KEYCLOAK_APP_BASE_URL/*" \
                 --audience-to-map guardian \
                 --admin-url "$KEYCLOAK_APP_BASE_URL" \
                 --host-fqdn "$KEYCLOAK_HOST" \
                 --public-client \
                 --default-scopes "basic" \
-                --web-origins "$KEYCLOAK_APP_BASE_URL" \
+                --web-origins "https://$KEYCLOAK_APP_BASE_URL" \
               && \
               python3 /run.py
         envFrom:
           - configMapRef:
               name: {{ printf "%s-provisioning-env" (include "common.names.fullname" .) }}
+          - configMapRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
         env:
           - name: KEYCLOAK_PASSWORD
             valueFrom:
@@ -108,6 +140,9 @@ spec:
         - name: provisioning-script
           configMap:
             name: {{ printf "%s-provisioning-script" (include "common.names.fullname" .) }}
+        - name: "wait-for-keycloak"
+          configMap:
+            name: {{ printf "%s-init" (include "common.names.fullname" .) }}
         {{- if .Values.provisioning.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumes  "context" .) | nindent 8 }}
         {{- end }}
