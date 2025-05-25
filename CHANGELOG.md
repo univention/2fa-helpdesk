@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.2.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.1.0...v0.2.0) (2025-05-25)
+
+
+### Features
+
+* templatable extension entry category ([e5fdbeb](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e5fdbebadb8c7b55c71c29610dd0372688ac4550))
+
+
+### Bug Fixes
+
+* add self server to portalUserLinks ([3cae630](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/3cae630ee856a7cf9e1c7150dcf77b733aef8546))
+* better error & payload handling ([6befd40](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/6befd40216046c23c6e29c703fd392da2adb4579))
+* explicitly set https & remove path ([a4a9093](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/a4a909345df80537e69b6b934ac7b9133793c3d5))
+* **helm:** remove duplicated KEYCLOAK_URL ([8ae72dc](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/8ae72dceab1576e3c7fc3be03a5543861f9f47f9))
+* **helm:** use full provisoning env for init container ([c6d1497](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/c6d14979623daebdfa08578ad147517876c1f6cf))
+* **helm:** use OIDC_REALM for check ([e61c459](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e61c4599b85e78e0f3e052c6a9e94415de1360cb))
+* **helm:** use realm from config map in request ([dfa73a9](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/dfa73a9a707b104632a03ed45af5b268fe14d204))
+* re-enable checksum for provisioning ([9b54bb1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/9b54bb1cc367de2b7ae7e2fcef551a9c90940050))
+* re-enable portal links with new cn ([d1929bf](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/d1929bfa97cd362572a059adf4c27f9ba788fd66))
+* remove debugging token ([b0f3989](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/b0f39890a29ca22d402a1b8d4984ce23fb6351c8))
+* remove duplicated : ([58fbb64](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/58fbb64f3e81d8ce62a981a50f01c1ed57a1d2ca))
+* remove univentionNewPortalUserLinks extension ([7a79d5b](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/7a79d5b43b7c35d3b18b4b1309351a321f7a5128))
+* set position to dn & userLinks ([25a9931](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/25a9931b63b2e02a7643e5f100047ca313cb3f74))
+* **values-helm:** rename default display group ([a231d66](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/a231d663fd7787225c0ddf9b16abd4f172a00308))
+* **values:** use full group path by default ([07be23a](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/07be23a471bb789a51eae0467946d72127cdb09d))
+
 ## [0.1.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.0.1...v0.1.0) (2025-05-19)
 
 
