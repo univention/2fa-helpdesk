@@ -126,17 +126,14 @@ data:
         print("Group mapper may already exist or failed: " + str(e))
 
     # add user-id attribute mapper
-    user_id_mapper_payload = {
-        "name": "user-id-mapper",
+    sub_mapper_payload = {
+        "name": "user_id",
         "protocol": "openid-connect",
-        "protocolMapper": "oidc-usermodel-attribute-mapper",
+        "protocolMapper": "oidc-sub-mapper",
         "config": {
-            "user.attribute": "id",
-            "claim.name": "user_id",
-            "claim.type": "String",
-            "id.token.claim": "true",
             "access.token.claim": "true",
-            "userinfo.token.claim": "true"
+            "introspection.token.claim": "true",
+            "lightweight.claim": "false"
         }
     }
 
