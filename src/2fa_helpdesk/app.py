@@ -228,6 +228,7 @@ def list_users(
         success = True
         detail = ""
     else:
+        users, total = 0, 0
         success = False
         detail = _not_2fa_admin_msg(user_token)
 
