@@ -34,7 +34,7 @@ data:
 
   VITE_API_URL: /backend
   VITE_API_TOKEN: test
-  VITE_KEYCLOAK_URL: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
+  VITE_KEYCLOAK_URL: "https://{{ .Values.twofaHelpdeskBackend.config.oidc_host }}"
   VITE_KEYCLOAK_REALM: "{{ .Values.global.keycloak.realm  }}"
   VITE_KEYCLOAK_CLIENT_ID: "{{ .Values.twofaHelpdeskBackend.config.oidc_client }}"
 ---
