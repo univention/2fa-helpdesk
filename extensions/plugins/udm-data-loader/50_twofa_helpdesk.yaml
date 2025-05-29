@@ -39,7 +39,9 @@ properties:
     - - en_US
       - {{ portalTwoFaLinkBase }}/ui/admin
   allowedGroups:
-    - 'cn=twofa_admins,cn=groups,{{ ldapBaseDn }}'
+    {% for group in portalTwoFaAllowedGroups %}
+    - 'cn={{ group }},cn=groups,{{ ldapBaseDn }}'
+    {% endfor %}
   linkTarget: newwindow
   description:
     de_DE: 2FA Settings Verwalten
