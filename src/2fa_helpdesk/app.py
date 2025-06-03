@@ -166,7 +166,7 @@ def is_2fa_admin(user_token: dict) -> bool:
 )
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
 
-    user_id = user_token["user_id"]
+    user_id = user_token["sub"]
     results_count = adapters.keycloak.reset_2fa_token(user_id)
     return ResetResponse(
         success=True,
@@ -228,6 +228,7 @@ def list_users(
         success = True
         detail = ""
     else:
+        users, total = 0, 0
         success = False
         detail = _not_2fa_admin_msg(user_token)
 
