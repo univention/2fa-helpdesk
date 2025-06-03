@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.2.0...v0.2.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* add stub values for error error message ([4326bb9](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/4326bb9fa22b5950e13d29065222199df2fd584f))
+* **helm:** set default group to match 2fa-users scheme ([c625716](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/c625716ac2b40a18521a85dd8fa53718c9854bbf))
+* **helm:** template allowedGroups as jinja-loop ([b729f9c](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/b729f9cae888b2fdb3efd13e85fbb20a4bb303f2))
+* **helm:** use oidc_host for frontend env ([02f43bd](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/02f43bdd20ca0f9728ffd8623e0d6cc8e01323ba))
+* **helm:** user sub mapper instead of usid ([0d27e28](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/0d27e28141654dfdd5bfdce0265db2e4ce5a3e69))
+* use new uid/sub mapper struct ([bff8ae9](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/bff8ae9f58ea59a48c43efdca9bc78aa7049bb55))
+
 ## [0.2.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.1.0...v0.2.0) (2025-05-25)
 
 
