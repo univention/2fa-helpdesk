@@ -55,7 +55,6 @@ spec:
 
         ports:
         - containerPort: 8080
-        env:
         envFrom:
           - configMapRef:
               name: {{ printf "%s-config" (include "common.names.fullname" .) }}
@@ -63,7 +62,7 @@ spec:
           - name: KEYCLOAK_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ums-opendesk-keycloak-credentials # FIXME: use nubus-common.secrets?? where docs, were banana
+                name: {{ printf "%s-%s" .Release.Name "keycloak-credentials" }} # FIXME: use nubus-common.secrets?? where docs, were banana
                 key: admin_password
         {{- if .Values.twofaHelpdeskBackend.probes.liveness.enabled }}
         livenessProbe:

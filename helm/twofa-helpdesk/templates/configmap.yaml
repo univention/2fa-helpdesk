@@ -13,9 +13,9 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.twofaHelpdeskBackend.extraAnnotations "context" . ) | nindent 4 }}
   {{- end }}
 data:
-  OIDC_HOST: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
-  OIDC_REALM: "{{ .Values.global.keycloak.realm }}"
-  OIDC_CLIENT_ID: "{{ .Values.twofaHelpdeskBackend.config.oidc_client }}"
+  OIDC_HOST: "{{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . }}"
+  OIDC_REALM: "{{ default .Values.global.keycloak.realm (tpl .Values.twofaHelpdeskBackend.config.oidc_realm .) }}"
+  OIDC_CLIENT_ID: "{{ tpl .Values.twofaHelpdeskBackend.config.oidc_client . }}"
 
   # currently unused #
   UDM_USERNAME: ""
@@ -23,10 +23,10 @@ data:
   UDM_HOST: ""
 
   # Keycloak configuration
-  KEYCLOAK_URL: "{{ .Values.twofaHelpdeskBackend.config.keycloak_url }}"
-  KEYCLOAK_USERNAME: "{{ .Values.twofaHelpdeskBackend.auth.username }}"
-  KEYCLOAK_REALM_NAME: "{{ .Values.global.keycloak.realm }}"
-  KEYCLOAK_ADMIN_REALM_NAME: "{{ .Values.twofaHelpdeskBackend.config.keycloak_admin_realm }}"
+  KEYCLOAK_URL: "{{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . }}"
+  KEYCLOAK_USERNAME: "{{ tpl .Values.twofaHelpdeskBackend.auth.username . }}"
+  KEYCLOAK_REALM_NAME: "{{ default .Values.global.keycloak.realm (tpl .Values.twofaHelpdeskBackend.config.oidc_realm .) }}"
+  KEYCLOAK_ADMIN_REALM_NAME: "{{ tpl .Values.twofaHelpdeskBackend.config.keycloak_admin_realm . }}"
 
   TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaHelpdeskBackend.config.twofa_admin_groups }}
 
@@ -34,9 +34,9 @@ data:
 
   VITE_API_URL: /backend
   VITE_API_TOKEN: test
-  VITE_KEYCLOAK_URL: "https://{{ .Values.twofaHelpdeskBackend.config.oidc_host }}"
-  VITE_KEYCLOAK_REALM: "{{ .Values.global.keycloak.realm  }}"
-  VITE_KEYCLOAK_CLIENT_ID: "{{ .Values.twofaHelpdeskBackend.config.oidc_client }}"
+  VITE_KEYCLOAK_URL: {{ default (printf "https://%s" .Values.twofaHelpdeskBackend.config.oidc_host) (tpl .Values.twofaHelpdeskBackend.config.keycloak_url .) | quote }}
+  VITE_KEYCLOAK_REALM: "{{ default .Values.global.keycloak.realm (tpl .Values.twofaHelpdeskBackend.config.oidc_realm .) }}"
+  VITE_KEYCLOAK_CLIENT_ID: "{{ tpl .Values.twofaHelpdeskBackend.config.oidc_client . }}"
 ---
 apiVersion: "v1"
 kind: ConfigMap

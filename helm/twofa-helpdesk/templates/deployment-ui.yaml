@@ -48,6 +48,28 @@ spec:
       - name: cache-tmpfs
         emptyDir:
           medium: Memory
+      - name: configjson
+        emptyDir:
+          medium: Memory
+      - name: var-run-volume
+        emptyDir: {}
+      - name: var-lib-nginx-volume
+        emptyDir: {}
+      {{- if .Values.twofaHelpdeskFrontend.podSecurityContext.enabled }}
+      securityContext:
+        {{- omit .Values.twofaHelpdeskFrontend.podSecurityContext "enabled" | toYaml  | nindent 10 }}
+      {{- end }}
+      initContainers:
+      - name: init-configjson
+        {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
+        securityContext:
+          {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
+        {{- end }}
+        image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
+        command: ["sh", "-c", "mkdir -p /mnt && touch /mnt/config.json"]
+        volumeMounts:
+          - name: configjson
+            mountPath: /mnt
       containers:
       - name: "twofa-helpdesk-frontend-ui"
         {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
@@ -61,6 +83,13 @@ spec:
         volumeMounts:
           - name: cache-tmpfs
             mountPath: /var/cache/nginx
+          - name: configjson
+            mountPath: /usr/share/nginx/html/ui/config.json
+            subPath: config.json
+          - name: var-run-volume
+            mountPath: /var/run
+          - name: var-lib-nginx-volume
+            mountPath: /var/lib/nginx
         env:
         envFrom:
           - configMapRef:
