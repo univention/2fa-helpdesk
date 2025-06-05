@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.2.1...v0.3.0) (2025-06-05)
+
+
+### Features
+
+* all containers run as non-root w/ read-only file systems ([0942b44](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/0942b44ee6b35c7c63c4538264ef605931f7bde3)), closes [univention/dev/internal/team-nubus#1212](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1212)
+
 ## [0.2.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.2.0...v0.2.1) (2025-06-03)
 
 
