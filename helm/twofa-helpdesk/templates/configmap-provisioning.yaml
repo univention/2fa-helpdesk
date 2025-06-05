@@ -18,7 +18,8 @@ metadata:
   {{- end }}
 
 data:
-  KEYCLOAK_URL: {{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . | quote }}
+  KEYCLOAK_URL: {{ printf "http://%s:%s/realms/%s"  (default (printf "%s-keycloak" .Release.Name) (tpl .Values.keycloak.connection.host .)) .Values.keycloak.connection.port (default .Values.global.keycloak.realm (tpl .Values.keycloak.realm .)) | quote }}
+...
 ---
 kind: "ConfigMap"
 apiVersion: "v1"
@@ -36,14 +37,15 @@ metadata:
 data:
   DEBUG: {{ .Values.provisioning.config.debug.enabled | quote }}
   DOMAIN: {{ .Values.global.domain | quote }}
-  KEYCLOAK_USERNAME: {{ tpl .Values.twofaHelpdeskBackend.config.keycloak_admin_user . | quote }}
-  KEYCLOAK_HOST: {{ tpl .Values.twofaHelpdeskBackend.config.oidc_host . | quote }}
-  KEYCLOAK_REALM: {{ default .Values.global.keycloak.realm (tpl .Values.twofaHelpdeskBackend.config.oidc_realm .) }}
-  KEYCLOAK_URL: {{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . | quote }}
-  OIDC_CLIENT_ID: {{ tpl .Values.twofaHelpdeskBackend.config.oidc_client . | quote }}
+  KEYCLOAK_USERNAME: {{ tpl .Values.keycloak.auth.username . | quote }}
+  KEYCLOAK_HOST: {{ default (printf "%s-keycloak" .Release.Name) (tpl .Values.keycloak.connection.host .) | quote}}
+  KEYCLOAK_REALM: {{ default .Values.global.keycloak.realm (tpl .Values.keycloak.realm .) | quote}}
+  KEYCLOAK_URL: {{ printf "http://%s:%s"  (default (printf "%s-keycloak" .Release.Name) (tpl .Values.keycloak.connection.host .)) .Values.keycloak.connection.port | quote }}
+  OIDC_CLIENT_ID: {{ tpl .Values.keycloak.client . | quote }}
   UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR: "/tmp"
   UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START: {{ .Values.provisioning.config.debug.pauseBeforeScriptStart  | quote }}
-  KEYCLOAK_APP_BASE_URL: {{  $.Values.nubusBaseUrl | quote }}
+  KEYCLOAK_APP_BASE_URL: {{ printf "https://%s" (tpl  $.Values.nubusBaseUrl .) | quote }}
+...
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -65,7 +67,7 @@ data:
     import sys
     import json
 
-    required_vars = ["KEYCLOAK_URL", "KEYCLOAK_REALM", "KEYCLOAK_USERNAME", "KEYCLOAK_PASSWORD", "OIDC_CLIENT_ID"]
+    required_vars = ["KEYCLOAK_URL", "KEYCLOAK_REALM", "KEYCLOAK_USERNAME", "OIDC_CLIENT_ID"]
     missing = [var for var in required_vars if not os.environ.get(var)]
     if missing:
         print("Missing environment variables: " + ", ".join(missing))
@@ -74,7 +76,8 @@ data:
     KEYCLOAK_URL = os.environ["KEYCLOAK_URL"]
     KEYCLOAK_REALM = os.environ["KEYCLOAK_REALM"]
     KEYCLOAK_USERNAME = os.environ["KEYCLOAK_USERNAME"]
-    KEYCLOAK_PASSWORD = os.environ["KEYCLOAK_PASSWORD"]
+    with open("/credentials/keycloak.secret") as fd:
+      KEYCLOAK_PASSWORD = fd.read().strip()
     CLIENT_ID = os.environ["OIDC_CLIENT_ID"]
     SCOPE_NAME = "twofa-default"
 
@@ -161,7 +164,6 @@ data:
     except Exception as e:
         print("Failed to assign scope to client: " + str(e))
 
-    import time
-    print("Finished, waiting 60s before terminating.", file=sys.stderr)
-    time.sleep(60) # wait for debugging
+    print("Finished", file=sys.stderr)
+...
 {{- end }}

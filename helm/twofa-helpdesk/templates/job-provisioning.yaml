@@ -10,9 +10,6 @@ metadata:
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" $ ) | nindent 4 }}
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   ttlSecondsAfterFinished: {{ .Values.provisioning.ttlSecondsAfterFinished }}
   template:
@@ -38,20 +35,18 @@ spec:
       initContainers:
       - name: "wait-for-keycloak-container"
         image: "{{ coalesce .Values.provisioning.image.registry .Values.global.imageRegistry }}/{{ .Values.provisioning.image.repository }}{{ if .Values.provisioning.image.sha256 }}@sha256:{{ .Values.provisioning.image.sha256 }}{{ else }}:{{ .Values.provisioning.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.provisioning.provisioningImage.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+        imagePullPolicy: {{ coalesce .Values.provisioning.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
         {{- if .Values.provisioning.containerSecurityContext.enabled }}
         securityContext:
           {{- omit .Values.provisioning.containerSecurityContext "enabled" | toYaml | nindent 10 }}
         {{- end }}
         envFrom:
           - configMapRef:
-              name: {{ printf "%s-provisioning-env" (include "common.names.fullname" .) }}
-          - configMapRef:
-              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
+              name: {{ printf "%s-provisioning-init" (include "common.names.fullname" .) }}
         {{- with .Values.provisioning.extraEnvVars }}
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        command: ["/usr/bin/python3", "/scripts/wait-for-keycloak.py"]
+        command: ["wait-for-keycloak.py"]
         {{- if .Values.provisioning.args }}
         args: {{ .Values.provisioning.args }}
         {{- end }}
@@ -60,8 +55,6 @@ spec:
         {{ toYaml . | indent 10 }}
         {{- end }}
         volumeMounts:
-          - name: "wait-for-keycloak"
-            mountPath: "/scripts"
           {{- if .Values.provisioning.extraVolumeMounts }}
           {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 10 }}
           {{- end }}
@@ -78,19 +71,19 @@ spec:
           - -c
           - |
               univention-keycloak \
-                --keycloak-url "$KEYCLOAK_URL" \
-                --realm "$KEYCLOAK_REALM" \
-                --binduser "$KEYCLOAK_USERNAME" \
-                --bindpwd "$KEYCLOAK_PASSWORD" \
+                --keycloak-url $KEYCLOAK_URL \
+                --realm $KEYCLOAK_REALM \
+                --binduser $KEYCLOAK_USERNAME \
+                --bindpwdfile /credentials/keycloak.secret \
                 oidc/rp create twofa-helpdesk \
-                --app-url "https://$KEYCLOAK_APP_BASE_URL" \
-                --redirect-uri "https://$KEYCLOAK_APP_BASE_URL/*" \
+                --app-url $KEYCLOAK_APP_BASE_URL \
+                --redirect-uri $KEYCLOAK_APP_BASE_URL/* \
                 --audience-to-map guardian \
-                --admin-url "$KEYCLOAK_APP_BASE_URL" \
-                --host-fqdn "$KEYCLOAK_HOST" \
+                --admin-url $KEYCLOAK_APP_BASE_URL \
+                --host-fqdn $KEYCLOAK_HOST \
                 --public-client \
                 --default-scopes "basic" \
-                --web-origins "https://$KEYCLOAK_APP_BASE_URL" \
+                --web-origins $KEYCLOAK_APP_BASE_URL \
               && \
               python3 /run.py
         envFrom:
@@ -115,9 +108,14 @@ spec:
         {{ toYaml . | indent 10 }}
         {{- end }}
         volumeMounts:
+          - mountPath: "/credentials/keycloak.secret"
+            name: "keycloak-credentials-volume"
+            subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") }}
           - name: "provisioning-script"
             mountPath: "/run.py"
             subPath: run.py
+          - name: "temp-dir"
+            mountPath: "/tmp"
           {{- if .Values.provisioning.extraVolumeMounts }}
           {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 10 }}
           {{- end }}
@@ -134,15 +132,15 @@ spec:
         {{ toYaml . | indent 8 }}
       {{- end }}
       volumes:
+        - name: "keycloak-credentials-volume"
+          secret:
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "provisioning-secret" "context" .) | quote }}
         - name: "temp-dir"
           emptyDir:
             sizeLimit: "20Mi"
         - name: provisioning-script
           configMap:
             name: {{ printf "%s-provisioning-script" (include "common.names.fullname" .) }}
-        - name: "wait-for-keycloak"
-          configMap:
-            name: {{ printf "%s-init" (include "common.names.fullname" .) }}
         {{- if .Values.provisioning.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumes  "context" .) | nindent 8 }}
         {{- end }}

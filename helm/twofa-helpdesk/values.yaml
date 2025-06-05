@@ -22,7 +22,7 @@ global:
 
   domain: ""
   subDomains:
-    keycloak: ""
+    keycloak: "id"
     portal: "portal"
 
 extraIngresses: []
@@ -35,8 +35,8 @@ provisioning:
 
   image:
     registry: ""
-    repository: "nubus-dev/images/wait-for-dependency"
-    tag: 0.31.0
+    repository: "nubus/images/wait-for-dependency"
+    tag: "0.32.0@sha256:a746257d2ad5ead98db0032378a5aa5b6462af0c24750bd576d3c404c78d6d6c"
     sha256: ""  # Optional
     imagePullPolicy: IfNotPresent
     pullSecrets: []
@@ -44,7 +44,7 @@ provisioning:
   provisioningImage:
     registry: ""
     repository: "nubus/images/keycloak-bootstrap"
-    tag: "0.11.0@sha256:55ad741e01dd91bb9b0332fd602a6262d3618abdf97a86c13f1e6148b36bd242"
+    tag: "0.12.0@sha256:624bc709b2269c7f0de74d776e65c60c8f8c2be2e1d4e9158f72c04b844b4af5"
     sha256: ""  # Optional
     imagePullPolicy: IfNotPresent
 
@@ -144,8 +144,28 @@ ingress:
         # enabled: true
         secretName: ""
 
-  keycloak:
-    realm: ""
+# -- Keycloak specific settings.
+keycloak:
+  # -- Keycloak realm.
+  client: "twofa-helpdesk"
+  realm: ""
+  admin_realm: "master"
+  auth:
+    # -- Keycloak user.
+    username: ""
+    # -- Keycloak password.
+    password: ""
+    # -- Keycloak password secret reference.
+    existingSecret:
+      name: null
+      keyMapping:
+        password: null
+  # -- Connection parameters.
+  connection:
+    # -- Keycloak host.
+    host: ""
+    # -- Keycloak port.
+    port: "8080"
 
 twofaHelpdeskBackend:
   affinity: {}
@@ -190,14 +210,8 @@ twofaHelpdeskBackend:
     sha256: null
 
   config:
-    oidc_host: ""
-    oidc_realm: ""
-    oidc_client: "twofa-helpdesk"
     keycloak_url: ""
-    keycloak_admin_realm: "master"
-    keycloak_admin_user: kcadmin
     twofa_admin_groups: ["/Domain Admins"]
-    app_path: "/backend"
 
   service:
     enabled: true
@@ -238,11 +252,6 @@ twofaHelpdeskBackend:
       periodSeconds: 15
       failureThreshold: 30
       successThreshold: 1
-
-  persistence:
-    data:
-      storageClass: ""
-      size: "1Gi"
 
 twofaHelpdeskFrontend:
   affinity: {}
@@ -327,8 +336,3 @@ twofaHelpdeskFrontend:
       periodSeconds: 15
       failureThreshold: 30
       successThreshold: 1
-
-  persistence:
-    data:
-      storageClass: ""
-      size: "1Gi"

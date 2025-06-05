@@ -8,7 +8,7 @@
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://artifacts.software-univention.de/nubus/charts | nubus-common | ^0.8.x |
+| oci://artifacts.software-univention.de/nubus/charts | nubus-common | ^0.18.x |
 
 ## Values
 
@@ -30,7 +30,7 @@
 | global.replicaCount | int | `1` |  |
 | global.restartPolicy | string | `"OnFailure"` |  |
 | global.securityContext | object | `{}` |  |
-| global.subDomains.keycloak | string | `""` |  |
+| global.subDomains.keycloak | string | `"id"` |  |
 | global.subDomains.portal | string | `"portal"` |  |
 | global.tolerations | list | `[]` |  |
 | ingress.annotations | object | `{}` | Define custom ingress annotations for all Ingresses. |
@@ -56,10 +56,17 @@
 | ingress.items[1].paths[0].path | string | `"/backend"` |  |
 | ingress.items[1].paths[0].pathType | string | `"Prefix"` |  |
 | ingress.items[1].tls.secretName | string | `""` |  |
-| ingress.keycloak.realm | string | `""` |  |
 | ingress.tls | object | `{"enabled":true,"secretName":""}` | Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.  Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls |
 | ingress.tls.enabled | bool | `true` | Enable TLS/SSL/HTTPS for Ingress. |
 | ingress.tls.secretName | string | `""` | The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided. |
+| keycloak | object | `{"admin_realm":"master","auth":{"existingSecret":{"keyMapping":{"password":null},"name":null},"password":"","username":""},"client":"twofa-helpdesk","connection":{"host":"","port":"8080"},"realm":""}` | Keycloak specific settings. |
+| keycloak.auth.existingSecret | object | `{"keyMapping":{"password":null},"name":null}` | Keycloak password secret reference. |
+| keycloak.auth.password | string | `""` | Keycloak password. |
+| keycloak.auth.username | string | `""` | Keycloak user. |
+| keycloak.client | string | `"twofa-helpdesk"` | Keycloak realm. |
+| keycloak.connection | object | `{"host":"","port":"8080"}` | Connection parameters. |
+| keycloak.connection.host | string | `""` | Keycloak host. |
+| keycloak.connection.port | string | `"8080"` | Keycloak port. |
 | provisioning.config.debug.enabled | bool | `true` |  |
 | provisioning.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | provisioning.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
@@ -74,9 +81,9 @@
 | provisioning.image.imagePullPolicy | string | `"IfNotPresent"` |  |
 | provisioning.image.pullSecrets | list | `[]` |  |
 | provisioning.image.registry | string | `""` |  |
-| provisioning.image.repository | string | `"nubus-dev/images/wait-for-dependency"` |  |
+| provisioning.image.repository | string | `"nubus/images/wait-for-dependency"` |  |
 | provisioning.image.sha256 | string | `""` |  |
-| provisioning.image.tag | string | `"0.31.0"` |  |
+| provisioning.image.tag | string | `"0.32.0@sha256:a746257d2ad5ead98db0032378a5aa5b6462af0c24750bd576d3c404c78d6d6c"` |  |
 | provisioning.podSecurityContext.enabled | bool | `true` |  |
 | provisioning.podSecurityContext.fsGroup | int | `1000` |  |
 | provisioning.podSecurityContext.runAsGroup | int | `1000` |  |
@@ -87,16 +94,10 @@
 | provisioning.provisioningImage.registry | string | `""` |  |
 | provisioning.provisioningImage.repository | string | `"nubus/images/keycloak-bootstrap"` |  |
 | provisioning.provisioningImage.sha256 | string | `""` |  |
-| provisioning.provisioningImage.tag | string | `"0.11.0@sha256:55ad741e01dd91bb9b0332fd602a6262d3618abdf97a86c13f1e6148b36bd242"` |  |
+| provisioning.provisioningImage.tag | string | `"0.12.0@sha256:624bc709b2269c7f0de74d776e65c60c8f8c2be2e1d4e9158f72c04b844b4af5"` |  |
 | provisioning.tolerations | list | `[]` |  |
 | twofaHelpdeskBackend.affinity | object | `{}` |  |
-| twofaHelpdeskBackend.config.app_path | string | `"/backend"` |  |
-| twofaHelpdeskBackend.config.keycloak_admin_realm | string | `"master"` |  |
-| twofaHelpdeskBackend.config.keycloak_admin_user | string | `"kcadmin"` |  |
 | twofaHelpdeskBackend.config.keycloak_url | string | `""` |  |
-| twofaHelpdeskBackend.config.oidc_client | string | `"twofa-helpdesk"` |  |
-| twofaHelpdeskBackend.config.oidc_host | string | `""` |  |
-| twofaHelpdeskBackend.config.oidc_realm | string | `""` |  |
 | twofaHelpdeskBackend.config.twofa_admin_groups[0] | string | `"/Domain Admins"` |  |
 | twofaHelpdeskBackend.environment | object | `{}` |  |
 | twofaHelpdeskBackend.fullnameOverride | string | `""` |  |
@@ -109,8 +110,6 @@
 | twofaHelpdeskBackend.ingress.tls.secretName | string | `"twofa-backend-api-tls"` |  |
 | twofaHelpdeskBackend.nameOverride | string | `""` |  |
 | twofaHelpdeskBackend.nodeSelector | object | `{}` |  |
-| twofaHelpdeskBackend.persistence.data.size | string | `"1Gi"` |  |
-| twofaHelpdeskBackend.persistence.data.storageClass | string | `""` |  |
 | twofaHelpdeskBackend.podAnnotations | object | `{}` |  |
 | twofaHelpdeskBackend.podSecurityContext.enabled | bool | `true` |  |
 | twofaHelpdeskBackend.podSecurityContext.fsGroup | int | `1000` |  |
@@ -158,8 +157,6 @@
 | twofaHelpdeskFrontend.nameOverride | string | `""` |  |
 | twofaHelpdeskFrontend.nginx.disableIPv6 | bool | `true` |  |
 | twofaHelpdeskFrontend.nodeSelector | object | `{}` |  |
-| twofaHelpdeskFrontend.persistence.data.size | string | `"1Gi"` |  |
-| twofaHelpdeskFrontend.persistence.data.storageClass | string | `""` |  |
 | twofaHelpdeskFrontend.podAnnotations | object | `{}` |  |
 | twofaHelpdeskFrontend.podSecurityContext.enabled | bool | `true` |  |
 | twofaHelpdeskFrontend.podSecurityContext.fsGroup | int | `1000` |  |
