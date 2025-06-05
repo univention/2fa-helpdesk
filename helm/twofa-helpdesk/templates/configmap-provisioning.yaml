@@ -38,8 +38,9 @@ data:
   DOMAIN: {{ .Values.global.domain | quote }}
   KEYCLOAK_USERNAME: {{ tpl .Values.twofaHelpdeskBackend.config.keycloak_admin_user . | quote }}
   KEYCLOAK_HOST: {{ tpl .Values.twofaHelpdeskBackend.config.oidc_host . | quote }}
-  KEYCLOAK_REALM: {{ tpl .Values.twofaHelpdeskBackend.config.oidc_realm . | quote }}
+  KEYCLOAK_REALM: {{ default .Values.global.keycloak.realm (tpl .Values.twofaHelpdeskBackend.config.oidc_realm .) }}
   KEYCLOAK_URL: {{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . | quote }}
+  OIDC_CLIENT_ID: {{ tpl .Values.twofaHelpdeskBackend.config.oidc_client . | quote }}
   UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR: "/tmp"
   UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START: {{ .Values.provisioning.config.debug.pauseBeforeScriptStart  | quote }}
   KEYCLOAK_APP_BASE_URL: {{  $.Values.nubusBaseUrl | quote }}
@@ -64,7 +65,7 @@ data:
     import sys
     import json
 
-    required_vars = ["KEYCLOAK_URL", "KEYCLOAK_REALM", "KEYCLOAK_USERNAME", "KEYCLOAK_PASSWORD"]
+    required_vars = ["KEYCLOAK_URL", "KEYCLOAK_REALM", "KEYCLOAK_USERNAME", "KEYCLOAK_PASSWORD", "OIDC_CLIENT_ID"]
     missing = [var for var in required_vars if not os.environ.get(var)]
     if missing:
         print("Missing environment variables: " + ", ".join(missing))
@@ -74,7 +75,7 @@ data:
     KEYCLOAK_REALM = os.environ["KEYCLOAK_REALM"]
     KEYCLOAK_USERNAME = os.environ["KEYCLOAK_USERNAME"]
     KEYCLOAK_PASSWORD = os.environ["KEYCLOAK_PASSWORD"]
-    CLIENT_ID = "twofa-helpdesk"
+    CLIENT_ID = os.environ["OIDC_CLIENT_ID"]
     SCOPE_NAME = "twofa-default"
 
     kc = KeycloakAdmin(

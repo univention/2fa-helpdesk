@@ -23,11 +23,11 @@ spec:
   {{- if or .tls.enabled $.Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - "{{ $.Values.nubusBaseUrl }}"
-      secretName: "{{ $.Values.tls.secretName }}"
+        - "{{ tpl $.Values.nubusBaseUrl $ }}"
+      secretName: "{{ tpl $.Values.tls.secretName $ }}"
   {{- end }}
   rules:
-    - host: "{{ $.Values.nubusBaseUrl }}"
+    - host: "{{ tpl $.Values.nubusBaseUrl $ }}"
       {{- if .paths }}
       http:
         paths:

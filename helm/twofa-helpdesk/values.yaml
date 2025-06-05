@@ -46,15 +46,29 @@ provisioning:
     imagePullPolicy: IfNotPresent
 
   podSecurityContext:
-    enabled: false
+    enabled: true
     fsGroup: 1000
     runAsUser: 1000
     runAsGroup: 1000
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
 
   containerSecurityContext:
-    enabled: false
+    enabled: true
     allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    privileged: false
     readOnlyRootFilesystem: true
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  tolerations: []
+
 
 ingress:
 
@@ -168,7 +182,7 @@ twofaHelpdeskBackend:
 
     registry: ""
     repository: "nubus-dev/images/twofa-helpdesk-backend"
-    tag: ""
+    tag: "latest"
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 
@@ -236,21 +250,24 @@ twofaHelpdeskFrontend:
   podAnnotations: {}
   podSecurityContext:
     enabled: true
-    fsGroup: 1000
+    fsGroup: 101
     # -- Change ownership and permission of the volume before being exposed inside a Pod.
     fsGroupChangePolicy: "Always"
+    sysctls:
+      - name: "net.ipv4.ip_unprivileged_port_start"
+        value: "1"
   replicaCount: 1
   securityContext:
-    enabled: false # FIXME
+    enabled: true
     allowPrivilegeEscalation: false
     capabilities:
       drop:
       - ALL
     privileged: false
     readOnlyRootFilesystem: true
-    runAsGroup: 1000
+    runAsGroup: 101
     runAsNonRoot: true
-    runAsUser: 1000
+    runAsUser: 101
     seccompProfile:
       type: RuntimeDefault
   tolerations: []
@@ -261,7 +278,7 @@ twofaHelpdeskFrontend:
 
     registry: ""
     repository: "nubus-dev/images/twofa-helpdesk-frontend"
-    tag: ""
+    tag: "latest"
     # -- Define image sha256 as an alternative to `tag`
     sha256: null
 
