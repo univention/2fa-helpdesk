@@ -62,8 +62,14 @@
 | ingress.tls.secretName | string | `""` | The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided. |
 | provisioning.config.debug.enabled | bool | `true` |  |
 | provisioning.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
-| provisioning.containerSecurityContext.enabled | bool | `false` |  |
+| provisioning.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| provisioning.containerSecurityContext.enabled | bool | `true` |  |
+| provisioning.containerSecurityContext.privileged | bool | `false` |  |
 | provisioning.containerSecurityContext.readOnlyRootFilesystem | bool | `true` |  |
+| provisioning.containerSecurityContext.runAsGroup | int | `1000` |  |
+| provisioning.containerSecurityContext.runAsNonRoot | bool | `true` |  |
+| provisioning.containerSecurityContext.runAsUser | int | `1000` |  |
+| provisioning.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | provisioning.enabled | bool | `true` |  |
 | provisioning.image.imagePullPolicy | string | `"IfNotPresent"` |  |
 | provisioning.image.pullSecrets | list | `[]` |  |
@@ -71,15 +77,18 @@
 | provisioning.image.repository | string | `"nubus-dev/images/wait-for-dependency"` |  |
 | provisioning.image.sha256 | string | `""` |  |
 | provisioning.image.tag | string | `"0.31.0"` |  |
-| provisioning.podSecurityContext.enabled | bool | `false` |  |
+| provisioning.podSecurityContext.enabled | bool | `true` |  |
 | provisioning.podSecurityContext.fsGroup | int | `1000` |  |
 | provisioning.podSecurityContext.runAsGroup | int | `1000` |  |
+| provisioning.podSecurityContext.runAsNonRoot | bool | `true` |  |
 | provisioning.podSecurityContext.runAsUser | int | `1000` |  |
+| provisioning.podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | provisioning.provisioningImage.imagePullPolicy | string | `"IfNotPresent"` |  |
 | provisioning.provisioningImage.registry | string | `""` |  |
 | provisioning.provisioningImage.repository | string | `"nubus/images/keycloak-bootstrap"` |  |
 | provisioning.provisioningImage.sha256 | string | `""` |  |
 | provisioning.provisioningImage.tag | string | `"0.11.0@sha256:55ad741e01dd91bb9b0332fd602a6262d3618abdf97a86c13f1e6148b36bd242"` |  |
+| provisioning.tolerations | list | `[]` |  |
 | twofaHelpdeskBackend.affinity | object | `{}` |  |
 | twofaHelpdeskBackend.config.app_path | string | `"/backend"` |  |
 | twofaHelpdeskBackend.config.keycloak_admin_realm | string | `"master"` |  |
@@ -96,7 +105,7 @@
 | twofaHelpdeskBackend.image.registry | string | `""` |  |
 | twofaHelpdeskBackend.image.repository | string | `"nubus-dev/images/twofa-helpdesk-backend"` |  |
 | twofaHelpdeskBackend.image.sha256 | string | `nil` | Define image sha256 as an alternative to `tag` |
-| twofaHelpdeskBackend.image.tag | string | `""` |  |
+| twofaHelpdeskBackend.image.tag | string | `"latest"` |  |
 | twofaHelpdeskBackend.ingress.tls.secretName | string | `"twofa-backend-api-tls"` |  |
 | twofaHelpdeskBackend.nameOverride | string | `""` |  |
 | twofaHelpdeskBackend.nodeSelector | object | `{}` |  |
@@ -145,15 +154,17 @@
 | twofaHelpdeskFrontend.image.registry | string | `""` |  |
 | twofaHelpdeskFrontend.image.repository | string | `"nubus-dev/images/twofa-helpdesk-frontend"` |  |
 | twofaHelpdeskFrontend.image.sha256 | string | `nil` | Define image sha256 as an alternative to `tag` |
-| twofaHelpdeskFrontend.image.tag | string | `""` |  |
+| twofaHelpdeskFrontend.image.tag | string | `"latest"` |  |
 | twofaHelpdeskFrontend.nameOverride | string | `""` |  |
 | twofaHelpdeskFrontend.nodeSelector | object | `{}` |  |
 | twofaHelpdeskFrontend.persistence.data.size | string | `"1Gi"` |  |
 | twofaHelpdeskFrontend.persistence.data.storageClass | string | `""` |  |
 | twofaHelpdeskFrontend.podAnnotations | object | `{}` |  |
 | twofaHelpdeskFrontend.podSecurityContext.enabled | bool | `true` |  |
-| twofaHelpdeskFrontend.podSecurityContext.fsGroup | int | `1000` |  |
+| twofaHelpdeskFrontend.podSecurityContext.fsGroup | int | `101` |  |
 | twofaHelpdeskFrontend.podSecurityContext.fsGroupChangePolicy | string | `"Always"` | Change ownership and permission of the volume before being exposed inside a Pod. |
+| twofaHelpdeskFrontend.podSecurityContext.sysctls[0].name | string | `"net.ipv4.ip_unprivileged_port_start"` |  |
+| twofaHelpdeskFrontend.podSecurityContext.sysctls[0].value | string | `"1"` |  |
 | twofaHelpdeskFrontend.probes.liveness.enabled | bool | `true` |  |
 | twofaHelpdeskFrontend.probes.liveness.failureThreshold | int | `3` |  |
 | twofaHelpdeskFrontend.probes.liveness.initialDelaySeconds | int | `20` |  |
@@ -170,12 +181,12 @@
 | twofaHelpdeskFrontend.resources | object | `{"limits":{"cpu":"4","memory":"4Gi"},"requests":{"cpu":"250m","memory":"512Mi"}}` | Deployment resources for the listener container |
 | twofaHelpdeskFrontend.securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | twofaHelpdeskFrontend.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| twofaHelpdeskFrontend.securityContext.enabled | bool | `false` |  |
+| twofaHelpdeskFrontend.securityContext.enabled | bool | `true` |  |
 | twofaHelpdeskFrontend.securityContext.privileged | bool | `false` |  |
 | twofaHelpdeskFrontend.securityContext.readOnlyRootFilesystem | bool | `true` |  |
-| twofaHelpdeskFrontend.securityContext.runAsGroup | int | `1000` |  |
+| twofaHelpdeskFrontend.securityContext.runAsGroup | int | `101` |  |
 | twofaHelpdeskFrontend.securityContext.runAsNonRoot | bool | `true` |  |
-| twofaHelpdeskFrontend.securityContext.runAsUser | int | `1000` |  |
+| twofaHelpdeskFrontend.securityContext.runAsUser | int | `101` |  |
 | twofaHelpdeskFrontend.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | twofaHelpdeskFrontend.service.enabled | bool | `true` |  |
 | twofaHelpdeskFrontend.service.ports.http.containerPort | int | `80` |  |
