@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.0...v0.3.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* change extension to use ucs-base-image, remove useless folders, restructure plugins folder ([9600097](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/9600097aa549bca748c18b6d15b260dbdea22434))
+
 ## [0.3.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.2.1...v0.3.0) (2025-06-05)
 
 
