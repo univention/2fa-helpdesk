@@ -193,7 +193,7 @@ twofaHelpdeskBackend:
     keycloak_url: ""
     keycloak_admin_realm: "master"
     keycloak_admin_user: kcadmin
-    twofa_admin_groups: ["/2fa-admins"]
+    twofa_admin_groups: ["/Domain Admins"]
     app_path: "/backend"
 
   service:
