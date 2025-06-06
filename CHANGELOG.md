@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.1...v0.3.2) (2025-06-06)
+
+
+### Bug Fixes
+
+* remove old file ([e769889](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e769889a75fffe0c1cf7a63b81e6dab70fbdf97c))
+
 ## [0.3.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.0...v0.3.1) (2025-06-06)
 
 
