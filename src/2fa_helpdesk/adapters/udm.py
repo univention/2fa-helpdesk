@@ -40,7 +40,7 @@ def list_users(query: str = "") -> list[User]:
     users = []
     udm_module = _get_udm_module()
     result = udm_module.module.search(
-        f"(|(uid={query}*)(mailPrimaryAddress={query}*)(firstname={query}*)(lastname={query}*))"
+        f"(|(uid={query}*)(mailPrimaryAddress={query}*)(firstname={query}*)(lastname={query}*))",
     )
 
     for _user in result:

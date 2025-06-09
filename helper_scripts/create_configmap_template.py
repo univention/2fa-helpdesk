@@ -1,4 +1,6 @@
-import os
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 import yaml
 import argparse
 
@@ -21,9 +23,9 @@ def create_configmap(env_vars, name, namespace="default"):
         "kind": "ConfigMap",
         "metadata": {
             "name": name,
-            "namespace": namespace
+            "namespace": namespace,
         },
-        "data": env_vars
+        "data": env_vars,
     }
 
     return configmap

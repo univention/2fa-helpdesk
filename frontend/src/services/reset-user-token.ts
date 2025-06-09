@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-FileCopyrightText: 2025 Univention GmbH
+ */
+
 import axios from "axios";
 import type { UserData } from "../types";
 let isResetting = false;

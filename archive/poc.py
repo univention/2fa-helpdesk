@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 from fastapi import FastAPI, HTTPException, Query
 from typing import List
 import requests
@@ -95,7 +98,7 @@ def get_kc_admin():
             password=PASSWORD,
             realm_name=REALM_NAME,
             client_id="admin-cli",
-            verify=True  # Set to False if using self-signed certs
+            verify=True,  # Set to False if using self-signed certs
         )
         return kc_admin
     except Exception as e:
@@ -163,7 +166,7 @@ def add_user_to_group(data: GroupAddRequest, auth: HTTPBasicAuth = Depends(get_u
         f"{UDM_URL}/users/user",
         auth=auth,
         params={"filter": f"username={data.username}"},
-        verify=VERIFY_SSL
+        verify=VERIFY_SSL,
     )
     if not user_resp.ok or not user_resp.json().get("items"):
         raise HTTPException(status_code=404, detail=f"User '{data.username}' not found")
@@ -174,7 +177,7 @@ def add_user_to_group(data: GroupAddRequest, auth: HTTPBasicAuth = Depends(get_u
         f"{UDM_URL}/groups",
         auth=auth,
         params={"filter": f"name={data.group}"},
-        verify=VERIFY_SSL
+        verify=VERIFY_SSL,
     )
     if not group_resp.ok or not group_resp.json().get("items"):
         raise HTTPException(status_code=404, detail=f"Group '{data.group}' not found")
@@ -192,7 +195,7 @@ def add_user_to_group(data: GroupAddRequest, auth: HTTPBasicAuth = Depends(get_u
         f"{UDM_URL}/groups/{group_dn}",
         auth=auth,
         json={"users": group_users},
-        verify=VERIFY_SSL
+        verify=VERIFY_SSL,
     )
     if not patch_resp.ok:
         raise HTTPException(status_code=500, detail=f"Failed to update group: {patch_resp.text}")
@@ -246,7 +249,7 @@ def add_group_to_2fa_role(data: GroupToRoleRequest):
         return {
             "group": data.group_name,
             "role_assigned": "2fa",
-            "status": "success"
+            "status": "success",
         }
 
     except KeycloakGetError as e:

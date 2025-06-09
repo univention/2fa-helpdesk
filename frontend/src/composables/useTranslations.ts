@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-FileCopyrightText: 2025 Univention GmbH
+ */
+
 import { ref, computed } from "vue";
 
 export enum Locale {

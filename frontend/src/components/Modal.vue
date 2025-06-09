@@ -1,3 +1,8 @@
+<!--
+ SPDX-License-Identifier: AGPL-3.0-only
+ SPDX-FileCopyrightText: 2025 Univention GmbH
+-->
+
 <template>
   <div v-if="isOpen" class="modal-backdrop" @click.self="closeModal">
     <div

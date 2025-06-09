@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
+---
+
+provisioning:
+  enabled: true
+  config:
+    debug:
+      enabled: true
+
+ingress:
+  ingressClassName: "nginx"
+  host: "twofa.example.test"
+  tls:
+    secretName: "twofa-tls"
+
+twofaHelpdeskBackend:
+  config:
+    oidc_host: "http://nubus-keycloak:8080"
+    oidc_realm: "nubus"
+    oidc_client: "twofa-helpdesk"
+    keycloak_url: "http://nubus-keycloak:8080"
+    keycloak_admin_realm: "master"
+    keycloak_admin_user: kcAdmin
+    twofa_admin_groups: ["/dummy group"]
+
+
+...

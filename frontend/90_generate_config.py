@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 
 import os
 import json
@@ -7,7 +10,9 @@ from pathlib import Path
 # generate config.json for VITE-Deployment
 output_path = Path("/usr/share/nginx/html/ui/config.json")
 
-vite_env_vars = {key: value for key, value in os.environ.items() if key.startswith("VITE_")}
+vite_env_vars = {
+    key: value for key, value in os.environ.items() if key.startswith("VITE_")
+}
 
 output_path.parent.mkdir(parents=True, exist_ok=True)
 
