@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.2...v0.3.3) (2025-06-10)
+
+
+### Bug Fixes
+
+* allow deactivate tiles from data-loader ([fb9d862](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/fb9d8625e795f142599f9f88cb63fc7afb42c6ab)), closes [univention/dev/internal/team-nubus#1211](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1211)
+
 ## [0.3.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.1...v0.3.2) (2025-06-06)
 
 
