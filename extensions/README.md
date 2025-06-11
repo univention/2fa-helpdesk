@@ -20,5 +20,3 @@ nubusStackDataUms:
     twofaActivated: true
 
 ```
-
-
