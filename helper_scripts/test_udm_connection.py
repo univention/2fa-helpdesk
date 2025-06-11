@@ -1,8 +1,9 @@
 #!/usr/bin/python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
 
-import os
+
 import requests
-import json
 
 ## Step 1: authenticate using Keycloak
 
@@ -63,7 +64,7 @@ r = requests.post(
         "client_id": "admin-cli",
         "username": UCS_ADMIN,
         "password": UCS_ADMIN_PASS,
-    }
+    },
 )
 print(r)
 print(r.json())

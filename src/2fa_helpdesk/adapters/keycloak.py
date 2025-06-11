@@ -24,13 +24,17 @@ def _get_kc_admin():
             realm_name=os.environ["KEYCLOAK_REALM_NAME"],
             user_realm_name=os.environ["KEYCLOAK_ADMIN_REALM_NAME"],
             client_id=os.environ.get("KEYCLOAK_CLIENT_ID") or "admin-cli",
-            verify=os.environ.get("KEYCLOAK_VERIFY_SSL") or True
+            verify=os.environ.get("KEYCLOAK_VERIFY_SSL") or True,
         )
         return kc_admin
     except KeyError as e:
-        raise fastapi.HTTPException(status_code=500, detail=f"Missing required Environment: {str(e)}")
+        raise fastapi.HTTPException(
+            status_code=500, detail=f"Missing required Environment: {str(e)}",
+        )
     except Exception as e:
-        raise fastapi.HTTPException(status_code=500, detail=f"Keycloak connection error: {type(e)} - {str(e)}")
+        raise fastapi.HTTPException(
+            status_code=500, detail=f"Keycloak connection error: {type(e)} - {str(e)}",
+        )
 
 def _logout_user_sessions(kc_admin, user_id):
     '''Logout/Kill all user session'''
@@ -72,7 +76,7 @@ def list_users(query: str, page: int, limit: int) -> typing.Tuple[list[User], in
     # generate user count query #
     query_struct_user_count = {
         "search" : query or "*@*",
-        "briefRepresentation": True
+        "briefRepresentation": True,
     }
 
     user_dicts = kc_admin.get_users(query=query_struct_with_pages)
@@ -92,8 +96,8 @@ def list_users(query: str, page: int, limit: int) -> typing.Tuple[list[User], in
                 email=kc_user.get('email'),
                 firstname=kc_user.get('firstName'),
                 lastname=kc_user.get('lastName'),
-                totp=kc_user.get('totp')
-            )
+                totp=kc_user.get('totp'),
+            ),
         )
 
     return users, total_for_this_query

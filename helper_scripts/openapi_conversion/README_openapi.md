@@ -494,4 +494,3 @@ WhoAmIResponse
 |token|object|true|none|none|
 |success|boolean|true|none|none|
 |twofa_admin|boolean|true|none|none|
-

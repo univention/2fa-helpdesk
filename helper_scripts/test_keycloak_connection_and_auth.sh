@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 
 : "${KEYCLOAK_ADMIN:?Need to set KEYCLOAK_ADMIN}"
 : "${KEYCLOAK_PASSWORD:?Need to set KEYCLOAK_PASSWORD}"

@@ -1,4 +1,9 @@
 /**
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * SPDX-FileCopyrightText: 2025 Univention GmbH
+ */
+
+/**
  * Utility to load custom CSS styles provided by customers
  * These styles will override the default theme.css
  */

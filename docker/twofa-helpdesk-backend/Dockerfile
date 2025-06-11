@@ -44,7 +44,7 @@ ENV \
     PYTHONPATH=.:/usr/lib/python3/dist-packages/
 
 # install Poetry
-RUN pip3 install --break-system-packages --no-cache-dir poetry>=1.7.0
+RUN pip3 install --break-system-packages --no-cache-dir poetry==2.1.3
 RUN poetry --version
 
 COPY ./src ${WORKDIR}

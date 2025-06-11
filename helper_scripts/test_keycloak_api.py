@@ -1,4 +1,7 @@
 #! /usr/bin/python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 import requests
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -24,8 +27,8 @@ r = requests.post(
     data={
         "grant_type": "client_credentials",
         "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET
-    }
+        "client_secret": CLIENT_SECRET,
+    },
 )
 access_token = r.json()["access_token"]
 
@@ -34,11 +37,11 @@ r = requests.get(
     f"https://{HOSTNAME}/admin/realms/{REALM}/users",
     verify=False,
     headers={
-        "Authorization": f"bearer {access_token}"
+        "Authorization": f"bearer {access_token}",
     },
     params={
-        "username": USERNAME
-    }
+        "username": USERNAME,
+    },
 )
 user_id = r.json()[0]["id"]
 
@@ -47,8 +50,8 @@ r = requests.get(
     f"https://{HOSTNAME}/admin/realms/{REALM}/users/{user_id}/credentials",
     verify=False,
     headers={
-        "Authorization": f"bearer {access_token}"
-    }
+        "Authorization": f"bearer {access_token}",
+    },
 )
 otp_cred = [i for i in r.json() if i["type"] == "otp"]  # filter OTPs
 if not otp_cred:
@@ -61,8 +64,8 @@ r = requests.delete(
     f"https://{HOSTNAME}/admin/realms/{REALM}/users/{user_id}/credentials/{cred_id}",
     verify=False,
     headers={
-        "Authorization": f"bearer {access_token}"
-    }
+        "Authorization": f"bearer {access_token}",
+    },
 )
 
 if r.status_code == 204:

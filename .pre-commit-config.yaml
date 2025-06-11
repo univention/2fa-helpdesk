@@ -1,0 +1,101 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
+---
+
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+  - repo: "https://github.com/pre-commit/pre-commit-hooks"
+    rev: "v4.4.0"
+    hooks:
+      # "check for added large files"
+      - id: "check-added-large-files"
+        args:
+          - "--maxkb=2048"
+      # "check for merge conflicts"
+      - id: "check-merge-conflict"
+      # "check yaml"
+      - id: "check-yaml"
+        args:
+          - "--allow-multiple-documents"
+        exclude: "^helm/.+/(templates|data-files)/|^extensions/plugins/udm/udm-data-loader/"
+      # "fix end of files"
+      - id: "end-of-file-fixer"
+        exclude: "^helm/.+/(README.md|.*.svg)"
+      # "fix python encoding pragma"
+      - id: "fix-encoding-pragma"
+        args:
+          - "--remove"
+      # "trim trailing whitespace"
+      - id: "trailing-whitespace"
+        # Whitespace is specific syntax in markdown
+        exclude: '.*\.md$'
+
+  - repo: "https://github.com/compilerla/conventional-pre-commit"
+    rev: "v2.1.1"
+    hooks:
+      - id: "conventional-pre-commit"
+        stages: ["commit-msg"]
+
+  # "Python linter"
+  - repo: "https://github.com/astral-sh/ruff-pre-commit"
+    rev: "v0.0.275"
+    hooks:
+      - id: "ruff"
+        args:
+          - "--fix"
+          - "--exit-non-zero-on-fix"
+          - "--extend-select"
+          - "COM"
+        exclude: "^archive/|^helper_scripts/"
+
+  # This is a wrapper for shellcheck as long as
+  # shellcheck doesn't have it's own .pre-commit-hooks.yaml
+  # https://github.com/koalaman/shellcheck/pull/1032
+  - repo: "https://gitlab.com/univention/pre-commit-hooks/pre-commit-shell"
+    rev: "v1.0.6"
+    hooks:
+      # "Shell Syntax Check"
+      - id: "shell-lint"
+        exclude: "^helper_scripts"
+
+  # "docker-compose.yaml linter"
+  - repo: "https://gitlab.com/univention/pre-commit-hooks/docker-compose-check"
+    rev: "7702a8801a158b8595569dd29e2dd655d8a08310"
+    hooks:
+      # "Validate docker-compose files"
+      - id: "docker-compose-check"
+
+  # "Dockerfile linter"
+  - repo: "https://gitlab.com/univention/pre-commit-hooks/docker-pre-commit"
+    rev: "v2.0.0"
+    hooks:
+      # "Lint Dockerfiles"
+      - id: "hadolint-system"
+        args:
+          - --ignore
+          - DL3059
+          - --ignore
+          - DL3008
+        exclude: "^helper_scripts"
+
+  - repo: "https://git.knut.univention.de/univention/infrastructure/pre-commit-hooks/addlicense"
+    rev: "v1.0.1"
+    hooks:
+      - id: "addlicense"
+        name: "Check or add license headers to files"
+
+  - repo: "https://github.com/norwoodj/helm-docs"
+    rev: "v1.12.0"
+    hooks:
+    - id: helm-docs
+      args:
+        - --chart-search-root=helm
+
+#  - repo: "https://git.knut.univention.de/univention/customers/dataport/upx/kyverno-test-pre-commit"
+#    rev: "v0.2.0"
+#    hooks:
+#      - id: "kyverno-test"
+...

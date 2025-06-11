@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 # Step 1: Build the app
 FROM node:20-alpine AS builder
 
@@ -8,7 +11,7 @@ RUN yarn install --frozen-lockfile && yarn build
 # Step 2: Serve with nginx
 FROM nginx:stable-alpine
 
-RUN apk add python3
+RUN apk add --no-cache python3=3.12.11-r0
 
 COPY --from=builder /app/dist /usr/share/nginx/html/ui
 

@@ -1,18 +1,16 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 from pydantic import BaseModel
-from typing import List, Dict, Any, Annotated
 from typing import Annotated, Any, Dict, List, Optional
 
 import jwt
 import os
 import fastapi
-from fastapi import FastAPI, APIRouter, HTTPException, Security, security, status
+from fastapi import FastAPI, HTTPException, Security, security, status
 from fastapi.responses import JSONResponse
 import pydantic
 from pydantic_settings import BaseSettings
 
-import os
 import adapters.keycloak
 import adapters.udm
 import logging
@@ -21,12 +19,16 @@ class ResetUsersRequest(BaseModel):
     user_ids: List[str]
 
 class ListUserQuery(BaseModel):
-    query: Optional[str] = pydantic.Field("", description="Search for users matching this query")
+    query: Optional[str] = pydantic.Field(
+        "", description="Search for users matching this query",
+    )
 
 class ResetResponse(BaseModel):
     success: bool
     detail: str
-    resets_by_user: Dict[str, int] = pydantic.Field("", description="Map of usernames to reset counts")
+    resets_by_user: Dict[str, int] = pydantic.Field(
+        "", description="Map of usernames to reset counts",
+    )
 
 class WhoAmIResponse(BaseModel):
     token: dict
@@ -75,7 +77,7 @@ settings = Settings(
     token_url=f"{oidc_host}/realms/{oidc_realm}/protocol/openid-connect/token",
     authorization_url=f"{oidc_host}/realms/{oidc_realm}/login-actions/authenticate",
     jwks_url=f"{oidc_host}/realms/{oidc_realm}/protocol/openid-connect/certs",
-    client_id=os.environ["OIDC_CLIENT_ID"]
+    client_id=os.environ["OIDC_CLIENT_ID"],
 )
 jwks_client = jwt.PyJWKClient(settings.jwks_url)  # Caches JWKS
 
@@ -109,7 +111,9 @@ def user_token(
         )
     except (RuntimeError, jwt.exceptions.DecodeError) as e:
         #print("Token no validated. Using Fake Token", e)
-        #return {"username" : "Administrator", "2fa_user_groups": ["2fa_admin", "test"], "is_fake_token": True }
+        #return {"username" : "Administrator",
+        # "2fa_user_groups": ["2fa_admin", "test"],
+        # "is_fake_token": True }
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -123,7 +127,7 @@ def user_token(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Not enough permissions",
                 headers={
-                    "WWW-Authenticate": f'Bearer scope="{required_scopes.scope_str}"'
+                    "WWW-Authenticate": f'Bearer scope="{required_scopes.scope_str}"',
                 },
             )
 
@@ -171,7 +175,7 @@ def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)])
     return ResetResponse(
         success=True,
         detail="",
-        resets_by_user={user_id: results_count}
+        resets_by_user={user_id: results_count},
     )
 
 @backend_app.post(
@@ -181,7 +185,7 @@ def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)])
 )
 def reset_user_tokens(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
-    body: ResetUsersRequest
+    body: ResetUsersRequest,
 ):
 
     results = dict()
@@ -212,7 +216,7 @@ def list_users(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
     page: Optional[int] = fastapi.Query(0),
     limit: Optional[int] = fastapi.Query(20),
-    body: ListUserQuery = None
+    body: ListUserQuery = None,
 ):
 
     success = False
@@ -239,7 +243,7 @@ def list_users(
         total=total,
         total_pages=int(total/limit)+1,
         page=page,
-        limit=limit
+        limit=limit,
     )
 
 @backend_app.get(
@@ -254,7 +258,7 @@ def whoami(
     return WhoAmIResponse(
         token=user_token,
         success=True, # FIXME
-        twofa_admin=is_2fa_admin(user_token)
+        twofa_admin=is_2fa_admin(user_token),
     )
 
 @backend_app.get("/backend/openapi.json", include_in_schema=False)

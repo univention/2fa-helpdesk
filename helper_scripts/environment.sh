@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
 
 if [ -z "$NAMESPACE" ]; then
     read -rp "Enter the namespace (or do export NAMESPACE= yourself): " NAMESPACE
