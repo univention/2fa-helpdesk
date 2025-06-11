@@ -156,12 +156,13 @@
 | twofaHelpdeskFrontend.image.sha256 | string | `nil` | Define image sha256 as an alternative to `tag` |
 | twofaHelpdeskFrontend.image.tag | string | `"latest"` |  |
 | twofaHelpdeskFrontend.nameOverride | string | `""` |  |
+| twofaHelpdeskFrontend.nginx.disableIPv6 | bool | `true` |  |
 | twofaHelpdeskFrontend.nodeSelector | object | `{}` |  |
 | twofaHelpdeskFrontend.persistence.data.size | string | `"1Gi"` |  |
 | twofaHelpdeskFrontend.persistence.data.storageClass | string | `""` |  |
 | twofaHelpdeskFrontend.podAnnotations | object | `{}` |  |
 | twofaHelpdeskFrontend.podSecurityContext.enabled | bool | `true` |  |
-| twofaHelpdeskFrontend.podSecurityContext.fsGroup | int | `101` |  |
+| twofaHelpdeskFrontend.podSecurityContext.fsGroup | int | `1000` |  |
 | twofaHelpdeskFrontend.podSecurityContext.fsGroupChangePolicy | string | `"Always"` | Change ownership and permission of the volume before being exposed inside a Pod. |
 | twofaHelpdeskFrontend.podSecurityContext.sysctls[0].name | string | `"net.ipv4.ip_unprivileged_port_start"` |  |
 | twofaHelpdeskFrontend.podSecurityContext.sysctls[0].value | string | `"1"` |  |
@@ -184,9 +185,9 @@
 | twofaHelpdeskFrontend.securityContext.enabled | bool | `true` |  |
 | twofaHelpdeskFrontend.securityContext.privileged | bool | `false` |  |
 | twofaHelpdeskFrontend.securityContext.readOnlyRootFilesystem | bool | `true` |  |
-| twofaHelpdeskFrontend.securityContext.runAsGroup | int | `101` |  |
+| twofaHelpdeskFrontend.securityContext.runAsGroup | int | `1000` |  |
 | twofaHelpdeskFrontend.securityContext.runAsNonRoot | bool | `true` |  |
-| twofaHelpdeskFrontend.securityContext.runAsUser | int | `101` |  |
+| twofaHelpdeskFrontend.securityContext.runAsUser | int | `1000` |  |
 | twofaHelpdeskFrontend.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
 | twofaHelpdeskFrontend.service.enabled | bool | `true` |  |
 | twofaHelpdeskFrontend.service.ports.http.containerPort | int | `80` |  |

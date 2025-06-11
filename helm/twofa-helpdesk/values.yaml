@@ -253,7 +253,7 @@ twofaHelpdeskFrontend:
   podAnnotations: {}
   podSecurityContext:
     enabled: true
-    fsGroup: 101
+    fsGroup: 1000
     # -- Change ownership and permission of the volume before being exposed inside a Pod.
     fsGroupChangePolicy: "Always"
     sysctls:
@@ -268,12 +268,15 @@ twofaHelpdeskFrontend:
       - ALL
     privileged: false
     readOnlyRootFilesystem: true
-    runAsGroup: 101
+    runAsGroup: 1000
     runAsNonRoot: true
-    runAsUser: 101
+    runAsUser: 1000
     seccompProfile:
       type: RuntimeDefault
   tolerations: []
+
+  nginx:
+    disableIPv6: true
 
   image:
     imagePullPolicy: "Always"
