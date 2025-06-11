@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.4...v0.3.5) (2025-06-11)
+
+
+### Bug Fixes
+
+* **twofa-frontend:** use univention nginx image ([565722f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/565722f4098c9b1f1a2f08679e49d274c08d559e)), closes [univention/dev/internal/team-nubus#1224](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1224)
+
 ## [0.3.4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.3...v0.3.4) (2025-06-11)
 
 
