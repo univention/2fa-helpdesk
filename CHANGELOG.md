@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.3...v0.3.4) (2025-06-11)
+
+
+### Bug Fixes
+
+* resolved linter issue on extension's README ([73614d7](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/73614d784541f3c84983c858076c7c1c165fe196)), closes [univention/dev/internal/team-nubus#1214](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1214)
+
 ## [0.3.3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.2...v0.3.3) (2025-06-10)
 
 
