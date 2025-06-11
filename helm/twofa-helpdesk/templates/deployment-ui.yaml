@@ -58,6 +58,10 @@ spec:
         emptyDir: {}
       - name: var-lib-nginx-volume
         emptyDir: {}
+      - name: {{ printf "%s-nginx" (include "common.names.fullname" .) | quote }}
+        configMap:
+          name: {{ printf "%s-nginx" (include "common.names.fullname" .) | quote }}
+          defaultMode: 420
       {{- if .Values.twofaHelpdeskFrontend.podSecurityContext.enabled }}
       securityContext:
         {{- omit .Values.twofaHelpdeskFrontend.podSecurityContext "enabled" | toYaml  | nindent 10 }}
@@ -93,6 +97,9 @@ spec:
             mountPath: /var/run
           - name: var-lib-nginx-volume
             mountPath: /var/lib/nginx
+          - name: {{ printf "%s-nginx" (include "common.names.fullname" .) | quote }}
+            subPath: nginx.conf
+            mountPath: /etc/nginx/nginx.conf
         env:
         envFrom:
           - configMapRef:
