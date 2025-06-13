@@ -57,15 +57,17 @@
 | ingress.tls | object | `{"enabled":true,"secretName":""}` | Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.  Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls |
 | ingress.tls.enabled | bool | `true` | Enable TLS/SSL/HTTPS for Ingress. |
 | ingress.tls.secretName | string | `""` | The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided. |
-| keycloak | object | `{"admin_realm":"master","auth":{"existingSecret":{"keyMapping":{"adminPassword":null},"name":null},"password":"","username":"kcadmin"},"client":"twofa-helpdesk","connection":{"host":"","port":"8080"},"realm":""}` | Keycloak specific settings. |
+| keycloak | object | `{"admin_realm":"master","auth":{"existingSecret":{"keyMapping":{"adminPassword":null},"name":null},"password":"","username":"kcadmin"},"client":"twofa-helpdesk","connection":{"host":"","port":"8080","url":""},"realm":""}` | Keycloak specific settings. |
 | keycloak.auth.existingSecret | object | `{"keyMapping":{"adminPassword":null},"name":null}` | Keycloak password secret reference. |
 | keycloak.auth.password | string | `""` | Keycloak password. |
 | keycloak.auth.username | string | `"kcadmin"` | Keycloak user. |
 | keycloak.client | string | `"twofa-helpdesk"` | Keycloak 2FA client name |
-| keycloak.connection | object | `{"host":"","port":"8080"}` | Connection parameters. |
-| keycloak.connection.host | string | `""` | Keycloak host. |
+| keycloak.connection | object | `{"host":"","port":"8080","url":""}` | Connection parameters. |
+| keycloak.connection.host | string | `""` | Keycloak host (for cluster internal connection of the backend service). |
 | keycloak.connection.port | string | `"8080"` | Keycloak port. |
+| keycloak.connection.url | string | `""` | Keycloak URL (for the helpdesk UI). |
 | keycloak.realm | string | `""` | Keycloak realm. |
+| nubusBaseUrl | string | `""` |  |
 | provisioning.config.debug.enabled | bool | `true` |  |
 | provisioning.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | provisioning.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
@@ -95,8 +97,8 @@
 | provisioning.provisioningImage.sha256 | string | `""` |  |
 | provisioning.provisioningImage.tag | string | `"0.12.1@sha256:4a36e3753bda7d6ccc6fc98f5e115bf96a4257c1a9458d075888256484cfdd4b"` |  |
 | provisioning.tolerations | list | `[]` |  |
+| provisioning.ttlSecondsAfterFinished | int | `60` |  |
 | twofaHelpdeskBackend.affinity | object | `{}` |  |
-| twofaHelpdeskBackend.config.keycloak_url | string | `""` |  |
 | twofaHelpdeskBackend.config.twofa_admin_groups[0] | string | `"/Domain Admins"` |  |
 | twofaHelpdeskBackend.environment | object | `{}` |  |
 | twofaHelpdeskBackend.fullnameOverride | string | `""` |  |

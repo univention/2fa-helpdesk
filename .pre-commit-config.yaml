@@ -49,6 +49,7 @@ repos:
           - "--exit-non-zero-on-fix"
           - "--extend-select"
           - "COM"
+          - "--line-length=100"
         exclude: "^archive/|^helper_scripts/"
 
   # This is a wrapper for shellcheck as long as

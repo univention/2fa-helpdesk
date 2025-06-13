@@ -16,8 +16,10 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.twofaHelpdeskBackend.extraAnnotations "context" . ) | nindent 4 }}
   {{- end }}
 data:
-  OIDC_HOST: "{{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . }}"
-  OIDC_REALM: "{{ default .Values.global.keycloak.realm (tpl .Values.keycloak.realm .) }}"
+  OIDC_REALM: "{{ tpl .Values.keycloak.realm . }}"
+  OIDC_HOST: "{{ printf "http://%s:%s"
+    (required "keycloak.connection.host is required" (tpl .Values.keycloak.connection.host .))
+    (required "keycloak.connection.port is required" (tpl .Values.keycloak.connection.port .)) }}"
   OIDC_CLIENT_ID: "{{ tpl .Values.keycloak.client . }}"
 
   # currently unused #
@@ -26,9 +28,11 @@ data:
   UDM_HOST: ""
 
   # Keycloak configuration
-  KEYCLOAK_URL: "{{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . }}"
-  KEYCLOAK_USERNAME: "{{ tpl .Values.twofaHelpdeskBackend.auth.username . }}"
-  KEYCLOAK_REALM_NAME: "{{ default .Values.global.keycloak.realm (tpl .Values.keycloak.realm .) }}"
+  KEYCLOAK_URL: "{{ printf "http://%s:%s"
+    (required "keycloak.connection.host is required" (tpl .Values.keycloak.connection.host .))
+    (required "keycloak.connection.port is required" (tpl .Values.keycloak.connection.port .)) }}"
+  KEYCLOAK_USERNAME: "{{ tpl .Values.keycloak.auth.username . }}"
+  KEYCLOAK_REALM_NAME: "{{ tpl .Values.keycloak.realm . }}"
   KEYCLOAK_ADMIN_REALM_NAME: "{{ tpl .Values.keycloak.admin_realm . }}"
 
   TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaHelpdeskBackend.config.twofa_admin_groups }}
@@ -37,8 +41,8 @@ data:
 
   VITE_API_URL: /backend
   VITE_API_TOKEN: test
-  VITE_KEYCLOAK_URL: "{{ tpl .Values.twofaHelpdeskBackend.config.keycloak_url . }}"
-  VITE_KEYCLOAK_REALM: "{{ default .Values.global.keycloak.realm (tpl .Values.keycloak.realm .) }}"
+  VITE_KEYCLOAK_URL: "{{ required "keycloak.connection.url is required" (tpl .Values.keycloak.connection.url .) }}"
+  VITE_KEYCLOAK_REALM: "{{ tpl .Values.keycloak.realm . }}"
   VITE_KEYCLOAK_CLIENT_ID: "{{ tpl .Values.keycloak.client . }}"
 ...
 ---
