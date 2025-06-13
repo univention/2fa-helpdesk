@@ -30,8 +30,6 @@
 | global.replicaCount | int | `1` |  |
 | global.restartPolicy | string | `"OnFailure"` |  |
 | global.securityContext | object | `{}` |  |
-| global.subDomains.keycloak | string | `"id"` |  |
-| global.subDomains.portal | string | `"portal"` |  |
 | global.tolerations | list | `[]` |  |
 | ingress.annotations | object | `{}` | Define custom ingress annotations for all Ingresses. |
 | ingress.certManager.enabled | bool | `false` | Enable cert-manager.io annotaion. |
@@ -59,14 +57,15 @@
 | ingress.tls | object | `{"enabled":true,"secretName":""}` | Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.  Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls |
 | ingress.tls.enabled | bool | `true` | Enable TLS/SSL/HTTPS for Ingress. |
 | ingress.tls.secretName | string | `""` | The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided. |
-| keycloak | object | `{"admin_realm":"master","auth":{"existingSecret":{"keyMapping":{"password":null},"name":null},"password":"","username":""},"client":"twofa-helpdesk","connection":{"host":"","port":"8080"},"realm":""}` | Keycloak specific settings. |
-| keycloak.auth.existingSecret | object | `{"keyMapping":{"password":null},"name":null}` | Keycloak password secret reference. |
+| keycloak | object | `{"admin_realm":"master","auth":{"existingSecret":{"keyMapping":{"adminPassword":null},"name":null},"password":"","username":"kcadmin"},"client":"twofa-helpdesk","connection":{"host":"","port":"8080"},"realm":""}` | Keycloak specific settings. |
+| keycloak.auth.existingSecret | object | `{"keyMapping":{"adminPassword":null},"name":null}` | Keycloak password secret reference. |
 | keycloak.auth.password | string | `""` | Keycloak password. |
-| keycloak.auth.username | string | `""` | Keycloak user. |
-| keycloak.client | string | `"twofa-helpdesk"` | Keycloak realm. |
+| keycloak.auth.username | string | `"kcadmin"` | Keycloak user. |
+| keycloak.client | string | `"twofa-helpdesk"` | Keycloak 2FA client name |
 | keycloak.connection | object | `{"host":"","port":"8080"}` | Connection parameters. |
 | keycloak.connection.host | string | `""` | Keycloak host. |
 | keycloak.connection.port | string | `"8080"` | Keycloak port. |
+| keycloak.realm | string | `""` | Keycloak realm. |
 | provisioning.config.debug.enabled | bool | `true` |  |
 | provisioning.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | provisioning.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |

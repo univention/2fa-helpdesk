@@ -21,9 +21,6 @@ global:
       port: ""
 
   domain: ""
-  subDomains:
-    keycloak: "id"
-    portal: "portal"
 
 extraIngresses: []
 
@@ -146,20 +143,21 @@ ingress:
 
 # -- Keycloak specific settings.
 keycloak:
-  # -- Keycloak realm.
+  # -- Keycloak 2FA client name
   client: "twofa-helpdesk"
+  # -- Keycloak realm.
   realm: ""
   admin_realm: "master"
   auth:
     # -- Keycloak user.
-    username: ""
+    username: "kcadmin"
     # -- Keycloak password.
     password: ""
     # -- Keycloak password secret reference.
     existingSecret:
       name: null
       keyMapping:
-        password: null
+        adminPassword: null
   # -- Connection parameters.
   connection:
     # -- Keycloak host.
