@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.5...v0.4.0) (2025-06-13)
+
+
+### Features
+
+* refactor provisioning to follow Nubus style ([fa4e589](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/fa4e589b7b4f72690e21f3836cf03f44116dd5df)), closes [univention/dev/internal/team-nubus#1213](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1213)
+
+
+### Bug Fixes
+
+* QA suggestions ([06b90fc](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/06b90fc08a362134bdc12fcc1f551cbece6f0d0c)), closes [univention/dev/internal/team-nubus#1213](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1213)
+
 ## [0.3.5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.4...v0.3.5) (2025-06-11)
 
 
