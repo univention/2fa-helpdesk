@@ -33,7 +33,7 @@ provisioning:
   image:
     registry: ""
     repository: "nubus/images/wait-for-dependency"
-    tag: "0.32.0@sha256:a746257d2ad5ead98db0032378a5aa5b6462af0c24750bd576d3c404c78d6d6c"
+    tag: "0.32.1@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
     sha256: ""  # Optional
     imagePullPolicy: IfNotPresent
     pullSecrets: []
@@ -41,7 +41,7 @@ provisioning:
   provisioningImage:
     registry: ""
     repository: "nubus/images/keycloak-bootstrap"
-    tag: "0.12.0@sha256:624bc709b2269c7f0de74d776e65c60c8f8c2be2e1d4e9158f72c04b844b4af5"
+    tag: "0.12.1@sha256:4a36e3753bda7d6ccc6fc98f5e115bf96a4257c1a9458d075888256484cfdd4b"
     sha256: ""  # Optional
     imagePullPolicy: IfNotPresent
 
