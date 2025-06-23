@@ -4,7 +4,7 @@ This container image provides an API and business logic to connect the 2FA Admin
 
 build with:
 
-    docker build -f docker/backend/Dockerfile .
+    docker build -f docker/twofa-helpdesk-backend/Dockerfile .
     # --net=host is required if you use kubeproxy
     # see .env sample file for environment help
     # run helper_scripts/environment.sh to extract info from a deployment

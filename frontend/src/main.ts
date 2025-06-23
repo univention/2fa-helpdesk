@@ -8,17 +8,14 @@ import App from "./App.vue";
 import axios from "axios";
 import router from "./router";
 import { createPinia } from "pinia";
-import { loadCustomStyles } from "./utils/customStyles";
+import { loadAllStyles } from "./utils/customStyles";
 
-import {
-  initKeycloak,
-  getToken
-} from "./services/keycloak";
+import { initKeycloak, getToken } from "./services/keycloak";
 
 import "./base-styles.css";
 import { loadConfig } from "./services/loadConfig";
 
-loadCustomStyles();
+loadAllStyles();
 
 loadConfig()
   .then(() => {
