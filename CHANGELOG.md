@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.4.1...v0.5.0) (2025-06-23)
+
+
+### Features
+
+* refactor secret handling for keycloak secrets ([73a8b4d](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/73a8b4dd5a79da152a943bf4780184e3c1b72332)), closes [univention/dev/internal/team-nubus#1219](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1219)
+
+
+### Bug Fixes
+
+* use default cluster ingress class if not defined ([f4f784f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/f4f784f4a4c5ff0fb139a5ac8e188d2f03f337bd)), closes [univention/dev/internal/team-nubus#1134](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1134)
+
 ## [0.4.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.4.0...v0.4.1) (2025-06-23)
 
 
