@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.4.0...v0.4.1) (2025-06-23)
+
+
+### Bug Fixes
+
+* bump umc-base-image version ([2ac2070](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/2ac2070f13bc1e3a8bc5c7761510803a65b543ea)), closes [univention/dev/internal/team-nubus#1263](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1263)
+
 ## [0.4.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.3.5...v0.4.0) (2025-06-13)
 
 
