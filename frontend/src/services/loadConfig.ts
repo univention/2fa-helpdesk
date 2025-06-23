@@ -8,6 +8,7 @@ export interface AppConfig {
   VITE_API_URL: string;
   VITE_KEYCLOAK_REALM: string;
   VITE_KEYCLOAK_CLIENT_ID: string;
+  VITE_POST_LOGOUT_REDIRECT_URI?: string;
 }
 
 declare global {

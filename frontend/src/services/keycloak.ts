@@ -10,6 +10,7 @@ type KeycloakInstance = InstanceType<typeof Keycloak>;
 type KCConfig = ConstructorParameters<typeof Keycloak>[0];
 type KCInitOptions = Parameters<KeycloakInstance["init"]>[0];
 type KCLoginOpts = Parameters<KeycloakInstance["login"]>[0];
+type KCLogoutOpts = Parameters<KeycloakInstance["logout"]>[0];
 
 let keycloak: KeycloakInstance;
 
@@ -43,4 +44,11 @@ export function login(opts?: KCLoginOpts): void {
     throw new Error("Keycloak not initialized");
   }
   keycloak.login(opts);
+}
+
+export function logout(opts?: KCLogoutOpts): void {
+  if (!keycloak) {
+    throw new Error("Keycloak not initialized");
+  }
+  keycloak.logout(opts);
 }

@@ -38,12 +38,11 @@ data:
   TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaHelpdeskBackend.config.twofa_admin_groups }}
 
   PREFIX: "/backend"
-
   VITE_API_URL: /backend
-  VITE_API_TOKEN: test
   VITE_KEYCLOAK_URL: "{{ required "keycloak.connection.url is required" (tpl .Values.keycloak.connection.url .) }}"
   VITE_KEYCLOAK_REALM: "{{ tpl .Values.keycloak.realm . }}"
   VITE_KEYCLOAK_CLIENT_ID: "{{ tpl .Values.keycloak.client . }}"
+  VITE_POST_LOGOUT_REDIRECT_URI: "{{ tpl .Values.twofaHelpdeskFrontend.config.postLogoutRedirectURI . }}"
 ...
 ---
 kind: "ConfigMap"

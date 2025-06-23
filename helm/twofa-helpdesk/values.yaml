@@ -44,7 +44,7 @@ provisioning:
   provisioningImage:
     registry: ""
     repository: "nubus/images/keycloak-bootstrap"
-    tag: "0.12.1@sha256:4a36e3753bda7d6ccc6fc98f5e115bf96a4257c1a9458d075888256484cfdd4b"
+    tag: "0.13.0@sha256:5ea9c055e2e6698335b76db4df24ee0c5aa7232103a3a6d7c78c120dcc626721"
     sha256: ""  # Optional
     imagePullPolicy: IfNotPresent
 
@@ -340,3 +340,7 @@ twofaHelpdeskFrontend:
       periodSeconds: 15
       failureThreshold: 30
       successThreshold: 1
+  config:
+    # -- The URI to redirect the user to after they reset their 2FA token using the self-service helpdesk.
+    # If provisioning is active this URL will also be added to the Keycloak clients valid post logout redirect URIs.
+    postLogoutRedirectURI: ""

@@ -1,8 +1,37 @@
 # twofa-helpdesk
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
-
 2FA Helpdesk Backend API
+
+- **Version**: 0.1.0
+- **Type**:
+- **AppVersion**: 1.0.0
+-
+
+## TL;DR
+
+```console
+helm upgrade --install twofa-helpdesk oci://artifacts.software-univention.de/nubus-dev/charts/twofa-helpdesk
+```
+
+## Introduction
+
+This chart does install the 2FA-Helpdesk.
+
+## Installing
+
+To install the chart with the release name `twofa-helpdesk`:
+
+```console
+helm upgrade --install twofa-helpdesk oci://artifacts.software-univention.de/nubus-dev/charts/twofa-helpdesk
+```
+
+## Uninstalling
+
+To uninstall the chart with the release name `twofa-helpdesk`:
+
+```console
+helm uninstall twofa-helpdesk
+```
 
 ## Requirements
 
@@ -12,190 +41,1724 @@
 
 ## Values
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| extraIngresses | list | `[]` |  |
-| global.affinity | object | `{}` |  |
-| global.domain | string | `""` |  |
-| global.environment | object | `{}` |  |
-| global.fullnameOverride | string | `""` |  |
-| global.host | string | `"twofa"` |  |
-| global.imageRegistry | string | `"artifacts.software-univention.de"` |  |
-| global.nameOverride | string | `""` |  |
-| global.nodeSelector | object | `{}` |  |
-| global.podAnnotations | object | `{}` |  |
-| global.podSecurityContext | object | `{}` |  |
-| global.postgresql.connection.host | string | `""` |  |
-| global.postgresql.connection.port | string | `""` |  |
-| global.replicaCount | int | `1` |  |
-| global.restartPolicy | string | `"OnFailure"` |  |
-| global.securityContext | object | `{}` |  |
-| global.tolerations | list | `[]` |  |
-| ingress.annotations | object | `{}` | Define custom ingress annotations for all Ingresses. |
-| ingress.certManager.enabled | bool | `false` | Enable cert-manager.io annotaion. |
-| ingress.certManager.issuerRef.kind | string | `"ClusterIssuer"` | Type of Issuer, f.e. "Issuer" or "ClusterIssuer". |
-| ingress.certManager.issuerRef.name | string | `""` | Name of cert-manager.io Issuer resource. |
-| ingress.enabled | bool | `true` | Enable creation of Ingress. |
-| ingress.host | string | `""` | Define the Fully Qualified Domain Name (FQDN) where application should be reachable. (This will be the default for all Ingresses) |
-| ingress.ingressClassName | string | `"nginx"` | The Ingress controlledebugr class name. (This will be the default for all Ingresses) |
-| ingress.items[0].annotations."nginx.ingress.kubernetes.io/rewrite-target" | string | `"/ui/$2"` |  |
-| ingress.items[0].annotations."nginx.ingress.kubernetes.io/use-regex" | string | `"true"` |  |
-| ingress.items[0].host | string | `""` |  |
-| ingress.items[0].ingressClassName | string | `""` |  |
-| ingress.items[0].name | string | `"twofa-helpdesk-ui"` |  |
-| ingress.items[0].paths | list | `[{"backend":{"service":{"name":"2fa-helpdesk-backend-ui","port":{"number":80},"suffix":"-ui"}},"path":"/univention/2fa(/|$)(.*)","pathType":"ImplementationSpecific"}]` | Define the Ingress paths. |
-| ingress.items[0].tls.secretName | string | `""` |  |
-| ingress.items[1].annotations | object | `{}` |  |
-| ingress.items[1].host | string | `""` |  |
-| ingress.items[1].ingressClassName | string | `""` |  |
-| ingress.items[1].name | string | `"twofa-backend"` |  |
-| ingress.items[1].paths[0].backend.service.name | string | `"2fa-helpdesk-backend"` |  |
-| ingress.items[1].paths[0].backend.service.port.number | int | `8080` |  |
-| ingress.items[1].paths[0].backend.service.suffix | string | `""` |  |
-| ingress.items[1].paths[0].path | string | `"/backend"` |  |
-| ingress.items[1].paths[0].pathType | string | `"Prefix"` |  |
-| ingress.items[1].tls.secretName | string | `""` |  |
-| ingress.tls | object | `{"enabled":true,"secretName":""}` | Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.  Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls |
-| ingress.tls.enabled | bool | `true` | Enable TLS/SSL/HTTPS for Ingress. |
-| ingress.tls.secretName | string | `""` | The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided. |
-| keycloak | object | `{"admin_realm":"master","auth":{"existingSecret":{"keyMapping":{"adminPassword":null},"name":null},"password":"","username":"kcadmin"},"client":"twofa-helpdesk","connection":{"host":"","port":"8080","url":""},"realm":""}` | Keycloak specific settings. |
-| keycloak.auth.existingSecret | object | `{"keyMapping":{"adminPassword":null},"name":null}` | Keycloak password secret reference. |
-| keycloak.auth.password | string | `""` | Keycloak password. |
-| keycloak.auth.username | string | `"kcadmin"` | Keycloak user. |
-| keycloak.client | string | `"twofa-helpdesk"` | Keycloak 2FA client name |
-| keycloak.connection | object | `{"host":"","port":"8080","url":""}` | Connection parameters. |
-| keycloak.connection.host | string | `""` | Keycloak host (for cluster internal connection of the backend service). |
-| keycloak.connection.port | string | `"8080"` | Keycloak port. |
-| keycloak.connection.url | string | `""` | Keycloak URL (for the helpdesk UI). |
-| keycloak.realm | string | `""` | Keycloak realm. |
-| nubusBaseUrl | string | `""` |  |
-| provisioning.config.debug.enabled | bool | `true` |  |
-| provisioning.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
-| provisioning.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| provisioning.containerSecurityContext.enabled | bool | `true` |  |
-| provisioning.containerSecurityContext.privileged | bool | `false` |  |
-| provisioning.containerSecurityContext.readOnlyRootFilesystem | bool | `true` |  |
-| provisioning.containerSecurityContext.runAsGroup | int | `1000` |  |
-| provisioning.containerSecurityContext.runAsNonRoot | bool | `true` |  |
-| provisioning.containerSecurityContext.runAsUser | int | `1000` |  |
-| provisioning.containerSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| provisioning.enabled | bool | `true` |  |
-| provisioning.image.imagePullPolicy | string | `"IfNotPresent"` |  |
-| provisioning.image.pullSecrets | list | `[]` |  |
-| provisioning.image.registry | string | `""` |  |
-| provisioning.image.repository | string | `"nubus/images/wait-for-dependency"` |  |
-| provisioning.image.sha256 | string | `""` |  |
-| provisioning.image.tag | string | `"0.32.1@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"` |  |
-| provisioning.podSecurityContext.enabled | bool | `true` |  |
-| provisioning.podSecurityContext.fsGroup | int | `1000` |  |
-| provisioning.podSecurityContext.runAsGroup | int | `1000` |  |
-| provisioning.podSecurityContext.runAsNonRoot | bool | `true` |  |
-| provisioning.podSecurityContext.runAsUser | int | `1000` |  |
-| provisioning.podSecurityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| provisioning.provisioningImage.imagePullPolicy | string | `"IfNotPresent"` |  |
-| provisioning.provisioningImage.registry | string | `""` |  |
-| provisioning.provisioningImage.repository | string | `"nubus/images/keycloak-bootstrap"` |  |
-| provisioning.provisioningImage.sha256 | string | `""` |  |
-| provisioning.provisioningImage.tag | string | `"0.12.1@sha256:4a36e3753bda7d6ccc6fc98f5e115bf96a4257c1a9458d075888256484cfdd4b"` |  |
-| provisioning.tolerations | list | `[]` |  |
-| provisioning.ttlSecondsAfterFinished | int | `60` |  |
-| twofaHelpdeskBackend.affinity | object | `{}` |  |
-| twofaHelpdeskBackend.config.twofa_admin_groups[0] | string | `"/Domain Admins"` |  |
-| twofaHelpdeskBackend.environment | object | `{}` |  |
-| twofaHelpdeskBackend.fullnameOverride | string | `""` |  |
-| twofaHelpdeskBackend.image.imagePullPolicy | string | `"Always"` |  |
-| twofaHelpdeskBackend.image.imagePullSecrets | list | `[]` |  |
-| twofaHelpdeskBackend.image.registry | string | `""` |  |
-| twofaHelpdeskBackend.image.repository | string | `"nubus-dev/images/twofa-helpdesk-backend"` |  |
-| twofaHelpdeskBackend.image.sha256 | string | `nil` | Define image sha256 as an alternative to `tag` |
-| twofaHelpdeskBackend.image.tag | string | `"latest"` |  |
-| twofaHelpdeskBackend.ingress.tls.secretName | string | `"twofa-backend-api-tls"` |  |
-| twofaHelpdeskBackend.nameOverride | string | `""` |  |
-| twofaHelpdeskBackend.nodeSelector | object | `{}` |  |
-| twofaHelpdeskBackend.podAnnotations | object | `{}` |  |
-| twofaHelpdeskBackend.podSecurityContext.enabled | bool | `true` |  |
-| twofaHelpdeskBackend.podSecurityContext.fsGroup | int | `1000` |  |
-| twofaHelpdeskBackend.podSecurityContext.fsGroupChangePolicy | string | `"Always"` | Change ownership and permission of the volume before being exposed inside a Pod. |
-| twofaHelpdeskBackend.probes.liveness.enabled | bool | `true` |  |
-| twofaHelpdeskBackend.probes.liveness.failureThreshold | int | `3` |  |
-| twofaHelpdeskBackend.probes.liveness.initialDelaySeconds | int | `20` |  |
-| twofaHelpdeskBackend.probes.liveness.periodSeconds | int | `30` |  |
-| twofaHelpdeskBackend.probes.liveness.successThreshold | int | `1` |  |
-| twofaHelpdeskBackend.probes.liveness.timeoutSeconds | int | `3` |  |
-| twofaHelpdeskBackend.probes.readiness.enabled | bool | `true` |  |
-| twofaHelpdeskBackend.probes.readiness.failureThreshold | int | `30` |  |
-| twofaHelpdeskBackend.probes.readiness.initialDelaySeconds | int | `20` |  |
-| twofaHelpdeskBackend.probes.readiness.periodSeconds | int | `15` |  |
-| twofaHelpdeskBackend.probes.readiness.successThreshold | int | `1` |  |
-| twofaHelpdeskBackend.probes.readiness.timeoutSeconds | int | `3` |  |
-| twofaHelpdeskBackend.replicaCount | int | `1` |  |
-| twofaHelpdeskBackend.resources | object | `{"limits":{"cpu":"4","memory":"4Gi"},"requests":{"cpu":"250m","memory":"512Mi"}}` | Deployment resources for the listener container |
-| twofaHelpdeskBackend.securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| twofaHelpdeskBackend.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| twofaHelpdeskBackend.securityContext.enabled | bool | `true` |  |
-| twofaHelpdeskBackend.securityContext.privileged | bool | `false` |  |
-| twofaHelpdeskBackend.securityContext.readOnlyRootFilesystem | bool | `true` |  |
-| twofaHelpdeskBackend.securityContext.runAsGroup | int | `1000` |  |
-| twofaHelpdeskBackend.securityContext.runAsNonRoot | bool | `true` |  |
-| twofaHelpdeskBackend.securityContext.runAsUser | int | `1000` |  |
-| twofaHelpdeskBackend.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| twofaHelpdeskBackend.service.enabled | bool | `true` |  |
-| twofaHelpdeskBackend.service.ports.http.containerPort | int | `8080` |  |
-| twofaHelpdeskBackend.service.ports.http.port | int | `8080` |  |
-| twofaHelpdeskBackend.service.ports.http.protocol | string | `"TCP"` |  |
-| twofaHelpdeskBackend.service.sessionAffinity.enabled | bool | `false` |  |
-| twofaHelpdeskBackend.service.sessionAffinity.timeoutSeconds | int | `10800` |  |
-| twofaHelpdeskBackend.service.type | string | `"ClusterIP"` |  |
-| twofaHelpdeskBackend.tolerations | list | `[]` |  |
-| twofaHelpdeskFrontend.affinity | object | `{}` |  |
-| twofaHelpdeskFrontend.environment | object | `{}` |  |
-| twofaHelpdeskFrontend.fullnameOverride | string | `""` |  |
-| twofaHelpdeskFrontend.image.imagePullPolicy | string | `"Always"` |  |
-| twofaHelpdeskFrontend.image.imagePullSecrets | list | `[]` |  |
-| twofaHelpdeskFrontend.image.registry | string | `""` |  |
-| twofaHelpdeskFrontend.image.repository | string | `"nubus-dev/images/twofa-helpdesk-frontend"` |  |
-| twofaHelpdeskFrontend.image.sha256 | string | `nil` | Define image sha256 as an alternative to `tag` |
-| twofaHelpdeskFrontend.image.tag | string | `"latest"` |  |
-| twofaHelpdeskFrontend.nameOverride | string | `""` |  |
-| twofaHelpdeskFrontend.nginx.disableIPv6 | bool | `true` |  |
-| twofaHelpdeskFrontend.nodeSelector | object | `{}` |  |
-| twofaHelpdeskFrontend.podAnnotations | object | `{}` |  |
-| twofaHelpdeskFrontend.podSecurityContext.enabled | bool | `true` |  |
-| twofaHelpdeskFrontend.podSecurityContext.fsGroup | int | `1000` |  |
-| twofaHelpdeskFrontend.podSecurityContext.fsGroupChangePolicy | string | `"Always"` | Change ownership and permission of the volume before being exposed inside a Pod. |
-| twofaHelpdeskFrontend.podSecurityContext.sysctls[0].name | string | `"net.ipv4.ip_unprivileged_port_start"` |  |
-| twofaHelpdeskFrontend.podSecurityContext.sysctls[0].value | string | `"1"` |  |
-| twofaHelpdeskFrontend.probes.liveness.enabled | bool | `true` |  |
-| twofaHelpdeskFrontend.probes.liveness.failureThreshold | int | `3` |  |
-| twofaHelpdeskFrontend.probes.liveness.initialDelaySeconds | int | `20` |  |
-| twofaHelpdeskFrontend.probes.liveness.periodSeconds | int | `30` |  |
-| twofaHelpdeskFrontend.probes.liveness.successThreshold | int | `1` |  |
-| twofaHelpdeskFrontend.probes.liveness.timeoutSeconds | int | `3` |  |
-| twofaHelpdeskFrontend.probes.readiness.enabled | bool | `true` |  |
-| twofaHelpdeskFrontend.probes.readiness.failureThreshold | int | `30` |  |
-| twofaHelpdeskFrontend.probes.readiness.initialDelaySeconds | int | `20` |  |
-| twofaHelpdeskFrontend.probes.readiness.periodSeconds | int | `15` |  |
-| twofaHelpdeskFrontend.probes.readiness.successThreshold | int | `1` |  |
-| twofaHelpdeskFrontend.probes.readiness.timeoutSeconds | int | `3` |  |
-| twofaHelpdeskFrontend.replicaCount | int | `1` |  |
-| twofaHelpdeskFrontend.resources | object | `{"limits":{"cpu":"4","memory":"4Gi"},"requests":{"cpu":"250m","memory":"512Mi"}}` | Deployment resources for the listener container |
-| twofaHelpdeskFrontend.securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| twofaHelpdeskFrontend.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| twofaHelpdeskFrontend.securityContext.enabled | bool | `true` |  |
-| twofaHelpdeskFrontend.securityContext.privileged | bool | `false` |  |
-| twofaHelpdeskFrontend.securityContext.readOnlyRootFilesystem | bool | `true` |  |
-| twofaHelpdeskFrontend.securityContext.runAsGroup | int | `1000` |  |
-| twofaHelpdeskFrontend.securityContext.runAsNonRoot | bool | `true` |  |
-| twofaHelpdeskFrontend.securityContext.runAsUser | int | `1000` |  |
-| twofaHelpdeskFrontend.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| twofaHelpdeskFrontend.service.enabled | bool | `true` |  |
-| twofaHelpdeskFrontend.service.ports.http.containerPort | int | `80` |  |
-| twofaHelpdeskFrontend.service.ports.http.port | int | `80` |  |
-| twofaHelpdeskFrontend.service.ports.http.protocol | string | `"TCP"` |  |
-| twofaHelpdeskFrontend.service.sessionAffinity.enabled | bool | `false` |  |
-| twofaHelpdeskFrontend.service.sessionAffinity.timeoutSeconds | int | `10800` |  |
-| twofaHelpdeskFrontend.service.type | string | `"ClusterIP"` |  |
-| twofaHelpdeskFrontend.tolerations | list | `[]` |  |
+<table>
+	<thead>
+		<th>Key</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>extraIngresses</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.affinity</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.domain</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.environment</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.fullnameOverride</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+"twofa"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imageRegistry</td>
+			<td>string</td>
+			<td><pre lang="json">
+"artifacts.software-univention.de"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.nameOverride</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.podAnnotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.podSecurityContext</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.postgresql.connection.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.postgresql.connection.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.replicaCount</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.restartPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"OnFailure"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.securityContext</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.tolerations</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Define custom ingress annotations for all Ingresses.</td>
+		</tr>
+		<tr>
+			<td>ingress.certManager.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td>Enable cert-manager.io annotaion.</td>
+		</tr>
+		<tr>
+			<td>ingress.certManager.issuerRef.kind</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ClusterIssuer"
+</pre>
+</td>
+			<td>Type of Issuer, f.e. "Issuer" or "ClusterIssuer".</td>
+		</tr>
+		<tr>
+			<td>ingress.certManager.issuerRef.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Name of cert-manager.io Issuer resource.</td>
+		</tr>
+		<tr>
+			<td>ingress.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable creation of Ingress.</td>
+		</tr>
+		<tr>
+			<td>ingress.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Define the Fully Qualified Domain Name (FQDN) where application should be reachable. (This will be the default for all Ingresses)</td>
+		</tr>
+		<tr>
+			<td>ingress.ingressClassName</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nginx"
+</pre>
+</td>
+			<td>The Ingress controlledebugr class name. (This will be the default for all Ingresses)</td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].annotations."nginx.ingress.kubernetes.io/rewrite-target"</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/ui/$2"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].annotations."nginx.ingress.kubernetes.io/use-regex"</td>
+			<td>string</td>
+			<td><pre lang="json">
+"true"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].ingressClassName</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].name</td>
+			<td>string</td>
+			<td><pre lang="json">
+"twofa-helpdesk-ui"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].paths</td>
+			<td>list</td>
+			<td><pre lang="json">
+[
+  {
+    "backend": {
+      "service": {
+        "name": "2fa-helpdesk-backend-ui",
+        "port": {
+          "number": 80
+        },
+        "suffix": "-ui"
+      }
+    },
+    "path": "/univention/2fa(/|$)(.*)",
+    "pathType": "ImplementationSpecific"
+  }
+]
+</pre>
+</td>
+			<td>Define the Ingress paths.</td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].tls.secretName</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].ingressClassName</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].name</td>
+			<td>string</td>
+			<td><pre lang="json">
+"twofa-backend"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].paths[0].backend.service.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+"2fa-helpdesk-backend"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].paths[0].backend.service.port.number</td>
+			<td>int</td>
+			<td><pre lang="json">
+8080
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].paths[0].backend.service.suffix</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].paths[0].path</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/backend"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].paths[0].pathType</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Prefix"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].tls.secretName</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.tls</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "enabled": true,
+  "secretName": ""
+}
+</pre>
+</td>
+			<td>Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.  Ref.: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls</td>
+		</tr>
+		<tr>
+			<td>ingress.tls.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td>Enable TLS/SSL/HTTPS for Ingress.</td>
+		</tr>
+		<tr>
+			<td>ingress.tls.secretName</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The name of the kubernetes secret which contains a TLS private key and certificate. Hint: This secret is not created by this chart and must be provided.</td>
+		</tr>
+		<tr>
+			<td>keycloak</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "admin_realm": "master",
+  "auth": {
+    "existingSecret": {
+      "keyMapping": {
+        "adminPassword": null
+      },
+      "name": null
+    },
+    "password": "",
+    "username": "kcadmin"
+  },
+  "client": "twofa-helpdesk",
+  "connection": {
+    "host": "",
+    "port": "8080",
+    "url": ""
+  },
+  "realm": ""
+}
+</pre>
+</td>
+			<td>Keycloak specific settings.</td>
+		</tr>
+		<tr>
+			<td>keycloak.auth.existingSecret</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "keyMapping": {
+    "adminPassword": null
+  },
+  "name": null
+}
+</pre>
+</td>
+			<td>Keycloak password secret reference.</td>
+		</tr>
+		<tr>
+			<td>keycloak.auth.password</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Keycloak password.</td>
+		</tr>
+		<tr>
+			<td>keycloak.auth.username</td>
+			<td>string</td>
+			<td><pre lang="json">
+"kcadmin"
+</pre>
+</td>
+			<td>Keycloak user.</td>
+		</tr>
+		<tr>
+			<td>keycloak.client</td>
+			<td>string</td>
+			<td><pre lang="json">
+"twofa-helpdesk"
+</pre>
+</td>
+			<td>Keycloak 2FA client name</td>
+		</tr>
+		<tr>
+			<td>keycloak.connection</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "host": "",
+  "port": "8080",
+  "url": ""
+}
+</pre>
+</td>
+			<td>Connection parameters.</td>
+		</tr>
+		<tr>
+			<td>keycloak.connection.host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Keycloak host (for cluster internal connection of the backend service).</td>
+		</tr>
+		<tr>
+			<td>keycloak.connection.port</td>
+			<td>string</td>
+			<td><pre lang="json">
+"8080"
+</pre>
+</td>
+			<td>Keycloak port.</td>
+		</tr>
+		<tr>
+			<td>keycloak.connection.url</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Keycloak URL (for the helpdesk UI).</td>
+		</tr>
+		<tr>
+			<td>keycloak.realm</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>Keycloak realm.</td>
+		</tr>
+		<tr>
+			<td>nubusBaseUrl</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.config.debug.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.capabilities.drop[0]</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ALL"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.privileged</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.containerSecurityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.image.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"IfNotPresent"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.image.pullSecrets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.image.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.image.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus/images/wait-for-dependency"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.image.sha256</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.image.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"0.32.1@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.podSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.podSecurityContext.fsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.podSecurityContext.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.podSecurityContext.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.podSecurityContext.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.podSecurityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.provisioningImage.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"IfNotPresent"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.provisioningImage.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.provisioningImage.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus/images/keycloak-bootstrap"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.provisioningImage.sha256</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.provisioningImage.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"0.13.0@sha256:5ea9c055e2e6698335b76db4df24ee0c5aa7232103a3a6d7c78c120dcc626721"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.tolerations</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.ttlSecondsAfterFinished</td>
+			<td>int</td>
+			<td><pre lang="json">
+60
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.affinity</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.config.twofa_admin_groups[0]</td>
+			<td>string</td>
+			<td><pre lang="json">
+"/Domain Admins"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.environment</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.fullnameOverride</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.image.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Always"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.image.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.image.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.image.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus-dev/images/twofa-helpdesk-backend"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.image.sha256</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Define image sha256 as an alternative to `tag`</td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.image.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"latest"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.ingress.tls.secretName</td>
+			<td>string</td>
+			<td><pre lang="json">
+"twofa-backend-api-tls"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.nameOverride</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.podAnnotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.podSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.podSecurityContext.fsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.podSecurityContext.fsGroupChangePolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Always"
+</pre>
+</td>
+			<td>Change ownership and permission of the volume before being exposed inside a Pod.</td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.liveness.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.liveness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.liveness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+20
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.liveness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+30
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.liveness.successThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.liveness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.readiness.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.readiness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+30
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.readiness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+20
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.readiness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+15
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.readiness.successThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.probes.readiness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.replicaCount</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.resources</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "limits": {
+    "cpu": "4",
+    "memory": "4Gi"
+  },
+  "requests": {
+    "cpu": "250m",
+    "memory": "512Mi"
+  }
+}
+</pre>
+</td>
+			<td>Deployment resources for the listener container</td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.capabilities.drop[0]</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ALL"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.privileged</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.securityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.service.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.service.ports.http.containerPort</td>
+			<td>int</td>
+			<td><pre lang="json">
+8080
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.service.ports.http.port</td>
+			<td>int</td>
+			<td><pre lang="json">
+8080
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.service.ports.http.protocol</td>
+			<td>string</td>
+			<td><pre lang="json">
+"TCP"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.service.sessionAffinity.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.service.sessionAffinity.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+10800
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.service.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ClusterIP"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskBackend.tolerations</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.affinity</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.config.postLogoutRedirectURI</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td>The URI to redirect the user to after they reset their 2FA token using the self-service helpdesk. If provisioning is active this URL will also be added to the Keycloak clients valid post logout redirect URIs.</td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.environment</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.fullnameOverride</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.image.imagePullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Always"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.image.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.image.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.image.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus-dev/images/twofa-helpdesk-frontend"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.image.sha256</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Define image sha256 as an alternative to `tag`</td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.image.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"latest"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.nameOverride</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.nginx.disableIPv6</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.nodeSelector</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.podAnnotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.podSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.podSecurityContext.fsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.podSecurityContext.fsGroupChangePolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+"Always"
+</pre>
+</td>
+			<td>Change ownership and permission of the volume before being exposed inside a Pod.</td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.podSecurityContext.sysctls[0].name</td>
+			<td>string</td>
+			<td><pre lang="json">
+"net.ipv4.ip_unprivileged_port_start"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.podSecurityContext.sysctls[0].value</td>
+			<td>string</td>
+			<td><pre lang="json">
+"1"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.liveness.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.liveness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.liveness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+20
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.liveness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+30
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.liveness.successThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.liveness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.readiness.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.readiness.failureThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+30
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.readiness.initialDelaySeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+20
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.readiness.periodSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+15
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.readiness.successThreshold</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.probes.readiness.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+3
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.replicaCount</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.resources</td>
+			<td>object</td>
+			<td><pre lang="json">
+{
+  "limits": {
+    "cpu": "4",
+    "memory": "4Gi"
+  },
+  "requests": {
+    "cpu": "250m",
+    "memory": "512Mi"
+  }
+}
+</pre>
+</td>
+			<td>Deployment resources for the listener container</td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.allowPrivilegeEscalation</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.capabilities.drop[0]</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ALL"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.privileged</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.readOnlyRootFilesystem</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.securityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.ports.http.containerPort</td>
+			<td>int</td>
+			<td><pre lang="json">
+80
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.ports.http.port</td>
+			<td>int</td>
+			<td><pre lang="json">
+80
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.ports.http.protocol</td>
+			<td>string</td>
+			<td><pre lang="json">
+"TCP"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.sessionAffinity.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.sessionAffinity.timeoutSeconds</td>
+			<td>int</td>
+			<td><pre lang="json">
+10800
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"ClusterIP"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.tolerations</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
 
-----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.11.3](https://github.com/norwoodj/helm-docs/releases/v1.11.3)

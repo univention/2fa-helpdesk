@@ -9,9 +9,9 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS local-dev-env
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ARG NODE_VERSION="20.17.0"
+ARG NODE_VERSION="20.19.3"
 ARG YARN_VERSION="1.22.19"
-ARG NODE_SHA256="21e656f6f4e34080ddc5d75fbfe58ce8482fe6e70a76aeae14afdcdc1e23079d"
+ARG NODE_SHA256="76272878069683c3a36b933d2f4842436a26b527daa930ae9346b477011ee2f3"
 
 # The following dependencies are only needed when on an aarch64 platform,
 # because then the package "deasync" does not include ready made binaries
