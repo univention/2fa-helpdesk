@@ -38,11 +38,12 @@
 | ingress.enabled | bool | `true` | Enable creation of Ingress. |
 | ingress.host | string | `""` | Define the Fully Qualified Domain Name (FQDN) where application should be reachable. (This will be the default for all Ingresses) |
 | ingress.ingressClassName | string | `"nginx"` | The Ingress controlledebugr class name. (This will be the default for all Ingresses) |
-| ingress.items[0].annotations | object | `{}` |  |
+| ingress.items[0].annotations."nginx.ingress.kubernetes.io/rewrite-target" | string | `"/ui/$2"` |  |
+| ingress.items[0].annotations."nginx.ingress.kubernetes.io/use-regex" | string | `"true"` |  |
 | ingress.items[0].host | string | `""` |  |
 | ingress.items[0].ingressClassName | string | `""` |  |
 | ingress.items[0].name | string | `"twofa-helpdesk-ui"` |  |
-| ingress.items[0].paths | list | `[{"backend":{"service":{"name":"2fa-helpdesk-backend-ui","port":{"number":80},"suffix":"-ui"}},"path":"/ui","pathType":"Prefix"}]` | Define the Ingress paths. |
+| ingress.items[0].paths | list | `[{"backend":{"service":{"name":"2fa-helpdesk-backend-ui","port":{"number":80},"suffix":"-ui"}},"path":"/univention/2fa(/|$)(.*)","pathType":"ImplementationSpecific"}]` | Define the Ingress paths. |
 | ingress.items[0].tls.secretName | string | `""` |  |
 | ingress.items[1].annotations | object | `{}` |  |
 | ingress.items[1].host | string | `""` |  |

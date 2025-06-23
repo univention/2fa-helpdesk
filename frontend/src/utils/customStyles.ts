@@ -9,7 +9,7 @@
  */
 
 // Default location for custom CSS file
-const DEFAULT_CUSTOM_CSS_PATH = "/ui/css/custom.css";
+const DEFAULT_CUSTOM_CSS_PATH = "/univention/2fa/css/custom.css";
 
 /**
  * Loads custom CSS styles from the specified path
