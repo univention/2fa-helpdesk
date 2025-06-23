@@ -26,8 +26,6 @@ spec:
         {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
         {{- $mergedLabels := merge $otherLabels $commonLabels}}
         {{- toYaml $mergedLabels | nindent 8 }}
-      #annotations:
-      #  checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       {{- with .Values.twofaHelpdeskBackend.affinity }}
       affinity:
@@ -65,8 +63,8 @@ spec:
           - name: KEYCLOAK_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ printf "%s-%s" .Release.Name "keycloak-credentials" }} # FIXME: use nubus-common.secrets?? where docs, were banana
-                key: admin_password
+                name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
+                key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
         {{- if .Values.twofaHelpdeskBackend.probes.liveness.enabled }}
         livenessProbe:
           httpGet:

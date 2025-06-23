@@ -18,5 +18,14 @@ services:
         source: pre-commit-cache
         target: /cache
 
+  test-chart:
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:latest
+    command: pytest tests/chart
+    profiles:
+      - test
+    volumes:
+      - "./helm/twofa-helpdesk/:/app/helm/twofa-helpdesk"
+      - "./tests/chart:/app/tests/chart"
+
 volumes:
   pre-commit-cache:

@@ -29,7 +29,7 @@ spec:
   tls:
     - hosts:
         - "{{ tpl $.Values.nubusBaseUrl $ }}"
-      secretName: "{{ tpl $.Values.tls.secretName $ }}"
+      secretName: "{{ tpl $.Values.ingress.tls.secretName $ }}"
   {{- end }}
   rules:
     - host: "{{ tpl $.Values.nubusBaseUrl $ }}"

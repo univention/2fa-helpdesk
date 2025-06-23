@@ -3,6 +3,21 @@
 
 ---
 
+nubusBaseUrl: "nubus.example.test"
+
+keycloak:
+  realm: "nubus"
+  auth:
+    password: "password"
+  connection:
+    # -- Keycloak URL (for the helpdesk UI).
+    url: "https://id.example.test"
+    # -- Keycloak host.
+    host: "nubus-keycloak"
+    # -- Keycloak port.
+    port: "8080"
+
+
 provisioning:
   enabled: true
   config:
@@ -17,12 +32,8 @@ ingress:
 
 twofaHelpdeskBackend:
   config:
-    oidc_host: "http://nubus-keycloak:8080"
     oidc_realm: "nubus"
     oidc_client: "twofa-helpdesk"
-    keycloak_url: "http://nubus-keycloak:8080"
-    keycloak_admin_realm: "master"
-    keycloak_admin_user: kcAdmin
     twofa_admin_groups: ["/dummy group"]
 
 

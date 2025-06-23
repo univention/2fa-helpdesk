@@ -24,8 +24,11 @@ global:
 
 extraIngresses: []
 
+nubusBaseUrl: ""
+
 provisioning:
   enabled: true
+  ttlSecondsAfterFinished: 60
   config:
     debug:
       enabled: true
@@ -160,7 +163,9 @@ keycloak:
         adminPassword: null
   # -- Connection parameters.
   connection:
-    # -- Keycloak host.
+    # -- Keycloak URL (for the helpdesk UI).
+    url: ""
+    # -- Keycloak host (for cluster internal connection of the backend service).
     host: ""
     # -- Keycloak port.
     port: "8080"
@@ -208,7 +213,6 @@ twofaHelpdeskBackend:
     sha256: null
 
   config:
-    keycloak_url: ""
     twofa_admin_groups: ["/Domain Admins"]
 
   service:

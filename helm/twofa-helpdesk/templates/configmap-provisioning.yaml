@@ -18,7 +18,11 @@ metadata:
   {{- end }}
 
 data:
-  KEYCLOAK_URL: {{ printf "http://%s:%s/realms/%s"  (default (printf "%s-keycloak" .Release.Name) (tpl .Values.keycloak.connection.host .)) .Values.keycloak.connection.port (default .Values.global.keycloak.realm (tpl .Values.keycloak.realm .)) | quote }}
+  KEYCLOAK_URL: "{{ printf "http://%s:%s/realms/%s"
+    (required "keycloak.connection.host is required"  (tpl .Values.keycloak.connection.host .))
+    (required "keycloak.connection.port is required"  (tpl .Values.keycloak.connection.port .))
+    (required "keycloak.realm is required"            (tpl .Values.keycloak.realm .)) }}"
+
 ...
 ---
 kind: "ConfigMap"
@@ -39,8 +43,10 @@ data:
   DOMAIN: {{ .Values.global.domain | quote }}
   KEYCLOAK_USERNAME: {{ tpl .Values.keycloak.auth.username . | quote }}
   KEYCLOAK_HOST: {{ default (printf "%s-keycloak" .Release.Name) (tpl .Values.keycloak.connection.host .) | quote}}
-  KEYCLOAK_REALM: {{ default .Values.global.keycloak.realm (tpl .Values.keycloak.realm .) | quote}}
-  KEYCLOAK_URL: {{ printf "http://%s:%s"  (default (printf "%s-keycloak" .Release.Name) (tpl .Values.keycloak.connection.host .)) .Values.keycloak.connection.port | quote }}
+  KEYCLOAK_REALM: {{ tpl .Values.keycloak.realm . | quote }}
+  KEYCLOAK_URL: "{{ printf "http://%s:%s"
+    (required "keycloak.connection.host is required" (tpl .Values.keycloak.connection.host .))
+    (required "keycloak.connection.port is required" (tpl .Values.keycloak.connection.port .)) }}"
   OIDC_CLIENT_ID: {{ tpl .Values.keycloak.client . | quote }}
   UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR: "/tmp"
   UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START: {{ .Values.provisioning.config.debug.pauseBeforeScriptStart  | quote }}

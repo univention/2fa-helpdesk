@@ -43,6 +43,11 @@ push-image-external:
   parallel:
     matrix: *publish-matrix
 
-# package-helm-charts:
-#   variables:
-#     SKIP_UPDATE_HELM_VALUES: 1
+
+test-chart:
+  stage: test
+  needs: []
+  image: "gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:latest"
+  script:
+    - helm dep build helm/twofa-helpdesk
+    - pytest -W error -v tests/chart
