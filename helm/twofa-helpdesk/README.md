@@ -82,7 +82,7 @@
 | provisioning.image.registry | string | `""` |  |
 | provisioning.image.repository | string | `"nubus/images/wait-for-dependency"` |  |
 | provisioning.image.sha256 | string | `""` |  |
-| provisioning.image.tag | string | `"0.32.0@sha256:a746257d2ad5ead98db0032378a5aa5b6462af0c24750bd576d3c404c78d6d6c"` |  |
+| provisioning.image.tag | string | `"0.32.1@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"` |  |
 | provisioning.podSecurityContext.enabled | bool | `true` |  |
 | provisioning.podSecurityContext.fsGroup | int | `1000` |  |
 | provisioning.podSecurityContext.runAsGroup | int | `1000` |  |
@@ -93,7 +93,7 @@
 | provisioning.provisioningImage.registry | string | `""` |  |
 | provisioning.provisioningImage.repository | string | `"nubus/images/keycloak-bootstrap"` |  |
 | provisioning.provisioningImage.sha256 | string | `""` |  |
-| provisioning.provisioningImage.tag | string | `"0.12.0@sha256:624bc709b2269c7f0de74d776e65c60c8f8c2be2e1d4e9158f72c04b844b4af5"` |  |
+| provisioning.provisioningImage.tag | string | `"0.12.1@sha256:4a36e3753bda7d6ccc6fc98f5e115bf96a4257c1a9458d075888256484cfdd4b"` |  |
 | provisioning.tolerations | list | `[]` |  |
 | twofaHelpdeskBackend.affinity | object | `{}` |  |
 | twofaHelpdeskBackend.config.keycloak_url | string | `""` |  |
