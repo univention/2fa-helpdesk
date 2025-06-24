@@ -17,8 +17,12 @@ include:
 .build-matrix: &build-matrix
   - IMAGE_NAME:
       - "twofa-helpdesk-backend"
-      - "twofa-helpdesk-frontend"
       - "twofa-helpdesk-extensions"
+      - "twofa-helpdesk-frontend"
+  - IMAGE_NAME: "twofa-helpdesk-frontend-testrunner"
+    DOCKERFILE_PATH: "docker/twofa-helpdesk-frontend/Dockerfile"
+    KANIKO_BUILD_CONTEXT: "${CI_PROJECT_DIR}"
+    KANIKO_ARGS: "--target=base"
 .publish-matrix: &publish-matrix
   - IMAGE_NAME:
       - "twofa-helpdesk-backend"
@@ -51,3 +55,10 @@ test-chart:
   script:
     - helm dep build helm/twofa-helpdesk
     - pytest -W error -v tests/chart
+
+test-frontend-unit:
+  stage: test
+  image: "${CI_REGISTRY_IMAGE}/twofa-helpdesk-frontend-testrunner:${RELEASE_VERSION}"
+  script:
+    - cd /app
+    - yarn test
