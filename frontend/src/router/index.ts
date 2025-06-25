@@ -38,7 +38,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory("/ui"),
+  history: createWebHistory("/univention/2fa"),
   routes,
 });
 

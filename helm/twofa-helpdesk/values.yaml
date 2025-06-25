@@ -114,8 +114,8 @@ ingress:
       host: ""
       # -- Define the Ingress paths.
       paths:
-        - path: /ui
-          pathType: Prefix
+        - path: /univention/2fa(/|$)(.*)
+          pathType: ImplementationSpecific
           backend:
             service:
               name: 2fa-helpdesk-backend-ui
@@ -123,7 +123,9 @@ ingress:
                 number: 80
               suffix: "-ui"
       ingressClassName: ""
-      annotations: {}
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/rewrite-target: /ui/$2
       tls:
         # enabled: true
         secretName: ""
