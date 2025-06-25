@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.5.0...v0.5.1) (2025-06-25)
+
+
+### Bug Fixes
+
+* fix ingress template, and change path to `univention/2fa/ui` ([dbd49df](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/dbd49dffa701e863da90757681606f5e2143bd04)), closes [univention/dev/internal/team-nubus#1239](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1239)
+
 ## [0.5.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.4.1...v0.5.0) (2025-06-23)
 
 
