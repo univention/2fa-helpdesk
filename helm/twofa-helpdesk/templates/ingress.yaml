@@ -31,7 +31,7 @@ spec:
       secretName: "{{ tpl $.Values.ingress.tls.secretName $ }}"
   {{- end }}
   rules:
-    - host: "{{ tpl $.Values.nubusBaseUrl $ }}"
+    - host: "{{ tpl $.Values.ingress.host $ }}"
       {{- if .paths }}
       http:
         paths:
