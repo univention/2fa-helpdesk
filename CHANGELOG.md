@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.5.1...v0.5.2) (2025-06-26)
+
+
+### Bug Fixes
+
+* template ingress host fix ([b88a6df](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/b88a6dfad9d4bea888f4a852b52d78a5ea055e7e)), closes [univention/dev/internal/team-nubus#1239](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1239)
+
 ## [0.5.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.5.0...v0.5.1) (2025-06-25)
 
 
