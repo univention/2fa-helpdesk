@@ -10,7 +10,7 @@
 
 /* ===== IMPORT THEME VARIABLES ===== */
 @import url(./styles/portal-theme.css);
-:root{
+:root {
   --bgc-table-seperator: var(--bgc-content-body);
   --bgc-table-row-bg: var(--bgc-content-container);
   --bgc-pagination-button-bg: var(--bgc-content-container);
