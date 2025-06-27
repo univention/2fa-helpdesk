@@ -4,7 +4,7 @@
 ---
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.43.0"
+    ref: "v1.43.3"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -13,6 +13,7 @@ include:
       - "jobs/semantic-release-env.yaml"
       - "jobs/container-build-external.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
+      - "templates/sonarqube.yaml"
 
 .build-matrix: &build-matrix
   - IMAGE_NAME:
@@ -62,3 +63,7 @@ test-frontend-unit:
   script:
     - cd /app
     - yarn test
+
+sonarqube:
+  extends: .sonarqube
+  needs: []
