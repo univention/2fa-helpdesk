@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.5.2...v0.6.0) (2025-06-27)
+
+
+### Features
+
+* **frontend:** Use univention-portal theme.css and custom.css ([9e945af](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/9e945af1797ee84c2cd18f04843960d7af4aa1a9)), closes [univention/dev/internal/team-nubus#1242](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1242)
+
+
+### Bug Fixes
+
+* **frontend:** specify license in package.json ([aa93a2a](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/aa93a2ae8b95f82e1c5f208fa06cff669a9c61ab)), closes [univention/dev/internal/team-nubus#1242](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1242)
+
 ## [0.5.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.5.1...v0.5.2) (2025-06-26)
 
 
