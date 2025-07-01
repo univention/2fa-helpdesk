@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024-2025 Univention GmbH
+---
+
+imagePullSecrets:
+  - "kyverno-test"
+
+global:
+  imageRegistry: "my_private_registry.domain.tld"
+  imagePullSecrets:
+    - "kyverno-test"
+  imagePullPolicy: "kyverno"
+
+provisioning:
+  image:
+    tag: "kyverno"
+  provisioningImage:
+    tag: "kyverno"
+
+twofaHelpdeskBackend:
+  image:
+    tag: "kyverno"
+  replicaCount: 42
+
+twofaHelpdeskFrontend:
+  image:
+    tag: "kyverno"
+  replicaCount: 42
+
+...
