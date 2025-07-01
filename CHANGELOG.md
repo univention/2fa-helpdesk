@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.6.0...v0.7.0) (2025-07-01)
+
+
+### Features
+
+* add frontchannel-logout using keycloak.js ([20e240a](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/20e240a1f9f3f2103e416622cdafbe3f18a21e22)), closes [univention/dev/internal/team-nubus#1238](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1238)
+
 ## [0.6.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.5.2...v0.6.0) (2025-06-27)
 
 
