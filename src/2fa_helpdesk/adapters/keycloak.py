@@ -36,11 +36,6 @@ def _get_kc_admin():
             status_code=500, detail=f"Keycloak connection error: {type(e)} - {str(e)}",
         )
 
-def _logout_user_sessions(kc_admin, user_id):
-    '''Logout/Kill all user session'''
-
-    kc_admin.user_logout(user_id=user_id)
-
 
 def reset_2fa_token(user_id: str) -> dict:
     '''Reset the 2FA token for the give user'''
@@ -52,9 +47,6 @@ def reset_2fa_token(user_id: str) -> dict:
     otp_creds = [i for i in credentials if i["type"] == "otp"]
     for cred in otp_creds:
         kc_admin.delete_credential(user_id=user_id, credential_id=cred["id"])
-
-    # logout all user sessions #
-    _logout_user_sessions(kc_admin, user_id)
 
     return len(otp_creds)
 

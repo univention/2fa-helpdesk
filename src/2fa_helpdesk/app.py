@@ -110,10 +110,6 @@ def user_token(
             audience=settings.permitted_jwt_audiences,
         )
     except (RuntimeError, jwt.exceptions.DecodeError) as e:
-        #print("Token no validated. Using Fake Token", e)
-        #return {"username" : "Administrator",
-        # "2fa_user_groups": ["2fa_admin", "test"],
-        # "is_fake_token": True }
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",

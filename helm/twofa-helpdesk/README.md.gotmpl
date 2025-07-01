@@ -1,0 +1,46 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.description" . }}
+
+- **Version**: {{ template "chart.version" . }}
+- **Type**: {{ template "chart.type" . }}
+- **AppVersion**: {{ template "chart.appVersion" . }}
+- {{ template "chart.homepageLine" . }}
+
+## TL;DR
+
+```console
+helm upgrade --install twofa-helpdesk oci://artifacts.software-univention.de/nubus-dev/charts/twofa-helpdesk
+```
+
+
+## Introduction
+
+This chart does install the 2FA-Helpdesk.
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+
+## Installing
+
+To install the chart with the release name `twofa-helpdesk`:
+
+```console
+helm upgrade --install twofa-helpdesk oci://artifacts.software-univention.de/nubus-dev/charts/twofa-helpdesk
+```
+
+
+## Uninstalling
+
+To uninstall the chart with the release name `twofa-helpdesk`:
+
+```console
+helm uninstall twofa-helpdesk
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSectionHtml" . }}

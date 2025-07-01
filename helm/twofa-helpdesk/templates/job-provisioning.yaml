@@ -6,7 +6,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ include "common.names.fullname" . }}-provisioning-{{ .Release.Revision }}"
+  name: {{ printf "%s-provisioning" (include "nubus-common.names.fullnameWithRevision" .) }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
     {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" $ ) | nindent 4 }}
@@ -70,7 +70,7 @@ spec:
           - /bin/bash
           - -c
           - |
-              univention-keycloak \
+              /app/univention-keycloak \
                 --keycloak-url $KEYCLOAK_URL \
                 --realm $KEYCLOAK_REALM \
                 --binduser $KEYCLOAK_USERNAME \
@@ -84,6 +84,9 @@ spec:
                 --public-client \
                 --default-scopes "basic" \
                 --web-origins $KEYCLOAK_APP_BASE_URL \
+                --post-logout-redirect-uris "$POST_LOGOUT_REDIRECT_URI" \
+                --force \
+                --description 'Managed by Nubus. Manual changes will get overwritten on the next update.' \
               && \
               python3 /run.py
         envFrom:

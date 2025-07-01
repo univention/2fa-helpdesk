@@ -51,6 +51,7 @@ data:
   UNIVENTION_KEYCLOAK_BOOTSTRAP_TEMP_DIR: "/tmp"
   UNIVENTION_KEYCLOAK_BOOTSTRAP_DEBUG_PAUSE_BEFORE_SCRIPT_START: {{ .Values.provisioning.config.debug.pauseBeforeScriptStart  | quote }}
   KEYCLOAK_APP_BASE_URL: {{ printf "https://%s" (tpl  $.Values.nubusBaseUrl .) | quote }}
+  POST_LOGOUT_REDIRECT_URI: {{ tpl .Values.twofaHelpdeskFrontend.config.postLogoutRedirectURI . | quote }}
 ...
 ---
 kind: ConfigMap

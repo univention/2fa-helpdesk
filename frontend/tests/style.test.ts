@@ -3,27 +3,25 @@
  * SPDX-FileCopyrightText: 2025 Univention GmbH
  */
 
-/**
- * @jest-environment jsdom
- */
-
 import {
   loadThemeStyles,
   loadCustomStyles,
   loadAllStyles,
-} from "../src/utils/customStyles";
+} from "@/utils/customStyles";
+
+import { vi, describe, test, beforeEach, afterEach, expect } from "vitest";
 
 describe("External CSS Loading", () => {
   beforeEach(() => {
     // Clear the head of the document before each test
     document.head.innerHTML = "";
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "warn").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   const simulateLoadEvent = (element: HTMLElement) => {
@@ -41,7 +39,7 @@ describe("External CSS Loading", () => {
       const promise = loadThemeStyles();
       const link = document.getElementById("theme-styles") as HTMLLinkElement;
       expect(link).not.toBeNull();
-      expect(link.href).toBe("http://localhost/univention/theme.css");
+      expect(link.href).toBe("http://localhost:3000/univention/theme.css");
       simulateLoadEvent(link);
       await promise;
     });
@@ -51,7 +49,7 @@ describe("External CSS Loading", () => {
       const promise = loadThemeStyles(customPath);
       const link = document.getElementById("theme-styles") as HTMLLinkElement;
       expect(link).not.toBeNull();
-      expect(link.href).toBe(`http://localhost${customPath}`);
+      expect(link.href).toBe(`http://localhost:3000${customPath}`);
       simulateLoadEvent(link);
       await promise;
     });
@@ -63,7 +61,7 @@ describe("External CSS Loading", () => {
 
       await loadThemeStyles();
       expect(console.log).toHaveBeenCalledWith(
-        "CSS already loaded: theme-styles",
+        "CSS already loaded: theme-styles"
       );
     });
 
@@ -74,7 +72,7 @@ describe("External CSS Loading", () => {
       await promise;
       expect(console.warn).toHaveBeenCalledWith(
         "Failed to load CSS: /univention/theme.css",
-        expect.any(Event),
+        expect.any(Event)
       );
     });
 
@@ -95,12 +93,10 @@ describe("External CSS Loading", () => {
   describe("loadCustomStyles", () => {
     test("should load custom.css with default path", async () => {
       const promise = loadCustomStyles();
-      const link = document.getElementById(
-        "custom-styles",
-      ) as HTMLLinkElement;
+      const link = document.getElementById("custom-styles") as HTMLLinkElement;
       expect(link).not.toBeNull();
       expect(link.href).toBe(
-        "http://localhost/univention/portal/css/custom.css",
+        "http://localhost:3000/univention/portal/css/custom.css"
       );
       simulateLoadEvent(link);
       await promise;
@@ -109,11 +105,9 @@ describe("External CSS Loading", () => {
     test("should load custom.css with custom path", async () => {
       const customPath = "/custom/styles.css";
       const promise = loadCustomStyles(customPath);
-      const link = document.getElementById(
-        "custom-styles",
-      ) as HTMLLinkElement;
+      const link = document.getElementById("custom-styles") as HTMLLinkElement;
       expect(link).not.toBeNull();
-      expect(link.href).toBe(`http://localhost${customPath}`);
+      expect(link.href).toBe(`http://localhost:3000${customPath}`);
       simulateLoadEvent(link);
       await promise;
     });
@@ -125,20 +119,18 @@ describe("External CSS Loading", () => {
 
       await loadCustomStyles();
       expect(console.log).toHaveBeenCalledWith(
-        "CSS already loaded: custom-styles",
+        "CSS already loaded: custom-styles"
       );
     });
 
     test("should handle custom.css load error gracefully", async () => {
       const promise = loadCustomStyles();
-      const link = document.getElementById(
-        "custom-styles",
-      ) as HTMLLinkElement;
+      const link = document.getElementById("custom-styles") as HTMLLinkElement;
       simulateErrorEvent(link);
       await promise;
       expect(console.warn).toHaveBeenCalledWith(
         "Failed to load CSS: /univention/portal/css/custom.css",
-        expect.any(Event),
+        expect.any(Event)
       );
     });
 
@@ -147,9 +139,7 @@ describe("External CSS Loading", () => {
       document.head.appendChild(existingElement);
 
       const promise = loadCustomStyles();
-      const link = document.getElementById(
-        "custom-styles",
-      ) as HTMLLinkElement;
+      const link = document.getElementById("custom-styles") as HTMLLinkElement;
       expect(link).not.toBeNull();
       expect(document.head.lastChild).toBe(link);
       simulateLoadEvent(link);
@@ -167,10 +157,11 @@ describe("External CSS Loading", () => {
       simulateLoadEvent(themeLink);
 
       // Wait for loadThemeStyles promise to resolve and loadCustomStyles to be called
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       const customLink = document.getElementById("custom-styles") as HTMLLinkElement;
       expect(customLink).not.toBeNull();
+
       simulateLoadEvent(customLink);
 
       await allStylesPromise;
@@ -189,10 +180,11 @@ describe("External CSS Loading", () => {
       simulateErrorEvent(themeLink);
 
       // Wait for loadThemeStyles promise to resolve and loadCustomStyles to be called
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       const customLink = document.getElementById("custom-styles") as HTMLLinkElement;
       expect(customLink).not.toBeNull();
+
       simulateLoadEvent(customLink);
 
       await allStylesPromise;
