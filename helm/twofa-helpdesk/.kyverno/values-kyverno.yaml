@@ -2,9 +2,6 @@
 # SPDX-FileCopyrightText: 2024-2025 Univention GmbH
 ---
 
-imagePullSecrets:
-  - "kyverno-test"
-
 global:
   imageRegistry: "my_private_registry.domain.tld"
   imagePullSecrets:
@@ -13,18 +10,28 @@ global:
 
 provisioning:
   image:
-    tag: "kyverno"
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
   provisioningImage:
-    tag: "kyverno"
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
+  imagePullSecrets:
+    - "kyverno-test"
 
 twofaHelpdeskBackend:
   image:
-    tag: "kyverno"
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
   replicaCount: 42
+  imagePullSecrets:
+    - "kyverno-test"
 
 twofaHelpdeskFrontend:
   image:
-    tag: "kyverno"
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
   replicaCount: 42
+  imagePullSecrets:
+    - "kyverno-test"
 
 ...

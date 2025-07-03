@@ -24,6 +24,23 @@ global:
 
 extraIngresses: []
 
+# Service account to use.
+# Ref.: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  ## @param serviceAccount.automountServiceAccountToken Allows auto mount of ServiceAccountToken on the serviceAccount created
+  ## Can be set to false if pods using this serviceAccount do not need to use K8s API
+  ##
+  automountServiceAccountToken: false
+  # -- Additional custom labels for the ServiceAccount.
+  labels: {}
+
 nubusBaseUrl: ""
 
 provisioning:
@@ -72,6 +89,13 @@ provisioning:
       type: RuntimeDefault
   tolerations: []
 
+  resources:
+    limits:
+      cpu: 1
+      memory: "1Gi"
+    requests:
+      cpu: 0.1
+      memory: "64Mi"
 
 ingress:
 
@@ -230,7 +254,7 @@ twofaHelpdeskBackend:
       enabled: false
       timeoutSeconds: 10800
 
-  # -- Deployment resources for the listener container
+  # -- Deployment resources for the backend container
   resources:
     requests:
       memory: "512Mi"
@@ -314,7 +338,7 @@ twofaHelpdeskFrontend:
       enabled: false
       timeoutSeconds: 10800
 
-  # -- Deployment resources for the listener container
+  # -- Deployment resources for the frontend container
   resources:
     requests:
       memory: "512Mi"
