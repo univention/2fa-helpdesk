@@ -88,7 +88,7 @@ provisioning:
     seccompProfile:
       type: RuntimeDefault
   tolerations: []
-
+  backoffLimit: 6
   resources:
     limits:
       cpu: 1

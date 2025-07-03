@@ -8,6 +8,12 @@ global:
     - "kyverno-test"
   imagePullPolicy: "kyverno"
 
+ingress:
+  ingressClassName: "kyverno"
+  tls:
+    enabled: true
+    secretName: "kyverno-tls"
+
 provisioning:
   image:
     tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
