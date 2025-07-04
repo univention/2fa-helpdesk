@@ -39,9 +39,9 @@ spec:
       nodeSelector:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- if .Values.twofaHelpdeskBackend.imagePullSecrets }}
+      {{- if .Values.twofaHelpdeskBackend.image.imagePullSecrets }}
       imagePullSecrets:
-        {{- range .Values.twofaHelpdeskBackend.imagePullSecrets }}
+        {{- range .Values.twofaHelpdeskBackend.image.imagePullSecrets }}
         - name: "{{ . }}"
         {{- end }}
       {{- end }}
