@@ -10,7 +10,7 @@ metadata:
   labels:
     {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
     {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
-    {{- $mergedLabels := merge $otherLabels $commonLabels}}
+    {{- $mergedLabels := merge $otherLabels $commonLabels }}
     {{- toYaml $mergedLabels | nindent 4 }}
 spec:
   replicas: {{ .Values.twofaHelpdeskFrontend.replicaCount }}
@@ -24,7 +24,7 @@ spec:
         app: {{ printf "%s" (include "common.names.fullname" .) }}
         {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
         {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
-        {{- $mergedLabels := merge $otherLabels $commonLabels}}
+        {{- $mergedLabels := merge $otherLabels $commonLabels }}
         {{- toYaml $mergedLabels | nindent 8 }}
       #annotations:
       #  checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
@@ -41,11 +41,14 @@ spec:
       nodeSelector:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- if .Values.twofaHelpdeskFrontend.imagePullSecrets }}
+      {{- if .Values.twofaHelpdeskFrontend.image.imagePullSecrets }}
       imagePullSecrets:
-        {{- range .Values.twofaHelpdeskFrontend.imagePullSecrets }}
+        {{- range .Values.twofaHelpdeskFrontend.image.imagePullSecrets }}
         - name: "{{ . }}"
         {{- end }}
+      {{- end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "common.names.fullname" . }}
       {{- end }}
       volumes:
       - name: cache-tmpfs
@@ -73,10 +76,13 @@ spec:
           {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
         {{- end }}
         image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
         command: ["sh", "-c", "mkdir -p /mnt && touch /mnt/config.json"]
         volumeMounts:
           - name: configjson
             mountPath: /mnt
+        resources:
+          {{- toYaml .Values.twofaHelpdeskFrontend.resources | nindent 10 }}
       containers:
       - name: "twofa-helpdesk-frontend-ui"
         {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
@@ -84,7 +90,7 @@ spec:
           {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
         {{- end }}
         image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.imagePullPolicy .Values.global.imagePullPolicy | quote}}
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
         ports:
         - containerPort: 80
         volumeMounts:

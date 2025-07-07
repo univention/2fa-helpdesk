@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2024-2025 Univention GmbH
+---
+
+global:
+  imageRegistry: "my_private_registry.domain.tld"
+  imagePullSecrets:
+    - "kyverno-test"
+  imagePullPolicy: "kyverno"
+
+ingress:
+  ingressClassName: "kyverno"
+  tls:
+    enabled: true
+    secretName: "kyverno-tls"
+
+provisioning:
+  image:
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
+    imagePullSecrets:
+      - "kyverno-test"
+  provisioningImage:
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
+
+twofaHelpdeskBackend:
+  image:
+    imagePullSecrets:
+      - "kyverno-test"
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
+  replicaCount: 42
+
+twofaHelpdeskFrontend:
+  image:
+    imagePullSecrets:
+      - "kyverno-test"
+    tag: "kyverno@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+    imagePullPolicy: "kyverno"
+  replicaCount: 42
+
+...

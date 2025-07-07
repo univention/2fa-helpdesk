@@ -28,6 +28,15 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.provisioning.image.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.provisioning.image.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+      {{- end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "common.names.fullname" . }}
+      {{- end }}
       {{- if .Values.provisioning.podSecurityContext.enabled }}
       securityContext:
         {{- omit .Values.provisioning.podSecurityContext "enabled" | toYaml | nindent 8 }}
@@ -50,9 +59,9 @@ spec:
         {{- if .Values.provisioning.args }}
         args: {{ .Values.provisioning.args }}
         {{- end }}
-        {{- with .Values.provisioning.resources }}
+        {{- if .Values.provisioning.resources }}
         resources:
-        {{ toYaml . | indent 10 }}
+          {{- toYaml .Values.provisioning.resources | nindent 10 }}
         {{- end }}
         volumeMounts:
           {{- if .Values.provisioning.extraVolumeMounts }}
@@ -106,9 +115,9 @@ spec:
         {{- if .Values.provisioning.args }}
         args: {{ .Values.provisioning.args }}
         {{- end }}
-        {{- with .Values.provisioning.resources }}
+        {{- if .Values.provisioning.resources }}
         resources:
-        {{ toYaml . | indent 10 }}
+          {{- toYaml .Values.provisioning.resources | nindent 10 }}
         {{- end }}
         volumeMounts:
           - mountPath: "/credentials/keycloak.secret"

@@ -590,6 +590,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>provisioning.backoffLimit</td>
+			<td>int</td>
+			<td><pre lang="json">
+6
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>provisioning.config.debug.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -842,6 +851,42 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>provisioning.resources.limits.cpu</td>
+			<td>int</td>
+			<td><pre lang="json">
+1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.resources.limits.memory</td>
+			<td>string</td>
+			<td><pre lang="json">
+"1Gi"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.resources.requests.cpu</td>
+			<td>float</td>
+			<td><pre lang="json">
+0.1
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>provisioning.resources.requests.memory</td>
+			<td>string</td>
+			<td><pre lang="json">
+"64Mi"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>provisioning.tolerations</td>
 			<td>list</td>
 			<td><pre lang="json">
@@ -855,6 +900,51 @@ true
 			<td>int</td>
 			<td><pre lang="json">
 60
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.automountServiceAccountToken</td>
+			<td>bool</td>
+			<td><pre lang="json">
+false
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.create</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>serviceAccount.labels</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom labels for the ServiceAccount.</td>
+		</tr>
+		<tr>
+			<td>serviceAccount.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
 </pre>
 </td>
 			<td></td>
@@ -1145,7 +1235,7 @@ true
 }
 </pre>
 </td>
-			<td>Deployment resources for the listener container</td>
+			<td>Deployment resources for the backend container</td>
 		</tr>
 		<tr>
 			<td>twofaHelpdeskBackend.securityContext.allowPrivilegeEscalation</td>
@@ -1604,7 +1694,7 @@ true
 }
 </pre>
 </td>
-			<td>Deployment resources for the listener container</td>
+			<td>Deployment resources for the frontend container</td>
 		</tr>
 		<tr>
 			<td>twofaHelpdeskFrontend.securityContext.allowPrivilegeEscalation</td>
