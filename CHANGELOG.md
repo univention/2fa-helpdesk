@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.7.0...v0.7.1) (2025-07-07)
+
+
+### Bug Fixes
+
+* correct imagePullSecrets templating ([29299a6](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/29299a6385dac1703cb1bfaf6cf553c54f49b40c)), closes [univention/dev/internal/team-nubus#1237](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1237)
+* create serviceAccount ([9738703](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/97387035fa219569df37b3ffb14a0e827e257e65)), closes [univention/dev/internal/team-nubus#1237](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1237)
+* fix kyverno tests 2fa frontend ([4ca16b2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/4ca16b2302796db14175769bf96d6eab13b9504f)), closes [univention/dev/internal/team-nubus#1237](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1237)
+* kyverno tests 2fa backend ([cec60c0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/cec60c029cd3606aaa5cb0ec515b86803c585509)), closes [univention/dev/internal/team-nubus#1237](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1237)
+* kyverno tests ingress ([938a38f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/938a38f0a0b04c046956e5eb1c86b2e7defd41ad)), closes [univention/dev/internal/team-nubus#1237](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1237)
+
 ## [0.7.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.6.0...v0.7.0) (2025-07-01)
 
 
