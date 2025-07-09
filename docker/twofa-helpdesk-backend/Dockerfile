@@ -3,57 +3,68 @@
 
 ARG UCS_BASE_IMAGE_TAG=0.18.2-build-2025-06-12
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-522
+ARG POETRY_VERSION=2.1.3
 
-ARG WORKDIR="/src"
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS builder
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS build
-ARG WORKDIR
-WORKDIR ${WORKDIR}
+RUN apt-get -qq update \
+    && apt-get --assume-yes --verbose-versions --no-install-recommends install \
+    curl \
+    python3-pip \
+    python3-univention-directory-manager-rest-client \
+    python3-venv \
+    && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+ARG POETRY_VERSION
+ENV POETRY_HOME=/opt/poetry \
+    POETRY_VERSION=${POETRY_VERSION}
+RUN python3 -m venv "$POETRY_HOME" \
+    && "$POETRY_HOME"/bin/pip install --no-cache-dir poetry==${POETRY_VERSION}
+ENV PATH="$POETRY_HOME/bin:$PATH"
+
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+WORKDIR /app
+
+COPY ./src/poetry.lock ./src/pyproject.toml ./
+
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR \
+    poetry install --only=main --no-root
+
+COPY ./src ./src
+
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR \
+    poetry install --only-root
+
+FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS runtime
+
+RUN apt-get -qq update \
+    && apt-get --assume-yes --verbose-versions --no-install-recommends install \
+    python3 \
+    python3-univention-directory-manager-rest-client \
+    && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 ARG USER=fastapi
-RUN useradd -m "$USER"
+ARG UID=1000
+ARG GID=1000
+RUN groupadd -g ${GID} ${USER} \
+    && useradd -l -m -u ${UID} -g ${GID} -s /bin/bash ${USER}
 
-COPY ./src/poetry.lock ${WORKDIR}
-COPY ./src/pyproject.toml ${WORKDIR}
+WORKDIR /app
 
-RUN chown -R "$USER":"$USER" "${WORKDIR}"
+COPY --from=builder --chown=root:root --chmod=755 /app/.venv /app/.venv
+COPY --from=builder --chown=root:root --chmod=755 /app/src /app/src
 
-RUN chown "$USER":"$USER" "$WORKDIR" \
-  && apt-get -qq update \
-  && apt-get --assume-yes --verbose-versions --no-install-recommends install \
-  python3-pip \
-  python3-univention-directory-manager-rest-client \
-  curl \
-  && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH="/app/src:/usr/lib/python3/dist-packages"
 
-ENV \
-  PATH="/home/${USER}/.local/bin:${PATH}" \
-  PYTHONPATH="." \
-  WEB_CONCURRENCY=1 \
-  # Do not buffer `stdout`
-  PYTHONUNBUFFERED=1 \
-  # Do not create `.pyc` files
-  PYTHONDONTWRITEBYTECODE=1 \
-  # Do not ask questions
-  POETRY_NO_INTERACTION=1 \
-  # Put .venv inside source folder
-  POETRY_VIRTUALENVS_IN_PROJECT=1 \
-  # Cache of poetry
-  POETRY_CACHE_DIR=/tmp/poetry_cache \
-  # Include system site packages
-  PYTHONPATH=.:/usr/lib/python3/dist-packages/
+USER ${USER}
 
-# install Poetry
-RUN pip3 install --break-system-packages --no-cache-dir poetry==2.1.3
-RUN poetry --version
+WORKDIR /app/src/2fa_helpdesk
 
-COPY ./src ${WORKDIR}
-RUN chown -R "$USER":"$USER" "${WORKDIR}"
-
-# copy source code and install project
-ENV PIP_BREAK_SYSTEM_PACKAGES=1
-RUN poetry config virtualenvs.create false
-RUN poetry install #--only main
-
-WORKDIR /src/2fa_helpdesk
 CMD ["uvicorn", "app:app", "--proxy-headers", "--root-path", "./", "--port", "8080", "--host", "0.0.0.0"]
