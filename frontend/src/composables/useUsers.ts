@@ -4,7 +4,7 @@
  */
 
 import { ref, watch } from "vue";
-import axios from "axios";
+import axiosInstance from "../services/axios";
 import { type UserData } from "../types";
 
 export function useUsers() {
@@ -28,7 +28,7 @@ export function useUsers() {
     error.value = null;
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         "/list_users",
         { query: searchQuery.value },
         {

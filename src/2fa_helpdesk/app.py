@@ -149,7 +149,7 @@ backend_app = FastAPI(
 app = FastAPI()
 
 # Add CORS middleware
-if os.environ["CORS_ALLOW_ORIGINS"]:
+if os.environ.get("CORS_ALLOW_ORIGINS"):
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[os.environ["CORS_ALLOW_ORIGINS"]],

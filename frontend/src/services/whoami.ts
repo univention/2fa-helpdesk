@@ -4,7 +4,7 @@
  */
 
 // src/services/user.ts
-import axios from "axios";
+import axiosInstance from "./axios";
 
 interface WhoAmI {
   success: boolean;
@@ -15,11 +15,10 @@ let _whoami: Promise<WhoAmI> | null = null;
 
 export async function fetchWhoAmI(): Promise<WhoAmI> {
   if (!_whoami) {
-    _whoami = axios
+    _whoami = axiosInstance
       .get<WhoAmI>("/whoami")
       .then((r) => r.data)
       .catch((err) => {
-        _whoami = null;
         throw err;
       });
   }

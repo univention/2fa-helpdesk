@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Univention GmbH
  */
 
-import axios from "axios";
+import axiosInstance from "./axios";
 import type { UserData } from "../types";
 let isResetting = false;
 
@@ -22,7 +22,7 @@ export async function resetUserToken(
   try {
     const url = "/token/reset/user/";
 
-    await axios.post(
+    await axiosInstance.post(
       url,
       { user_ids: [selectedUser.keycloak_internal_id] },
       {

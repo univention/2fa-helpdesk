@@ -35,6 +35,18 @@ export function getToken(): string | undefined {
   return keycloak?.token;
 }
 
+export async function refreshToken(): Promise<void> {
+  try {
+      // Refresh token if lifetime is <= 5 seconds
+      const refreshed = await keycloak?.updateToken(5);
+      console.log(refreshed ? 'Token was refreshed' : 'Token is still valid');
+  } catch (error) {
+      console.error('Failed to refresh the token:', error);
+      throw error;
+  }
+}
+
+
 export function isAuthenticated(): boolean {
   return keycloak?.authenticated === true;
 }

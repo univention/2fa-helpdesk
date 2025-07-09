@@ -5,12 +5,12 @@
 
 import { createApp } from "vue";
 import App from "./App.vue";
-import axios from "axios";
+import axiosInstance from "./services/axios";
 import router from "./router";
 import { createPinia } from "pinia";
 import { loadAllStyles } from "./utils/customStyles";
 
-import { initKeycloak, getToken } from "./services/keycloak";
+import { initKeycloak } from "./services/keycloak";
 
 import "./base-styles.css";
 import { loadConfig } from "./services/loadConfig";
@@ -20,7 +20,7 @@ loadAllStyles();
 loadConfig()
   .then(() => {
     const cfg = window.__APP_CONFIG__!;
-    axios.defaults.baseURL = cfg.VITE_API_URL;
+    axiosInstance.defaults.baseURL = cfg.VITE_API_URL;
 
     return initKeycloak({
       onLoad: "login-required",
@@ -32,8 +32,6 @@ loadConfig()
       console.warn("Not authenticated");
       return;
     }
-    axios.defaults.headers.common["Authorization"] = `Bearer ${getToken()}`;
-    //axios.defaults.headers.common["Authorization"] = `Bearer test`;
 
     const app = createApp(App);
     app.use(createPinia());
