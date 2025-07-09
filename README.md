@@ -2,17 +2,79 @@
 
 This container image provides an API and business logic to connect the 2FA Admin Frontend module to Keycloak.
 
-build with:
+## Local Development and Testing with Docker Compose
 
-    docker build -f docker/twofa-helpdesk-backend/Dockerfile .
-    # --net=host is required if you use kubeproxy
-    # see .env sample file for environment help
-    # run helper_scripts/environment.sh to extract info from a deployment
-    docker run --net=host --env-file env.<yourfile> backend
+The project includes a Docker Compose setup for local development and testing. All necessary images can be built locally from the `docker/` directory.
 
-## Running helm chart tests
+### Prerequisites
 
-### Docker Compose
+- Docker and Docker Compose installed
+- Git repository cloned locally
+
+### Building and Running Services
+
+The Docker Compose configuration supports different profiles for different use cases:
+
+#### Setup Integration Testing
+
+To run the complete 2FA helpdesk stack with all services:
+
+```shell
+# Build all images and start the integration test environment
+docker compose --profile test-it up --build
+
+# This will start:
+# - Keycloak server (localhost:8080)
+# - 2FA Helpdesk Backend API (localhost:8081)
+```
+
+#### Running Integration Tests with Docker Compose
+
+```shell
+# (Re-)build and run the testrunner for testing tests/twofa
+docker compose run -it --rm --build testrunner
+
+# Alternatively: (Re-)build and run the testrunner for testing tests/twofa
+docker compose run -it --rm --build testrunner pytest --vv tests/twofa
+
+# Run tests from above without explicit building
+docker compose run -it --rm testrunner
+docker compose run -it --rm testrunner pytest --vv tests/twofa
+
+```
+
+In case you want to build and use an image named the same as the one specified in the compose file:
+```shell
+# Build the testrunner image
+docker compose --profile testrunner up --build --no-start
+docker compose --profile testrunner down --remove-orphans --volumes
+
+# Run the integration tests
+docker compose run -it --rm testrunner pytest -vv tests/twofa
+```
+
+#### Running Integration Tests locally
+
+Prerequisites:
+* Python 3.13
+
+First load the pipenv environment:
+
+```shell
+cd docker/testrunner
+pipenv sync
+pipenv shell
+cd -
+```
+
+The execute the tests:
+```shell
+# Load environment file
+source .env.test.local
+pytest -vv tests/twofa
+```
+
+#### Running Helm Chart Tests
 
 ```shell
 # Run the test suite
@@ -26,34 +88,34 @@ docker compose run -it --rm test-chart bash
 pytest tests/chart
 ```
 
-## Running tests in a local environment
+### Environment Configuration
 
-The dependencies are managed via `uv`. 
-Starting a shell which has the needed Python dependencies available is possible in the following ways (assuming you've cloned `common-helm` to `../common-helm`):
-
-```shell
-# Using bash
-uv --project ../common-helm run bash
-source ../common-helm/.venv/bin/activate
-
-# Using zsh
-uv --project ~/work/common-helm run zsh
-```
-
-Inside of the shell you can run `pytest` directly as the following examples
-based on the portal server show:
+For integration testing, create a `.env.test` file with the necessary environment variables. You can use the provided `docker-env.sample` as a template:
 
 ```shell
-pytest tests/chart -v
-pytest tests/chart -v --helm-debug
-pytest tests/chart -vsx --helm-debug
+cp docker-env.sample .env.test
+# Edit .env.test with your specific configuration
 ```
 
-Hints:
+### Accessing Services
 
-- `../common-helm` has to be replaced with the correct path to your local
-  clone of `common-helm`.
+When running the full stack:
+- Keycloak Admin Console: [http://localhost:8080/admin]() (username: admin & password:admin)
+- Backend API: Available internally to other services or access under [http://localhost:8081]()
 
+### Rebuilding Images
+
+To force rebuild all images:
+
+```shell
+docker compose --profile test-it build --no-cache
+```
+
+To rebuild a specific service:
+
+```shell
+docker compose build --no-cache api
+```
 
 # API
 ## reset_own_token_token_reset_own__post

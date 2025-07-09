@@ -34,7 +34,7 @@ services:
     command: start-dev --import-realm
     env_file: .env.test
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<> /dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: 127.0.0.1:9000\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200 OK' && exit 0 || exit 1"]
+      test: [ "CMD-SHELL", "exec 3<> /dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: 127.0.0.1:9000\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200 OK' && exit 0 || exit 1" ]
       start_period: 60s
       start_interval: 1s
       timeout: 5s
@@ -45,9 +45,14 @@ services:
 
   api:
     image: gitregistry.knut.univention.de/univention/dev/projects/2fa-helpdesk/twofa-helpdesk-backend:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: docker/twofa-helpdesk-backend/Dockerfile
     profiles:
       - test-it
     env_file: .env.test
+    ports:
+      - 8081:8080
     depends_on:
       keycloak:
         condition: service_healthy
@@ -55,6 +60,9 @@ services:
 
   testrunner:
     image: gitregistry.knut.univention.de/univention/dev/projects/2fa-helpdesk/testrunner:${IMAGE_TAG:-latest}
+    build:
+      context: docker/testrunner
+      dockerfile: Dockerfile
     profiles:
       - testrunner
     env_file: .env.test
