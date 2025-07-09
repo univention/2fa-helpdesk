@@ -8,6 +8,7 @@ import os
 import fastapi
 from fastapi import FastAPI, HTTPException, Security, security, status
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import pydantic
 from pydantic_settings import BaseSettings
 
@@ -146,6 +147,16 @@ backend_app = FastAPI(
 
 # Create a "root" app
 app = FastAPI()
+
+# Add CORS middleware
+if os.environ["CORS_ALLOW_ORIGINS"]:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[os.environ["CORS_ALLOW_ORIGINS"]],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Mount the backend app under the /backend prefix
 prefix = os.environ.get("PREFIX") or "/"
