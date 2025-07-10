@@ -184,12 +184,12 @@ def reset_user_tokens(
     body: ResetUsersRequest,
 ):
 
-    results = dict()
+    results = {}
     success = False
     if is_2fa_admin(user_token):
         for user_id in body.user_ids:
             reset_count = adapters.keycloak.reset_2fa_token(user_id)
-            results.update({ "user_id": reset_count})
+            results.update({ user_id: reset_count})
         success = True
         detail = ""
     else:
@@ -197,7 +197,7 @@ def reset_user_tokens(
         detail = _not_2fa_admin_msg(user_token)
 
     return ResetResponse(
-        users=results,
+        resets_by_user=results,
         success=success,
         detail=detail,
     )
@@ -212,7 +212,7 @@ def list_users(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
     page: Optional[int] = fastapi.Query(0),
     limit: Optional[int] = fastapi.Query(20),
-    body: ListUserQuery = None,
+    body: ListUserQuery | None = None,
 ):
 
     success = False
