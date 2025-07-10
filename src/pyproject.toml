@@ -22,3 +22,11 @@ pydantic-settings = "^2.8.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+extend-select = ["COM"]
+exclude = [
+    "archive/",
+    "helper_scripts/",
+]
