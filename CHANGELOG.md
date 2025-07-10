@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.7.1...v0.8.0) (2025-07-10)
+
+
+### Features
+
+* **backend:** add backend integration tests ([cae7f1b](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/cae7f1b07d2d6c53696c4e4cb1a7c8d3cf8b96c7)), closes [univention/dev/internal/team-nubus#1218](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1218)
+* **tests:** build images using compose / describe how to test in README ([8691417](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/8691417302bb3500ceb97ac07a570f0462981714)), closes [univention/dev/internal/team-nubus#1218](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1218)
+
+
+### Bug Fixes
+
+* **backend:** fix response of reset users tokens ([cbe4f48](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/cbe4f4861c5281c420da15eaed0f57e0edc0caf8)), closes [univention/dev/internal/team-nubus#1218](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1218)
+* cleanup backend Dockerfile ([6360d02](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/6360d02f1b9d228de2b13b09fcc72746ea84daf3)), closes [univention/dev/internal/team-nubus#1218](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1218)
+
 ## [0.7.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.7.0...v0.7.1) (2025-07-07)
 
 
