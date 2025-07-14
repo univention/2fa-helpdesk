@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.8.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.8.0...v0.8.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* **frontend:** Add script for easy usage of nubus as dev environment ([d682875](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/d6828754996eb78889a153d6f8fd007f706c7e41)), closes [univention/dev/internal/team-nubus#1241](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1241)
+* **frontend:** Add support for auth token refresh ([867deea](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/867deea6d583aa48c89be4998a2b4b4c1376089c)), closes [univention/dev/internal/team-nubus#1241](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1241)
+* **frontend:** Add unit test for token refresh ([27fc609](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/27fc6098901a20f4f25b0dfde5b1e592737851d0)), closes [univention/dev/internal/team-nubus#1241](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1241)
+
 ## [0.8.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.7.1...v0.8.0) (2025-07-10)
 
 
