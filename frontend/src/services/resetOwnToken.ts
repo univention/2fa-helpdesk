@@ -3,13 +3,13 @@
  * SPDX-FileCopyrightText: 2025 Univention GmbH
  */
 
-import axios from "axios";
+import axiosInstance from "./axios";
 
 /**
  * Reset own user token (self-service) via POST /token/reset/own/
  */
 export async function resetSelfServiceToken(): Promise<void> {
-  await axios.post("/token/reset/own/", {
+  await axiosInstance.post("/token/reset/own/", {
     headers: {
       Accept: "application/json",
     },
