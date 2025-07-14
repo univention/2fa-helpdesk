@@ -11,6 +11,70 @@ The project includes a Docker Compose setup for local development and testing. A
 - Docker and Docker Compose installed
 - Git repository cloned locally
 
+### Setting up test-realm on keycloak version changes
+
+The steps in this sections are only required to be executed whenever we change the keycloak version and the realm we've exported under `tests/data/export/realm-export-with-user.json` doesn't work well anymore.
+
+#### Start keycloak setup container
+
+Start the keycloak setup container:
+```shell
+docker compose up -d keycloak-setup
+docker compose exec -it keycloak-setup bash
+```
+
+Start keycloak within the setup container:
+```shell
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev
+```
+
+#### Configure keycloak via UI
+
+1. Login as `admin` (pw: `admin`)  under `localhost:8080`
+2. Create realm: `test-realm`
+3. Create client: `2fa-helpdesk`
+    - Activate `Direct Access Grants`
+    - Set "Valid redirect URIs": `*`
+    - Set "Valid post logout redirect URIs": `*`
+    - Set "Web origins": `*`
+4. Create groups:
+    * `2fa-users`
+    * `2FA Admins`
+5. Create "Client Scope": `twofa-default`
+    *  Add new mapper: `2fa Groups`
+      *  Set "Claim Name": `2fa_user_groups`
+6. Add client scope `twofa-default` to client `2fa-helpdesk`
+7. Adjust "Authentication Flow":
+    * Deactivate OTP for `direct grant`
+    * Change `browser/Conditional OTP` to required.
+8. Create user with username `test`
+    * Add user to groups: 
+      * `2fa-users`
+      * `2FA Admins`
+    * Create *non-temporary* password** `123qwe`
+
+#### Export keycloak realm
+
+Stop keycloak the keycloak setup container and export the realm (by Ctrl+C).
+Then export the realms to JSON:
+```shell
+kc.sh export --file=/opt/keycloak/data/export/realm-export.json --optimized
+```
+
+Exit and shutdown the container:
+```shell
+docker compose down --timeout 0 keycloak-setup
+```
+
+Remove the admin user from the export to avoid failures on import:
+```shell
+jq '.[].users |= map(select(.realmRoles | index("admin") | not))' \
+   tests/data/export/realm-export.json \
+   > tests/data/export/realm-export-with-user.json
+rm tests/data/export/realm-export.json
+```
+
 ### Building and Running Services
 
 The Docker Compose configuration supports different profiles for different use cases:

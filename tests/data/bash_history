@@ -1,0 +1,69 @@
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export --dir=/opt/keycloak/data/import/
+history -w /opt/keycloak/data/import/bash.hist
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export dir=/opt/keycloak/data/import/
+kc.sh export --file=/opt/keycloak/data/import/realm-export-with-user.json
+history -w /opt/keycloak/data/import/bash.hist
+ls -l/opt/keycloak/data/import/bash.hist
+ls -l /opt/keycloak/data/import/bash.hist
+history -w bash.hist
+history -w
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export --file=/opt/keycloak/data/import/realm-export-with-user.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export --file=/opt/keycloak/data/import/realm-export-with-user.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export --file=/opt/keycloak/data/import/realm-export-with-user.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev --import-realm=/opt/keycloak/data/import/realm-export-with-user.json
+kc.sh start-dev --import-realm /opt/keycloak/data/import/realm-export-with-user.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev --import-realm
+kc.sh start-dev --import-realm
+kc.sh start-dev --import-realm
+kc.sh start-dev --import-realm
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev --import-realm
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev --import-realm
+kc.sh start-dev --import-realm
+kc.sh start-dev --import-realm
+kc.sh start-dev --import-realm
+kc.sh start-dev --import-realm /opt/keycloak/data/import/realm-export-with-user.json
+kc.sh export --file=/opt/keycloak/data/import/realm-export-with-user.json
+kc.sh export --file=/opt/keycloak/data/export/realm-export-with-user.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export --file=/opt/keycloak/data/export/realm-export-with-user.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export --file=/opt/keycloak/data/export/realm-export.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh export --file=/opt/keycloak/data/export/realm-export.json
+ls -l /opt/keycloak/data/export/
+ls -la /opt/keycloak/.bash_history /opt/keycloak/data/
+history -w
+cat /opt/keycloak/.bash_history
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev
+kc.sh export --file=/opt/keycloak/data/export/realm-export.json
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev
+kc.sh export --file=/opt/keycloak/data/export/realm-export.json --optimized
+kc.sh start-dev
+#kc.sh start-dev
+cp /opt/keycloak/data/export/realm-export.json /opt/keycloak/data/import
+ll /opt/keycloak/data/import
+ls -l /opt/keycloak/data/import
+rm /opt/keycloak/data/import
+mkdir /opt/keycloak/data/import
+cp /opt/keycloak/data/export/realm-export.json /opt/keycloak/data/import/
+kc.sh start-dev --import-realm
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev
+export PATH=/opt/keycloak/bin:$PATH
+kc.sh start-dev
+kc.sh export --file=/opt/keycloak/data/export/realm-export.json --optimized

@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 
-from keycloak import KeycloakAdmin
 import requests
+from keycloak import KeycloakAdmin
 
 
 def test_whoami(
@@ -112,6 +112,7 @@ def test_list_users_no_query(
     twofa_api_baseurl,
     session: requests.Session,
     keycloak_user_with_totp,
+    known_keycloak_user_id,
 ):
     resp = session.post(
         f"{twofa_api_baseurl}/list_users",
@@ -123,7 +124,8 @@ def test_list_users_no_query(
     assert resp_json["success"]
     expected_users = {keycloak_2fa_admin.id, keycloak_user_with_totp.id}
     assert {
-        user["keycloak_internal_id"] for user in resp_json["users"]
+        user["keycloak_internal_id"] for user in resp_json["users"] \
+            if user["keycloak_internal_id"] != known_keycloak_user_id
     } == expected_users
 
 

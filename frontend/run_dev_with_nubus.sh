@@ -61,7 +61,7 @@ container_id=$( \
     -e "KEYCLOAK_ADMIN_REALM_NAME=${KEYCLOAK_ADMIN_REALM_NAME}" \
     -e "TWOFA_ADMIN_GROUPS=${TWOFA_ADMIN_GROUPS}" \
     -e "PREFIX=/backend" \
-    -e "CORS_ALLOW_ORIGINS=http://localhost:5173" \
+    -e "CORS_ALLOW=http://localhost:5173" \
     -p "127.0.0.1:${BACKEND_PORT}:8080" \
     -d \
     "${docker_name}"

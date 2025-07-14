@@ -1,14 +1,16 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 
+import json
+import os
+from dataclasses import dataclass
+
+import pyotp
 import pytest
 import requests
 from bs4 import BeautifulSoup, Tag
-from keycloak import KeycloakAdmin, KeycloakOpenID
-import pyotp
 from faker import Faker
-from dataclasses import dataclass
-import os
+from keycloak import KeycloakAdmin, KeycloakOpenID
 
 
 @dataclass
@@ -318,9 +320,11 @@ def keycloak_user_with_totp(
         "userLabel": "foo",
         "totp": totp.now(),
         "totpSecret": get_input_value(soup, "totpSecret"),
+        "mode": "manual",
+        "logout-sessions": "on",
     }
 
-    resp = session.post(totp_submit_form_action, data=data)
+    resp = session.post(totp_submit_form_action, data=data, allow_redirects=False)
     resp.raise_for_status()
 
     credentials = keycloak_admin.get_credentials(keycloak_user.id)
@@ -329,3 +333,20 @@ def keycloak_user_with_totp(
     keycloak_user.set_totp(totp_secret)
 
     return keycloak_user
+
+@pytest.fixture
+def known_keycloak_user_id():
+    """Find the user 'test' in the realm export file and return their ID."""
+    realm_file_path = "tests/data/export/realm-export-with-user.json"
+
+    with open(realm_file_path, 'r') as f:
+        realms = json.load(f)
+
+    # Look through all realms for the user 'test'
+    for realm in realms:
+        if 'users' in realm:
+            for user in realm['users']:
+                if user.get("username") == "test":
+                    return user["id"]
+
+    raise ValueError("User 'test' not found in realm export file")

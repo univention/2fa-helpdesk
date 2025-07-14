@@ -23,11 +23,13 @@ include:
   - IMAGE_NAME:
       - "twofa-helpdesk-backend"
       - "twofa-helpdesk-extensions"
-      - "twofa-helpdesk-frontend"
   - IMAGE_NAME: "twofa-helpdesk-frontend-testrunner"
     DOCKERFILE_PATH: "docker/twofa-helpdesk-frontend/Dockerfile"
-    KANIKO_BUILD_CONTEXT: "${CI_PROJECT_DIR}"
+    KANIKO_BUILD_CONTEXT: "${CI_PROJECT_DIR}/frontend"
     KANIKO_ARGS: "--target=base"
+  - IMAGE_NAME: "twofa-helpdesk-frontend"
+    DOCKERFILE_PATH: "docker/twofa-helpdesk-frontend/Dockerfile"
+    KANIKO_BUILD_CONTEXT: "${CI_PROJECT_DIR}/frontend"
   - IMAGE_NAME: "testrunner"
     DOCKERFILE_PATH: "docker/testrunner/Dockerfile"
     KANIKO_BUILD_CONTEXT: "${CI_PROJECT_DIR}/docker/testrunner"
@@ -68,7 +70,6 @@ test-frontend-unit:
   stage: test
   image: "${CI_REGISTRY_IMAGE}/twofa-helpdesk-frontend-testrunner:${RELEASE_VERSION}"
   script:
-    - cd /app
     - yarn test
 
 test-backend:

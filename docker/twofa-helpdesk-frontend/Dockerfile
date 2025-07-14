@@ -51,15 +51,15 @@ WORKDIR /app
 CMD ["/bin/bash"]
 
 FROM local-dev-env AS base
-COPY ./frontend/package.json .
-COPY ./frontend/yarn.lock .
+COPY ./package.json .
+COPY ./yarn.lock .
 
 RUN \
     yarn install --frozen-lockfile \
     && yarn cache clean
 
 # Copy should come after yarn install to prevent long rebuilding time
-COPY ./frontend .
+COPY . .
 
 ###############################################################################
 # Step 1: Build the app
@@ -79,5 +79,5 @@ RUN apt-get update && \
 
 COPY --from=build /app/dist /usr/share/nginx/html/ui
 
-COPY frontend/90_generate_config.py /
-COPY frontend/90_generate_config.sh /entrypoint.d/
+COPY 90_generate_config.py /
+COPY 90_generate_config.sh /entrypoint.d/
