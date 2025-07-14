@@ -37,7 +37,7 @@ helm uninstall twofa-helpdesk
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://artifacts.software-univention.de/nubus/charts | nubus-common | ^0.18.x |
+| oci://artifacts.software-univention.de/nubus/charts | nubus-common | 0.21.0 |
 
 ## Values
 
@@ -49,6 +49,24 @@ helm uninstall twofa-helpdesk
 		<th>Description</th>
 	</thead>
 	<tbody>
+		<tr>
+			<td>additionalAnnotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom annotations to add to all deployed objects.</td>
+		</tr>
+		<tr>
+			<td>additionalLabels</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom labels to add to all deployed objects.</td>
+		</tr>
 		<tr>
 			<td>extraIngresses</td>
 			<td>list</td>
@@ -99,6 +117,15 @@ helm uninstall twofa-helpdesk
 			<td>string</td>
 			<td><pre lang="json">
 "twofa"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>global.imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
 </pre>
 </td>
 			<td></td>
@@ -201,6 +228,15 @@ helm uninstall twofa-helpdesk
 </pre>
 </td>
 			<td></td>
+		</tr>
+		<tr>
+			<td>imagePullSecrets</td>
+			<td>list</td>
+			<td><pre lang="json">
+[]
+</pre>
+</td>
+			<td>Image pull secrets to use for pulling images.</td>
 		</tr>
 		<tr>
 			<td>ingress.annotations</td>
@@ -698,22 +734,13 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.image.imagePullPolicy</td>
+			<td>provisioning.image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"IfNotPresent"
+null
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.image.pullSecrets</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td></td>
+			<td>Image pull policy. This setting has higher precedence than global.imagePullPolicy.</td>
 		</tr>
 		<tr>
 			<td>provisioning.image.registry</td>
@@ -806,13 +833,13 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.provisioningImage.imagePullPolicy</td>
+			<td>provisioning.provisioningImage.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"IfNotPresent"
+null
 </pre>
 </td>
-			<td></td>
+			<td>Image pull policy. This setting has higher precedence than global.imagePullPolicy.</td>
 		</tr>
 		<tr>
 			<td>provisioning.provisioningImage.registry</td>
@@ -986,22 +1013,13 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>twofaHelpdeskBackend.image.imagePullPolicy</td>
+			<td>twofaHelpdeskBackend.image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"Always"
+null
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>twofaHelpdeskBackend.image.imagePullSecrets</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td></td>
+			<td>Image pull policy. This setting has higher precedence than global.imagePullPolicy.</td>
 		</tr>
 		<tr>
 			<td>twofaHelpdeskBackend.image.registry</td>
@@ -1319,6 +1337,15 @@ true
 			<td></td>
 		</tr>
 		<tr>
+			<td>twofaHelpdeskBackend.service.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom annotations.</td>
+		</tr>
+		<tr>
 			<td>twofaHelpdeskBackend.service.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
@@ -1427,22 +1454,13 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>twofaHelpdeskFrontend.image.imagePullPolicy</td>
+			<td>twofaHelpdeskFrontend.image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
-"Always"
+null
 </pre>
 </td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>twofaHelpdeskFrontend.image.imagePullSecrets</td>
-			<td>list</td>
-			<td><pre lang="json">
-[]
-</pre>
-</td>
-			<td></td>
+			<td>Image pull policy. This setting has higher precedence than global.imagePullPolicy.</td>
 		</tr>
 		<tr>
 			<td>twofaHelpdeskFrontend.image.registry</td>
@@ -1776,6 +1794,15 @@ true
 </pre>
 </td>
 			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.service.annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td>Additional custom annotations.</td>
 		</tr>
 		<tr>
 			<td>twofaHelpdeskFrontend.service.enabled</td>

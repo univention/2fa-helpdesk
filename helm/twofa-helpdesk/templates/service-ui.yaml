@@ -10,10 +10,12 @@ metadata:
   name: {{ printf "%s-ui" (include "common.names.fullname" .) }}
   namespace: {{ include "common.names.namespace" $ }}
   labels:
-    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
-    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s" (include "common.names.fullname" .)) }}
-    {{- $mergedLabels := merge $uiLabels $commonLabels }}
-    {{- toYaml $mergedLabels | nindent 4 }}
+    app: {{ printf "%s-ui" (include "common.names.fullname" .) }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.twofaHelpdeskFrontend.service.annotations .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 spec:
   type: {{ .Values.twofaHelpdeskFrontend.service.type }}
   {{- if .Values.twofaHelpdeskFrontend.service.sessionAffinity.enabled }}
@@ -33,9 +35,8 @@ spec:
       {{- end }}
     {{- end }}
   selector:
-    {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
-    {{- $uiLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
-    {{- merge $uiLabels $commonLabels | toYaml | nindent 4 }}
+    app: {{ printf "%s-ui" (include "common.names.fullname" .) }}
+    {{- include "common.labels.matchLabels" . | nindent 4 }}
 
 ...
 {{- end }}
