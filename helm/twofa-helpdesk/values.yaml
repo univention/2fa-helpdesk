@@ -14,6 +14,7 @@ global:
   securityContext: {}
   tolerations: []
   imageRegistry: "artifacts.software-univention.de"
+  imagePullSecrets: []
   restartPolicy: OnFailure
   postgresql:
     connection:
@@ -23,6 +24,15 @@ global:
   domain: ""
 
 extraIngresses: []
+
+# -- Additional custom annotations to add to all deployed objects.
+additionalAnnotations: {}
+
+# -- Additional custom labels to add to all deployed objects.
+additionalLabels: {}
+
+# -- Image pull secrets to use for pulling images.
+imagePullSecrets: []
 
 # Service account to use.
 # Ref.: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -55,15 +65,16 @@ provisioning:
     repository: "nubus/images/wait-for-dependency"
     tag: "0.32.1@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
     sha256: ""  # Optional
-    imagePullPolicy: IfNotPresent
-    pullSecrets: []
+    # -- Image pull policy. This setting has higher precedence than global.imagePullPolicy.
+    pullPolicy: null
 
   provisioningImage:
     registry: ""
     repository: "nubus/images/keycloak-bootstrap"
     tag: "0.13.0@sha256:5ea9c055e2e6698335b76db4df24ee0c5aa7232103a3a6d7c78c120dcc626721"
     sha256: ""  # Optional
-    imagePullPolicy: IfNotPresent
+    # -- Image pull policy. This setting has higher precedence than global.imagePullPolicy.
+    pullPolicy: null
 
   podSecurityContext:
     enabled: true
@@ -229,8 +240,8 @@ twofaHelpdeskBackend:
       secretName: "twofa-backend-api-tls"
 
   image:
-    imagePullPolicy: "Always"
-    imagePullSecrets: []
+    # -- Image pull policy. This setting has higher precedence than global.imagePullPolicy.
+    pullPolicy: null
 
     registry: ""
     repository: "nubus-dev/images/twofa-helpdesk-backend"
@@ -242,6 +253,8 @@ twofaHelpdeskBackend:
     twofa_admin_groups: ["/Domain Admins"]
 
   service:
+    # -- Additional custom annotations.
+    annotations: {}
     enabled: true
     type: "ClusterIP"
     ports:
@@ -316,8 +329,8 @@ twofaHelpdeskFrontend:
     disableIPv6: true
 
   image:
-    imagePullPolicy: "Always"
-    imagePullSecrets: []
+    # -- Image pull policy. This setting has higher precedence than global.imagePullPolicy.
+    pullPolicy: null
 
     registry: ""
     repository: "nubus-dev/images/twofa-helpdesk-frontend"
@@ -326,6 +339,8 @@ twofaHelpdeskFrontend:
     sha256: null
 
   service:
+    # -- Additional custom annotations.
+    annotations: {}
     enabled: true
     type: "ClusterIP"
     ports:

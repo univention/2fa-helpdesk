@@ -8,26 +8,26 @@ metadata:
   name: {{ printf "%s-ui" (include "common.names.fullname" .) }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
-    {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
-    {{- $mergedLabels := merge $otherLabels $commonLabels }}
-    {{- toYaml $mergedLabels | nindent 4 }}
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
 spec:
   replicas: {{ .Values.twofaHelpdeskFrontend.replicaCount }}
   selector:
     matchLabels:
-      app: {{ printf "%s" (include "common.names.fullname" .) }}
-      {{- $commonLabels := include "common.labels.matchLabels" . | fromYaml }}
+      app: {{ printf "%s-ui" (include "common.names.fullname" .) }}
+      {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" .) | nindent 8 }}
+        {{- end }}
       labels:
-        app: {{ printf "%s" (include "common.names.fullname" .) }}
-        {{- $commonLabels := include "common.labels.standard" . | fromYaml }}
-        {{- $otherLabels := dict "app.kubernetes.io/name" (printf "%s-ui" (include "common.names.fullname" .)) }}
-        {{- $mergedLabels := merge $otherLabels $commonLabels }}
-        {{- toYaml $mergedLabels | nindent 8 }}
-      #annotations:
-      #  checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        app: {{ printf "%s-ui" (include "common.names.fullname" .) }}
+        {{- include "common.labels.standard" . | nindent 8 }}
     spec:
       {{- with .Values.twofaHelpdeskFrontend.affinity }}
       affinity:
@@ -41,9 +41,12 @@ spec:
       nodeSelector:
         {{ toYaml . | nindent 8 | trim }}
       {{- end }}
-      {{- if .Values.twofaHelpdeskFrontend.image.imagePullSecrets }}
+      {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets  }}
       imagePullSecrets:
-        {{- range .Values.twofaHelpdeskFrontend.image.imagePullSecrets }}
+        {{- range .Values.global.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+        {{- range .Values.imagePullSecrets }}
         - name: "{{ . }}"
         {{- end }}
       {{- end }}
@@ -76,7 +79,7 @@ spec:
           {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
         {{- end }}
         image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.pullPolicy .Values.global.imagePullPolicy | quote }}
         command: ["sh", "-c", "mkdir -p /mnt && touch /mnt/config.json"]
         volumeMounts:
           - name: configjson
@@ -90,7 +93,7 @@ spec:
           {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
         {{- end }}
         image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.imagePullPolicy .Values.global.imagePullPolicy | quote }}
+        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.pullPolicy .Values.global.imagePullPolicy | quote }}
         ports:
         - containerPort: 80
         volumeMounts:
