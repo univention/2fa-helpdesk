@@ -90,7 +90,7 @@ test-backend:
     - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"
     - docker compose --profile test-it up --no-build --quiet-pull --wait --wait-timeout 180
   script:
-    - docker compose run --quiet-pull --rm testrunner bash -c 'pytest -lvv tests/twofa'
+    - docker compose run --quiet-pull --rm testrunner bash -c 'pytest -lvv tests/integration/api-2fa'
   after_script:
     - docker compose down --volumes
 

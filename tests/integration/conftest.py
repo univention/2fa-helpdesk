@@ -11,6 +11,7 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from faker import Faker
 from keycloak import KeycloakAdmin, KeycloakOpenID
+from playwright.sync_api import Page
 
 
 @dataclass
@@ -52,6 +53,22 @@ class KeycloakUser:
         """Return the access token for this user"""
         tokens = self.get_tokens()
         return tokens["access_token"]
+
+    def logout(self):
+        """Logout user by calling Keycloak logout endpoint."""
+        keycloak_openid = KeycloakOpenID(
+            server_url=self.server_url,
+            client_id=self.client_id,
+            realm_name=self.realm,
+        )
+        try:
+            tokens = self.get_tokens()
+            refresh_token = tokens.get("refresh_token")
+
+            if refresh_token:
+                keycloak_openid.logout(refresh_token)
+        except Exception as e:
+            print(f"Logout failed (this may be expected): {e}")
 
     def to_keycloak_payload(self) -> dict:
         """Convert to Keycloak user creation payload."""
@@ -337,7 +354,7 @@ def keycloak_user_with_totp(
 @pytest.fixture
 def known_keycloak_user_id():
     """Find the user 'test' in the realm export file and return their ID."""
-    realm_file_path = "tests/data/export/realm-export-with-user.json"
+    realm_file_path = "tests/integration/data/export/realm-export-with-user.json"
 
     with open(realm_file_path, 'r') as f:
         realms = json.load(f)
@@ -350,3 +367,31 @@ def known_keycloak_user_id():
                     return user["id"]
 
     raise ValueError("User 'test' not found in realm export file")
+
+@pytest.fixture
+def frontend_base_url():
+    """Fixture to provide the frontend base URL."""
+    return os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+@pytest.fixture
+def self_service_url(frontend_base_url: str):
+    """Fixture to provide the self-service URL."""
+    return f"{frontend_base_url}/univention/2fa/self-service"
+
+@pytest.fixture
+def admin_page_url(frontend_base_url: str):
+    """Fixture to provide the admin page URL."""
+    return f"{frontend_base_url}/univention/2fa/admin"
+
+
+@pytest.fixture
+def self_service_page(page: Page, self_service_url: str):
+    """Fixture to provide the self-service."""
+    page.goto(self_service_url)
+    return page
+
+@pytest.fixture
+def admin_page(page: Page, admin_page_url: str):
+    """Fixture to provide the admin page."""
+    page.goto(admin_page_url)
+    return page

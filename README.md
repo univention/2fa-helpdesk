@@ -13,7 +13,11 @@ The project includes a Docker Compose setup for local development and testing. A
 
 ### Setting up test-realm on keycloak version changes
 
-The steps in this sections are only required to be executed whenever we change the keycloak version and the realm we've exported under `tests/data/export/realm-export-with-user.json` doesn't work well anymore.
+For all types of integration tests we need a keycloak realm which has a specific setup.
+The realm's export is part of this repository and is loaded by keycloak in the docker compose environment.
+
+This section describes how to (re-)create the realm if necessary.
+The steps in this sections are only required to be executed whenever we change the keycloak version and the realm we've exported under `tests/integration/data/export/realm-export-with-user.json` doesn't work well anymore.
 
 #### Start keycloak setup container
 
@@ -42,7 +46,7 @@ kc.sh start-dev
     * `2fa-users`
     * `2FA Admins`
 5. Create "Client Scope": `twofa-default`
-    *  Add new mapper: `2fa Groups`
+    *  Create and add new mapper: `2fa Groups`
       *  Set "Claim Name": `2fa_user_groups`
 6. Add client scope `twofa-default` to client `2fa-helpdesk`
 7. Adjust "Authentication Flow":
@@ -70,9 +74,9 @@ docker compose down --timeout 0 keycloak-setup
 Remove the admin user from the export to avoid failures on import:
 ```shell
 jq '.[].users |= map(select(.realmRoles | index("admin") | not))' \
-   tests/data/export/realm-export.json \
-   > tests/data/export/realm-export-with-user.json
-rm tests/data/export/realm-export.json
+   tests/integration/data/export/realm-export.json \
+   > tests/integration/data/export/realm-export-with-user.json
+rm tests/integration/data/export/realm-export.json
 ```
 
 ### Building and Running Services
@@ -95,15 +99,15 @@ docker compose --profile test-it up --build
 #### Running Integration Tests with Docker Compose
 
 ```shell
-# (Re-)build and run the testrunner for testing tests/twofa
+# (Re-)build and run the testrunner for testing tests/integration/api-2fa
 docker compose run -it --rm --build testrunner
 
-# Alternatively: (Re-)build and run the testrunner for testing tests/twofa
-docker compose run -it --rm --build testrunner pytest --vv tests/twofa
+# Alternatively: (Re-)build and run the testrunner for testing tests/integration/api-2fa
+docker compose run -it --rm --build testrunner pytest --vv tests/integration/api-2fa
 
 # Run tests from above without explicit building
 docker compose run -it --rm testrunner
-docker compose run -it --rm testrunner pytest --vv tests/twofa
+docker compose run -it --rm testrunner pytest --vv tests/integration/api-2fa
 
 ```
 
@@ -114,7 +118,7 @@ docker compose --profile testrunner up --build --no-start
 docker compose --profile testrunner down --remove-orphans --volumes
 
 # Run the integration tests
-docker compose run -it --rm testrunner pytest -vv tests/twofa
+docker compose run -it --rm testrunner pytest -vv tests/integration/api-2fa
 ```
 
 #### Running Integration Tests locally
@@ -135,7 +139,48 @@ The execute the tests:
 ```shell
 # Load environment file
 source .env.test.local
-pytest -vv tests/twofa
+pytest -vv tests/integration/api-2fa
+```
+
+#### Running Integration Tests with Docker Compose
+
+**Doesn't work yet!**
+
+#### Setup E2E Testing
+
+To run the complete 2FA helpdesk stack with all services:
+
+```shell
+# Build all images and start the integration test environment
+docker compose --profile test-e2e-local up --build
+
+# This will start:
+# - Keycloak server (localhost:8080)
+# - 2FA Helpdesk Backend API (localhost:8081)
+# - 2FA Frontend (localhost:3000), access under 
+#     * http://localhost:3000/univention/2fa/self-service
+#     * http://localhost:3000/univention/2fa/admin
+```
+
+#### Running E2E Tests locally
+
+Prerequisites:
+* Python 3.13
+
+First load the pipenv environment:
+
+```shell
+cd docker/testrunner
+pipenv sync
+pipenv shell
+cd -
+```
+
+The execute the tests:
+```shell
+# Load environment file
+source .env.test.local
+pytest -vv tests/integration/e2e
 ```
 
 #### Running Helm Chart Tests
