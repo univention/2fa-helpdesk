@@ -63,8 +63,8 @@ services:
   frontend:
     image: gitregistry.knut.univention.de/univention/dev/projects/2fa-helpdesk/twofa-helpdesk-frontend:${IMAGE_TAG:-latest}
     build:
-      context: ./frontend
-      dockerfile: ../docker/twofa-helpdesk-frontend/Dockerfile
+      context: .
+      dockerfile: docker/twofa-helpdesk-frontend/Dockerfile
     profiles:
       - test-e2e
     env_file: .env.test
