@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.8.1...v0.8.2) (2025-07-15)
+
+
+### Bug Fixes
+
+* helm best practices ([5e471fa](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/5e471fad3a9bbb695dcca22ec7a88707bda45022)), closes [univention/dev/internal/team-nubus#1240](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1240)
+
 ## [0.8.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.8.0...v0.8.1) (2025-07-14)
 
 
