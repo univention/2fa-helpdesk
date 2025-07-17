@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.8.2...v0.9.0) (2025-07-17)
+
+
+### Features
+
+* update ucs-base to 5.2.2-build.20250714 ([3d94ecc](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/3d94ecc61ac7aa7d0c984cb0f11525bd9b155afd)), closes [univention/dev/internal/team-nubus#1320](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1320)
+
 ## [0.8.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.8.1...v0.8.2) (2025-07-15)
 
 
