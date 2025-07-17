@@ -773,7 +773,7 @@ null
 			<td>provisioning.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.32.1@sha256:44d45067e1d4e7a00d3b651e56df5177087e3206368a45cd1816d78ba7b21347"
+"0.35.0@sha256:61dfaea28a2b150459138dfd6a554ce53850cee05ef2a72ab47bbe23f2a92d0d"
 </pre>
 </td>
 			<td></td>
@@ -872,7 +872,7 @@ null
 			<td>provisioning.provisioningImage.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.13.0@sha256:5ea9c055e2e6698335b76db4df24ee0c5aa7232103a3a6d7c78c120dcc626721"
+"0.14.0@sha256:1b12d2421b723545446abe329b5a4732f6ab47f3ba5f8bea99a2e58d811f988e"
 </pre>
 </td>
 			<td></td>
