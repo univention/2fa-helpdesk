@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.10.0...v0.11.0) (2025-07-18)
+
+
+### Features
+
+* upgrade keycloak-bootstrap image to 0.15.0 ([1671609](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/1671609a32fa7d31fceb594fc63a037f1839a1cb)), closes [univention/dev/internal/team-nubus#1320](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1320)
+
 ## [0.10.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.9.0...v0.10.0) (2025-07-18)
 
 
