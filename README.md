@@ -1,10 +1,13 @@
-# 2FA Admin Backend
+# 2FA Helpdesk
 
-This container image provides an API and business logic to connect the 2FA Admin Frontend module to Keycloak.
+This project provides:
+* 2fa backend: This handles all communication related to keycloak
+* 2fa frontend: This provides a self-service and an admin page and allows to reset OTP tokens
 
 ## Local Development and Testing with Docker Compose
 
-The project includes a Docker Compose setup for local development and testing. All necessary images can be built locally from the `docker/` directory.
+The project includes a Docker Compose setup for local development and testing. 
+All necessary images can be built locally from the `docker/` directory.
 
 ### Prerequisites
 
@@ -56,7 +59,7 @@ kc.sh start-dev
     * Add user to groups: 
       * `2fa-users`
       * `2FA Admins`
-    * Create *non-temporary* password** `123qwe`
+    * Create *non-temporary* password: `123qwe`
 
 #### Export keycloak realm
 
@@ -103,19 +106,19 @@ docker compose --profile test-it up --build
 docker compose run -it --rm --build testrunner
 
 # Alternatively: (Re-)build and run the testrunner for testing tests/integration/api-2fa
-docker compose run -it --rm --build testrunner pytest --vv tests/integration/api-2fa
+docker compose run -it --rm --build testrunner pytest -vv tests/integration/api-2fa
 
 # Run tests from above without explicit building
 docker compose run -it --rm testrunner
-docker compose run -it --rm testrunner pytest --vv tests/integration/api-2fa
+docker compose run -it --rm testrunner pytest -vv tests/integration/api-2fa
 
 ```
 
-In case you want to build and use an image named the same as the one specified in the compose file:
+In case you want to build and use images named the same as the one specified in the compose file:
 ```shell
 # Build the testrunner image
-docker compose --profile testrunner up --build --no-start
-docker compose --profile testrunner down --remove-orphans --volumes
+docker compose --profile test-it up --build --no-start
+docker compose --profile test-it down --remove-orphans --volumes
 
 # Run the integration tests
 docker compose run -it --rm testrunner pytest -vv tests/integration/api-2fa
@@ -137,29 +140,67 @@ cd -
 
 The execute the tests:
 ```shell
-# Load environment file
-source .env.test.local
 pytest -vv tests/integration/api-2fa
 ```
 
-#### Running Integration Tests with Docker Compose
-
-**Doesn't work yet!**
-
 #### Setup E2E Testing
 
-To run the complete 2FA helpdesk stack with all services:
+To run the complete 2FA helpdesk stack with all services, to build all images and to start the e2e test environment for testing headless via docker compose:
 
 ```shell
-# Build all images and start the integration test environment
+docker compose --profile test-e2e-service up --build
+
+# This will start:
+# - Keycloak server (keycloak:8080, localhost:8080)
+# - 2FA Helpdesk Backend API (api:8080, localhost:8081)
+# - 2FA Helpdesk Frontend (keycloak:80)
+```
+
+In the scenario above `keycloak` and `frontend` share the same network (similar to a sidecar container in k8s).
+The reason is, that otherwise keycloak won't make the login page available and raise a "Web Crypto API is not available" error in the browser. 
+That's a security feature, which enforces that pure http requests for login are only supported from localhost.
+Thus the e2e tests wouldn't run properly.
+(see also https://github.com/keycloak/keycloak/issues/36804)
+
+
+To run the complete 2FA helpdesk stack with all services, to build all images and start the e2e test environment for testing directly via pytest:
+
+```shell
+
 docker compose --profile test-e2e-local up --build
 
 # This will start:
-# - Keycloak server (localhost:8080)
-# - 2FA Helpdesk Backend API (localhost:8081)
-# - 2FA Frontend (localhost:3000), access under 
-#     * http://localhost:3000/univention/2fa/self-service
-#     * http://localhost:3000/univention/2fa/admin
+# - Keycloak server (keycloak:8080, localhost:8080)
+# - 2FA Helpdesk Backend API (api:8080, localhost:8081)
+# - 2FA Helpdesk Frontend (frontend:80, localhost:3000)
+```
+This allows also to test in headed mode which is helpful during development.
+
+#### Running E2E Tests with Docker Compose
+
+Ensure all services are started with the profile `test-e2e-service` (see [section on E2E setup](#setup-e2e-testing)).
+
+```shell
+# (Re-)build and run the testrunner for testing tests/integration/api-2fa
+docker compose run -it --rm --build testrunner
+
+# Alternatively: (Re-)build and run the testrunner for testing tests/integration/api-2fa
+docker compose run -it --rm --build testrunner pytest -vv tests/integration/e2e
+
+# Run tests from above without explicit building
+docker compose run -it --rm testrunner
+docker compose run -it --rm testrunner pytest -vv tests/integration/e2e
+
+```
+
+In case you want to build and use an image named the same as the one specified in the compose file:
+```shell
+# Build the testrunner image
+docker compose --profile test-e2e up --build --no-start
+docker compose --profile test-e2e down --remove-orphans --volumes
+
+# Run the integration tests
+docker compose run -it --rm testrunner pytest -vv tests/integration/e2e
 ```
 
 #### Running E2E Tests locally
@@ -178,8 +219,6 @@ cd -
 
 The execute the tests:
 ```shell
-# Load environment file
-source .env.test.local
 pytest -vv tests/integration/e2e
 ```
 
@@ -197,27 +236,26 @@ docker compose run -it --rm test-chart bash
 pytest tests/chart
 ```
 
-### Environment Configuration
-
-For integration testing, create a `.env.test` file with the necessary environment variables. You can use the provided `docker-env.sample` as a template:
-
-```shell
-cp docker-env.sample .env.test
-# Edit .env.test with your specific configuration
-```
-
 ### Accessing Services
 
-When running the full stack:
+When running the full stack (either with profile `test-it` or `test-e2e-services`):
 - Keycloak Admin Console: [http://localhost:8080/admin]() (username: admin & password:admin)
 - Backend API: Available internally to other services or access under [http://localhost:8081]()
+
+When running the full stack (with profile `test-e2e-local`):
+- Keycloak Admin Console: [http://localhost:8080/admin]() (username: admin & password:admin)
+- Backend API: Available internally to other services or access under [http://localhost:8081]()
+- Frontend: Access under:
+  - Self-Service: http://localhost:3000/univention/2fa/self-service
+  - Admin Page: http://localhost:3000/univention/2fa/admin
+  - User credentials: User `test` with password `123qwe`
 
 ### Rebuilding Images
 
 To force rebuild all images:
 
 ```shell
-docker compose --profile test-it build --no-cache
+docker compose --profile test-e2e build --no-cache
 ```
 
 To rebuild a specific service:

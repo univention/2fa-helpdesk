@@ -8,7 +8,7 @@ from common import (logout_user_from_browser, user_enters_otp_code,
                     user_is_redirected_to_totp_setup,
                     user_logs_in_with_password, user_sets_up_totp)
 from conftest import KeycloakUser
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 
 def test_2fa_admin_can_reset_user_2fa(
@@ -54,12 +54,12 @@ def assert_admin_can_reset_user_2fa(
     user_sets_up_totp(page, keycloak_2fa_admin)
     page.wait_for_load_state("networkidle")
 
-    reset_btn = page.locator('tr', has_text=keycloak_user.username).locator('button')
-    reset_btn.wait_for(state="visible", timeout=5000)
-    reset_btn.click()
+    btn = page.locator('tr', has_text=keycloak_user.username).locator('button')
+    expect(btn).to_be_visible()
+    btn.click()
 
-    confirm_btn = page.locator('.modal-content').locator('button.primary')
-    confirm_btn.wait_for(state="visible", timeout=5000)
-    confirm_btn.click()
+    btn = page.locator('.modal-content').locator('button.primary')
+    expect(btn).to_be_visible()
+    btn.click()
 
     logout_user_from_browser(page, keycloak_2fa_admin)

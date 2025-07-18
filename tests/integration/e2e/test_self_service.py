@@ -8,35 +8,31 @@ from common import (logout_user_from_browser, user_enters_otp_code,
                     user_is_redirected_to_totp_setup,
                     user_logs_in_with_password, user_sets_up_totp)
 from conftest import KeycloakUser
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 
 def test_2fa_user_must_setup_totp_again_after_resetting_2fa(
         self_service_page: Page,
         keycloak_user: KeycloakUser):
-    """Tests that a user can set up TOTP and reset 2FA.
-    """
+    """Tests that a user can set up TOTP and reset 2FA."""
     assert_user_can_reset_2fa_via_self_service(self_service_page, keycloak_user)
 
 def test_2fa_must_login_with_otp_after_totp_setup(
         self_service_page: Page,
         keycloak_user: KeycloakUser):
-    """Tests that a user must log in with OTP after setting up TOTP.
-    """
+    """Tests that a user must log in with OTP after setting up TOTP."""
     assert_user_can_login_using_otp(self_service_page, keycloak_user)
 
 def test_2fa_admin_must_setup_totp_again_after_resetting_2fa(
         self_service_page: Page,
         keycloak_2fa_admin: KeycloakUser):
-    """Tests that an admin can set up TOTP and reset 2FA.
-    """
+    """Tests that an admin can set up TOTP and reset 2FA."""
     assert_user_can_reset_2fa_via_self_service(self_service_page, keycloak_2fa_admin)
 
 def test_2fa_admin_must_login_with_otp_after_totp_setup(
         self_service_page: Page,
         keycloak_2fa_admin: KeycloakUser):
-    """Tests that an admin must log in with OTP after setting up TOTP.
-    """
+    """Tests that an admin must log in with OTP after setting up TOTP."""
     assert_user_can_login_using_otp(self_service_page, keycloak_2fa_admin)
 
 def assert_user_can_reset_2fa_via_self_service(page: Page, user: KeycloakUser):
@@ -71,7 +67,7 @@ def assert_user_can_login_using_otp(page: Page, user: KeycloakUser):
 
 def user_resets_own_2fa(page: Page):
     checkbox = page.locator("#confirm-reset")
-    checkbox.wait_for(state="visible")
+    expect(checkbox).to_be_visible()
     checkbox.check()
 
     page.locator("button.primary:enabled").click()
@@ -79,4 +75,4 @@ def user_resets_own_2fa(page: Page):
 
 def user_is_redirected_to_self_service(page: Page):
     # Wait for redirect to self-service page by checking for specific content
-    page.wait_for_selector("text=Self Service", timeout=10000)
+    page.wait_for_selector("text=Self Service")

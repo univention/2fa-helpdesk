@@ -31,7 +31,9 @@ services:
     image: quay.io/keycloak/keycloak:26.2.5
     profiles:
       - test-it
+      - test-it-services
       - test-e2e
+      - test-e2e-services
       - test-e2e-local
     command: start-dev --import-realm
     env_file: .env.test
@@ -52,7 +54,9 @@ services:
       dockerfile: docker/twofa-helpdesk-backend/Dockerfile
     profiles:
       - test-it
+      - test-it-services
       - test-e2e
+      - test-e2e-services
       - test-e2e-local
     env_file: .env.test
     ports:
@@ -69,6 +73,7 @@ services:
       dockerfile: docker/twofa-helpdesk-frontend/Dockerfile
     profiles:
       - test-e2e
+      - test-e2e-services
     env_file: .env.test
     volumes:
       - ./tests/integration/e2e/config/nginx.conf:/etc/nginx/nginx.conf:ro
@@ -115,22 +120,9 @@ services:
     profiles:
       - testrunner
       - test-e2e
+      - test-it
     env_file: .env.test
     network_mode: service:keycloak
-    volumes:
-      - type: bind
-        source: .
-        target: /app/
-
-  testrunner-local:
-    image: gitregistry.knut.univention.de/univention/dev/projects/2fa-helpdesk/testrunner:${IMAGE_TAG:-latest}
-    network_mode: host
-    build:
-      context: docker/testrunner
-      dockerfile: Dockerfile
-    profiles:
-      - testrunner-local
-    env_file: .env.test.local
     volumes:
       - type: bind
         source: .

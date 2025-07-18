@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir pipenv==2023.6.18 \
     && pipenv sync --dev --system \
     && rm -r ~/.cache \
     && playwright install-deps \
-    && playwright install
+    && playwright install chromium
 
 WORKDIR /app
 

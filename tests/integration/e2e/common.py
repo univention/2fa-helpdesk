@@ -10,39 +10,32 @@ from playwright.sync_api import Page, expect
 
 def user_is_redirected_to_password_login_form(page: Page):
     # Wait for the page to load completely
-    page.wait_for_load_state("networkidle", timeout=10000)
-    page.wait_for_load_state("domcontentloaded", timeout=10000)
+    page.wait_for_load_state("domcontentloaded")
 
     # Wait for the login form elements to be visible
-    expect(page.locator('input[name="username"]')).to_be_visible(timeout=10000)
-    expect(page.locator('input[name="password"]')).to_be_visible(timeout=10000)
-    expect(page.locator('button[type="submit"]')).to_be_visible(timeout=10000)
+    expect(page.get_by_role("textbox", name="Username or email")).to_be_visible()
+    expect(page.get_by_role("textbox", name="Password")).to_be_visible()
+    expect(page.get_by_role("button", name="Sign In")).to_be_visible()
+
 
 
 def user_logs_in_with_password(page: Page, keycloak_user: KeycloakUser):
     # Ensure form elements are ready
-    page.wait_for_load_state("networkidle", timeout=10000)
+    page.wait_for_load_state("domcontentloaded")
 
-    page.fill('input[name="username"]', keycloak_user.username)
-    page.fill('input[name="password"]', keycloak_user.password)
-    page.click('button[type="submit"]')
-
-    # Wait for the form submission to process
-    page.wait_for_load_state("networkidle", timeout=10000)
+    page.get_by_role("textbox", name="Username or email").fill(keycloak_user.username)
+    page.get_by_role("textbox", name="Password").fill(keycloak_user.password)
+    page.get_by_role("button", name="Sign In").click()
 
 
 def user_is_redirected_to_totp_setup(page: Page):
-    page.wait_for_load_state("networkidle", timeout=10000)
-    page.wait_for_load_state("domcontentloaded", timeout=10000)
-    page.wait_for_selector('text="Unable to scan?"', timeout=10000)
+    page.wait_for_selector('text="Unable to scan?"')
 
 
 def user_is_redirected_to_otp_input_page(page: Page):
     """Wait for the OTP input page where user needs to enter one-time code."""
-    page.wait_for_load_state("networkidle", timeout=10000)
-    page.wait_for_load_state("domcontentloaded", timeout=10000)
-    page.wait_for_selector('input[name="otp"]', timeout=10000)
-    page.wait_for_selector('text="One-time code"', timeout=10000)
+    expect(page.get_by_role("textbox", name="Username or email"))
+    expect(page.get_by_role("textbox", name="One-time code"))
 
 
 def user_enters_otp_code(page: Page, keycloak_user: KeycloakUser):
@@ -86,7 +79,7 @@ def user_sets_up_totp(page: Page, keycloak_user: KeycloakUser):
 
     page.fill('input[name="totp"]', totp.now())
     page.fill('input[name="userLabel"]', "Test Device")
-    page.click('input[type="submit"]')
+    page.get_by_role("button", name="Submit").click()
 
 
 def logout_user_from_browser(page: Page, keycloak_user: KeycloakUser):

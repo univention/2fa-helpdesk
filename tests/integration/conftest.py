@@ -11,7 +11,7 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from faker import Faker
 from keycloak import KeycloakAdmin, KeycloakOpenID
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 
 @dataclass
@@ -387,11 +387,15 @@ def admin_page_url(frontend_base_url: str):
 @pytest.fixture
 def self_service_page(page: Page, self_service_url: str):
     """Fixture to provide the self-service."""
+    page.set_default_timeout(10000)
     page.goto(self_service_url)
     return page
 
 @pytest.fixture
 def admin_page(page: Page, admin_page_url: str):
     """Fixture to provide the admin page."""
+    page.set_default_timeout(10000)
     page.goto(admin_page_url)
     return page
+
+expect.set_options(timeout=10_000)
