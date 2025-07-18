@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.9.0...v0.10.0) (2025-07-18)
+
+
+### Features
+
+* update keycloak-bootstrap image to 0.14.0 ([1477fb2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/1477fb2985a7cbf704af2a3136c85e0a175c61d3)), closes [univention/dev/internal/team-nubus#1320](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1320)
+* update wait-for-dependency to 0.35.0 ([d90c799](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/d90c799b0236b971e9e9e0dce813678c40449ce3)), closes [univention/dev/internal/team-nubus#1320](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1320)
+
 ## [0.9.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.8.2...v0.9.0) (2025-07-17)
 
 
