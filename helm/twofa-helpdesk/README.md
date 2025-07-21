@@ -872,7 +872,7 @@ null
 			<td>provisioning.provisioningImage.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.15.0@sha256:5e7769c15ee66b03ee6b929a84a822b9ce191283cb45d6a14632d0cc8cca3032"
+"0.15.0@sha256:2bb358a4a0c11d11cf07cc16c518287a8257dfa5f6459c7924c241466d8326fe"
 </pre>
 </td>
 			<td></td>
