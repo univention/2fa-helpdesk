@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.12.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.11.0...v0.12.0) (2025-07-21)
+
+
+### Features
+
+* **e2e-test:** enable e2e tests in docker compose and in ci ([cc826a8](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/cc826a8576143cb233c2b9705920dda8c364210d)), closes [univention/dev/internal/team-nubus#1217](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1217)
+* **e2e-test:** implement e2e tests and combine them with integration tests ([e22318c](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e22318cbc80b4b5b0f36deb1d5cb92856dd03d85)), closes [univention/dev/internal/team-nubus#1217](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1217)
+* **e2e-test:** revert changes on creation of frontend docker image ([e7fdbbd](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e7fdbbd568ac9e7f3f13f1dd05fa2bed3537fc82)), closes [univention/dev/internal/team-nubus#1217](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1217)
+* **e2e-test:** setup keycloak and frontend to play with integration and e2e tests ([2494eeb](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/2494eeb75e882bab70f36490eda6e89e2407c8c7)), closes [univention/dev/internal/team-nubus#1217](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1217)
+* **e2e-test:** simplify way of e2e test exectution / cleanup documentation ([8873132](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/8873132064cde80263b1ad8491cbd8f729c42061)), closes [univention/dev/internal/team-nubus#1217](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1217)
+
 ## [0.11.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.10.0...v0.11.0) (2025-07-18)
 
 
