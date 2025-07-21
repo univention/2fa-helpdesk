@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.12.0...v0.12.1) (2025-07-21)
+
+
+### Bug Fixes
+
+* keycloak-bootstrap hash ([790e394](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/790e39420f31eeb665534f15e40d0eeb97e2852e)), closes [univention/dev/internal/team-nubus#1320](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1320)
+
 ## [0.12.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.11.0...v0.12.0) (2025-07-21)
 
 
