@@ -12,8 +12,10 @@ COPY Pipfile Pipfile.lock ./
 
 RUN pip install --no-cache-dir pipenv==2023.6.18 \
     && pipenv sync --dev --system \
-    && rm -r ~/.cache
+    && rm -r ~/.cache \
+    && playwright install-deps \
+    && playwright install chromium
 
 WORKDIR /app
 
-CMD [ "pytest", "tests/twofa" ]
+CMD [ "pytest", "tests/integration/api-2fa" ]

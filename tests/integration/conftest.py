@@ -1,14 +1,17 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
 
+import json
+import os
+from dataclasses import dataclass
+
+import pyotp
 import pytest
 import requests
 from bs4 import BeautifulSoup, Tag
-from keycloak import KeycloakAdmin, KeycloakOpenID
-import pyotp
 from faker import Faker
-from dataclasses import dataclass
-import os
+from keycloak import KeycloakAdmin, KeycloakOpenID
+from playwright.sync_api import Page, expect
 
 
 @dataclass
@@ -50,6 +53,22 @@ class KeycloakUser:
         """Return the access token for this user"""
         tokens = self.get_tokens()
         return tokens["access_token"]
+
+    def logout(self):
+        """Logout user by calling Keycloak logout endpoint."""
+        keycloak_openid = KeycloakOpenID(
+            server_url=self.server_url,
+            client_id=self.client_id,
+            realm_name=self.realm,
+        )
+        try:
+            tokens = self.get_tokens()
+            refresh_token = tokens.get("refresh_token")
+
+            if refresh_token:
+                keycloak_openid.logout(refresh_token)
+        except Exception as e:
+            print(f"Logout failed (this may be expected): {e}")
 
     def to_keycloak_payload(self) -> dict:
         """Convert to Keycloak user creation payload."""
@@ -318,9 +337,11 @@ def keycloak_user_with_totp(
         "userLabel": "foo",
         "totp": totp.now(),
         "totpSecret": get_input_value(soup, "totpSecret"),
+        "mode": "manual",
+        "logout-sessions": "on",
     }
 
-    resp = session.post(totp_submit_form_action, data=data)
+    resp = session.post(totp_submit_form_action, data=data, allow_redirects=False)
     resp.raise_for_status()
 
     credentials = keycloak_admin.get_credentials(keycloak_user.id)
@@ -329,3 +350,52 @@ def keycloak_user_with_totp(
     keycloak_user.set_totp(totp_secret)
 
     return keycloak_user
+
+@pytest.fixture
+def known_keycloak_user_id():
+    """Find the user 'test' in the realm export file and return their ID."""
+    realm_file_path = "tests/integration/data/export/realm-export-with-user.json"
+
+    with open(realm_file_path, 'r') as f:
+        realms = json.load(f)
+
+    # Look through all realms for the user 'test'
+    for realm in realms:
+        if 'users' in realm:
+            for user in realm['users']:
+                if user.get("username") == "test":
+                    return user["id"]
+
+    raise ValueError("User 'test' not found in realm export file")
+
+@pytest.fixture
+def frontend_base_url():
+    """Fixture to provide the frontend base URL."""
+    return os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+@pytest.fixture
+def self_service_url(frontend_base_url: str):
+    """Fixture to provide the self-service URL."""
+    return f"{frontend_base_url}/univention/2fa/self-service"
+
+@pytest.fixture
+def admin_page_url(frontend_base_url: str):
+    """Fixture to provide the admin page URL."""
+    return f"{frontend_base_url}/univention/2fa/admin"
+
+
+@pytest.fixture
+def self_service_page(page: Page, self_service_url: str):
+    """Fixture to provide the self-service."""
+    page.set_default_timeout(10000)
+    page.goto(self_service_url)
+    return page
+
+@pytest.fixture
+def admin_page(page: Page, admin_page_url: str):
+    """Fixture to provide the admin page."""
+    page.set_default_timeout(10000)
+    page.goto(admin_page_url)
+    return page
+
+expect.set_options(timeout=10_000)

@@ -1,20 +1,20 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025 Univention GmbH
-from pydantic import BaseModel
-from typing import Annotated, Any, Dict, List, Optional
-
-import jwt
+import logging
 import os
-import fastapi
-from fastapi import FastAPI, HTTPException, Security, security, status
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
-import pydantic
-from pydantic_settings import BaseSettings
+from typing import Annotated, Any, Dict, List, Optional
 
 import adapters.keycloak
 import adapters.udm
-import logging
+import fastapi
+import jwt
+import pydantic
+from fastapi import FastAPI, HTTPException, Security, security, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings
+
 
 class ResetUsersRequest(BaseModel):
     user_ids: List[str]
@@ -54,6 +54,7 @@ class Settings(BaseSettings):
     jwks_url: pydantic.HttpUrl
     client_id: str
     permitted_jwt_audiences: List[str] = ["account"]
+    cors_allow_origins: str = ""
 
 
 # init logger #
@@ -79,6 +80,7 @@ settings = Settings(
     authorization_url=f"{oidc_host}/realms/{oidc_realm}/login-actions/authenticate",
     jwks_url=f"{oidc_host}/realms/{oidc_realm}/protocol/openid-connect/certs",
     client_id=os.environ["OIDC_CLIENT_ID"],
+    cors_allow_origins=os.environ.get("CORS_ALLOW", ""),
 )
 jwks_client = jwt.PyJWKClient(settings.jwks_url)  # Caches JWKS
 
@@ -145,18 +147,22 @@ backend_app = FastAPI(
     },
 )
 
-# Create a "root" app
-app = FastAPI()
+# Add CORS middleware if configured
+if settings.cors_allow_origins:
+    origins = [origin.strip() for origin in settings.cors_allow_origins.split(",")]
+    if "*" in origins:
+        origins = ["*"]
 
-# Add CORS middleware
-if os.environ.get("CORS_ALLOW_ORIGINS"):
-    app.add_middleware(
+    backend_app.add_middleware(
         CORSMiddleware,
-        allow_origins=[os.environ["CORS_ALLOW_ORIGINS"]],
+        allow_origins=origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+# Create a "root" app
+app = FastAPI()
 
 # Mount the backend app under the /backend prefix
 prefix = os.environ.get("PREFIX") or "/"
