@@ -49,14 +49,15 @@ kc.sh start-dev
     * `2fa-users`
     * `2FA Admins`
 5. Create "Client Scope": `twofa-default`
-    *  Create and add new mapper: `2fa Groups`
-      *  Set "Claim Name": `2fa_user_groups`
+    * Create and add new mapper: `2fa Groups`
+      * Set "Claim Name": `2fa_user_groups`
+      * Turn off the "Full group path" option
 6. Add client scope `twofa-default` to client `2fa-helpdesk`
 7. Adjust "Authentication Flow":
     * Deactivate OTP for `direct grant`
     * Change `browser/Conditional OTP` to required.
 8. Create user with username `test`
-    * Add user to groups: 
+    * Add user to groups:
       * `2fa-users`
       * `2FA Admins`
     * Create *non-temporary* password: `123qwe`
@@ -65,16 +66,19 @@ kc.sh start-dev
 
 Stop keycloak the keycloak setup container and export the realm (by Ctrl+C).
 Then export the realms to JSON:
+
 ```shell
 kc.sh export --file=/opt/keycloak/data/export/realm-export.json --optimized
 ```
 
 Exit and shutdown the container:
+
 ```shell
 docker compose down --timeout 0 keycloak-setup
 ```
 
 Remove the admin user from the export to avoid failures on import:
+
 ```shell
 jq '.[].users |= map(select(.realmRoles | index("admin") | not))' \
    tests/integration/data/export/realm-export.json \
@@ -115,6 +119,7 @@ docker compose run -it --rm testrunner pytest -vv tests/integration/api-2fa
 ```
 
 In case you want to build and use images named the same as the one specified in the compose file:
+
 ```shell
 # Build the testrunner image
 docker compose --profile test-it up --build --no-start
@@ -127,6 +132,7 @@ docker compose run -it --rm testrunner pytest -vv tests/integration/api-2fa
 #### Running Integration Tests locally
 
 Prerequisites:
+
 * Python 3.13
 
 First load the pipenv environment:
@@ -139,6 +145,7 @@ cd -
 ```
 
 The execute the tests:
+
 ```shell
 pytest -vv tests/integration/api-2fa
 ```
@@ -161,7 +168,6 @@ The reason is, that otherwise keycloak won't make the login page available and r
 That's a security feature, which enforces that pure http requests for login are only supported from localhost.
 Thus the e2e tests wouldn't run properly.
 (see also https://github.com/keycloak/keycloak/issues/36804)
-
 
 To run the complete 2FA helpdesk stack with all services, to build all images and start the e2e test environment for testing directly via pytest:
 
@@ -206,6 +212,7 @@ docker compose run -it --rm testrunner pytest -vv tests/integration/e2e
 #### Running E2E Tests locally
 
 Prerequisites:
+
 * Python 3.13
 
 First load the pipenv environment:
@@ -218,6 +225,7 @@ cd -
 ```
 
 The execute the tests:
+
 ```shell
 pytest -vv tests/integration/e2e
 ```

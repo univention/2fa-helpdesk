@@ -989,7 +989,7 @@ true
 			<td>twofaHelpdeskBackend.config.twofa_admin_groups[0]</td>
 			<td>string</td>
 			<td><pre lang="json">
-"/Domain Admins"
+"Domain Admins"
 </pre>
 </td>
 			<td></td>

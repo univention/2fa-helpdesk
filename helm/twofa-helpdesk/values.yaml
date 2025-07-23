@@ -250,7 +250,7 @@ twofaHelpdeskBackend:
     sha256: null
 
   config:
-    twofa_admin_groups: ["/Domain Admins"]
+    twofa_admin_groups: ["Domain Admins"]
 
   service:
     # -- Additional custom annotations.
