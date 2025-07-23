@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.12.1...v0.12.2) (2025-07-23)
+
+
+### Bug Fixes
+
+* disable the full path option in the KC group mapper ([080378d](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/080378d662b607aba2ff2506e2b7086ab023b84d)), closes [univention/dev/internal/team-nubus#1343](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1343)
+
 ## [0.12.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.12.0...v0.12.1) (2025-07-21)
 
 
