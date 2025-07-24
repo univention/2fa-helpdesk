@@ -378,13 +378,25 @@ results:
     result: "pass"
 # Ingress frontend
   - resources:
-      - "release-name-twofa-helpdesk-twofa-helpdesk-ui"
+      - "release-name-twofa-helpdesk-twofa-helpdesk-ui-admin"
     policy: "template-ingress"
     kind: "Ingress"
     rule: "template-ingressClassName"
     result: "pass"
   - resources:
-      - "release-name-twofa-helpdesk-twofa-helpdesk-ui"
+      - "release-name-twofa-helpdesk-twofa-helpdesk-ui-admin"
+    policy: "template-ingress"
+    kind: "Ingress"
+    rule: "template-tls-secretName"
+    result: "pass"
+  - resources:
+      - "release-name-twofa-helpdesk-twofa-helpdesk-ui-self-service"
+    policy: "template-ingress"
+    kind: "Ingress"
+    rule: "template-ingressClassName"
+    result: "pass"
+  - resources:
+      - "release-name-twofa-helpdesk-twofa-helpdesk-ui-self-service"
     policy: "template-ingress"
     kind: "Ingress"
     rule: "template-tls-secretName"

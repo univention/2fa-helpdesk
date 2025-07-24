@@ -145,11 +145,12 @@ ingress:
     # Hint: This secret is not created by this chart and must be provided.
     secretName: ""
   items:
-    - name: twofa-helpdesk-ui
+    - name: twofa-helpdesk-ui-admin
+      enabled: "{{ .Values.twofaHelpdeskFrontend.config.enableAdminHelpdesk }}"
       host: ""
       # -- Define the Ingress paths.
       paths:
-        - path: /univention/2fa(/|$)(.*)
+        - path: /univention/2fa/(admin|assets|config.json|2fa.svg)(/.*)?$
           pathType: ImplementationSpecific
           backend:
             service:
@@ -160,11 +161,32 @@ ingress:
       ingressClassName: ""
       annotations:
         nginx.ingress.kubernetes.io/use-regex: "true"
-        nginx.ingress.kubernetes.io/rewrite-target: /ui/$2
+        nginx.ingress.kubernetes.io/rewrite-target: /ui/$1$2
+      tls:
+        # enabled: true
+        secretName: ""
+    - name: twofa-helpdesk-ui-self-service
+      enabled: "{{ .Values.twofaHelpdeskFrontend.config.enableSelfService }}"
+      host: ""
+      # -- Define the Ingress paths.
+      paths:
+        - path: /univention/2fa/(self-service|assets|config.json|2fa.svg)(/.*)?$
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: 2fa-helpdesk-backend-ui
+              port:
+                number: 80
+              suffix: "-ui"
+      ingressClassName: ""
+      annotations:
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/rewrite-target: /ui/$1$2
       tls:
         # enabled: true
         secretName: ""
     - name: twofa-backend
+      enabled: true
       host: ""
       paths:
         - path: /backend
@@ -383,3 +405,5 @@ twofaHelpdeskFrontend:
     # -- The URI to redirect the user to after they reset their 2FA token using the self-service helpdesk.
     # If provisioning is active this URL will also be added to the Keycloak clients valid post logout redirect URIs.
     postLogoutRedirectURI: ""
+    enableSelfService: true
+    enableAdminHelpdesk: true

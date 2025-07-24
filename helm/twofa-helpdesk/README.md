@@ -305,7 +305,7 @@ true
 			<td>ingress.items[0].annotations."nginx.ingress.kubernetes.io/rewrite-target"</td>
 			<td>string</td>
 			<td><pre lang="json">
-"/ui/$2"
+"/ui/$1$2"
 </pre>
 </td>
 			<td></td>
@@ -315,6 +315,15 @@ true
 			<td>string</td>
 			<td><pre lang="json">
 "true"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[0].enabled</td>
+			<td>string</td>
+			<td><pre lang="json">
+"{{ .Values.twofaHelpdeskFrontend.config.enableAdminHelpdesk }}"
 </pre>
 </td>
 			<td></td>
@@ -341,7 +350,7 @@ true
 			<td>ingress.items[0].name</td>
 			<td>string</td>
 			<td><pre lang="json">
-"twofa-helpdesk-ui"
+"twofa-helpdesk-ui-admin"
 </pre>
 </td>
 			<td></td>
@@ -361,7 +370,7 @@ true
         "suffix": "-ui"
       }
     },
-    "path": "/univention/2fa(/|$)(.*)",
+    "path": "/univention/2fa/(admin|assets|config.json|2fa.svg)(/.*)?$",
     "pathType": "ImplementationSpecific"
   }
 ]
@@ -379,10 +388,28 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.items[1].annotations</td>
-			<td>object</td>
+			<td>ingress.items[1].annotations."nginx.ingress.kubernetes.io/rewrite-target"</td>
+			<td>string</td>
 			<td><pre lang="json">
-{}
+"/ui/$1$2"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].annotations."nginx.ingress.kubernetes.io/use-regex"</td>
+			<td>string</td>
+			<td><pre lang="json">
+"true"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[1].enabled</td>
+			<td>string</td>
+			<td><pre lang="json">
+"{{ .Values.twofaHelpdeskFrontend.config.enableSelfService }}"
 </pre>
 </td>
 			<td></td>
@@ -409,31 +436,36 @@ true
 			<td>ingress.items[1].name</td>
 			<td>string</td>
 			<td><pre lang="json">
-"twofa-backend"
+"twofa-helpdesk-ui-self-service"
 </pre>
 </td>
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.items[1].paths[0].backend.service.name</td>
-			<td>string</td>
+			<td>ingress.items[1].paths</td>
+			<td>list</td>
 			<td><pre lang="json">
-"2fa-helpdesk-backend"
+[
+  {
+    "backend": {
+      "service": {
+        "name": "2fa-helpdesk-backend-ui",
+        "port": {
+          "number": 80
+        },
+        "suffix": "-ui"
+      }
+    },
+    "path": "/univention/2fa/(self-service|assets|config.json|2fa.svg)(/.*)?$",
+    "pathType": "ImplementationSpecific"
+  }
+]
 </pre>
 </td>
-			<td></td>
+			<td>Define the Ingress paths.</td>
 		</tr>
 		<tr>
-			<td>ingress.items[1].paths[0].backend.service.port.number</td>
-			<td>int</td>
-			<td><pre lang="json">
-8080
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>ingress.items[1].paths[0].backend.service.suffix</td>
+			<td>ingress.items[1].tls.secretName</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
@@ -442,7 +474,79 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.items[1].paths[0].path</td>
+			<td>ingress.items[2].annotations</td>
+			<td>object</td>
+			<td><pre lang="json">
+{}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].host</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].ingressClassName</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].name</td>
+			<td>string</td>
+			<td><pre lang="json">
+"twofa-backend"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].paths[0].backend.service.name</td>
+			<td>string</td>
+			<td><pre lang="json">
+"2fa-helpdesk-backend"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].paths[0].backend.service.port.number</td>
+			<td>int</td>
+			<td><pre lang="json">
+8080
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].paths[0].backend.service.suffix</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>ingress.items[2].paths[0].path</td>
 			<td>string</td>
 			<td><pre lang="json">
 "/backend"
@@ -451,7 +555,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.items[1].paths[0].pathType</td>
+			<td>ingress.items[2].paths[0].pathType</td>
 			<td>string</td>
 			<td><pre lang="json">
 "Prefix"
@@ -460,7 +564,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>ingress.items[1].tls.secretName</td>
+			<td>ingress.items[2].tls.secretName</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
@@ -1422,6 +1526,24 @@ false
 			<td>object</td>
 			<td><pre lang="json">
 {}
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.config.enableAdminHelpdesk</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>twofaHelpdeskFrontend.config.enableSelfService</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
 </pre>
 </td>
 			<td></td>
