@@ -25,7 +25,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 100
-extend-select = ["COM"]
+extend-select = ["COM", "E501"]
 exclude = [
     "archive/",
     "helper_scripts/",

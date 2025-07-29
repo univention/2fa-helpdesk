@@ -3,6 +3,7 @@
 
 {{- if .Values.ingress.enabled }}
 {{- range $index, $ingressConfig := concat .Values.ingress.items .Values.extraIngresses }}
+{{- if eq (tpl ( .enabled | toString | default "true" ) $) "true" }}
 {{- $_ := set $ingressConfig "host" (default $.Values.ingress.host $ingressConfig.host) }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -56,4 +57,5 @@ spec:
 
 ...
 {{- end }}
+{{- end}}
 {{- end }}
