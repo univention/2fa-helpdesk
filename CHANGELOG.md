@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.12.2...v0.13.0) (2025-07-29)
+
+
+### Features
+
+* conditionally enable/disable the self-service and admin helpdesk ([1cc0b6d](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/1cc0b6d7fae53ec60a3ff240e95e79b8c2392b88)), closes [univention/dev/internal/team-nubus#1347](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1347)
+
 ## [0.12.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.12.1...v0.12.2) (2025-07-23)
 
 
