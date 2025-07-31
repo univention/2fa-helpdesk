@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.13.0...v0.14.0) (2025-07-31)
+
+
+### Features
+
+* **helm:** Rename provisioning to keycloak bootstrap ([c495cc2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/c495cc2dee0ae1c89fda17be48e771553cc611c4)), closes [univention/dev/internal/team-nubus#1356](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1356)
+
 ## [0.13.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.12.2...v0.13.0) (2025-07-29)
 
 
