@@ -51,15 +51,7 @@ serviceAccount:
   # -- Additional custom labels for the ServiceAccount.
   labels: {}
 
-nubusBaseUrl: ""
-
-provisioning:
-  enabled: true
-  ttlSecondsAfterFinished: 60
-  config:
-    debug:
-      enabled: true
-
+waitForDependency:
   image:
     registry: ""
     repository: "nubus/images/wait-for-dependency"
@@ -68,7 +60,16 @@ provisioning:
     # -- Image pull policy. This setting has higher precedence than global.imagePullPolicy.
     pullPolicy: null
 
-  provisioningImage:
+nubusBaseUrl: ""
+
+keycloakBootstrap:
+  enabled: true
+  ttlSecondsAfterFinished: 60
+  config:
+    debug:
+      enabled: true
+
+  image:
     registry: ""
     repository: "nubus/images/keycloak-bootstrap"
     tag: "0.15.0@sha256:2bb358a4a0c11d11cf07cc16c518287a8257dfa5f6459c7924c241466d8326fe"
@@ -405,5 +406,7 @@ twofaHelpdeskFrontend:
     # -- The URI to redirect the user to after they reset their 2FA token using the self-service helpdesk.
     # If provisioning is active this URL will also be added to the Keycloak clients valid post logout redirect URIs.
     postLogoutRedirectURI: ""
+    # -- Enables the Ingress for the 2FA self-service.
     enableSelfService: true
+    # -- Enables the Ingress for the 2FA admin helpdesk.
     enableAdminHelpdesk: true

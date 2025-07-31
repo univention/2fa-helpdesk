@@ -9,8 +9,8 @@ class TestImageConfiguration(ImageConfiguration):
 
     def adjust_values(self, values: dict):
         mapping = {
-            "provisioning.image": "image",
-            "provisioning.provisioningImage": "image",
+            "keycloakBootstrap.image": "image",
+            "waitForDependency.image": "image",
             "twofaHelpdeskBackend.image": "image",
             "twofaHelpdeskFrontend.image": "image",
         }
