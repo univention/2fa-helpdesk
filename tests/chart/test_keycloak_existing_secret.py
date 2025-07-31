@@ -255,4 +255,4 @@ class TestKeycloakSecretInDeployment(KeycloakExistingSecret):
     template_file = "templates/deployment.yaml"
 
 class TestKeycloakSecretInJobProvisioning(KeycloakExistingSecret):
-    template_file = "templates/job-provisioning.yaml"
+    template_file = "templates/job-keycloak-bootstrap.yaml"

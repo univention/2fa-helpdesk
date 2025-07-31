@@ -17,8 +17,7 @@ keycloak:
     # -- Keycloak port.
     port: "8080"
 
-
-provisioning:
+keycloakBootstrap:
   enabled: true
   config:
     debug:

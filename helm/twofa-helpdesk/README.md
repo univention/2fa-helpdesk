@@ -721,16 +721,7 @@ true
 			<td>Keycloak realm.</td>
 		</tr>
 		<tr>
-			<td>nubusBaseUrl</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.backoffLimit</td>
+			<td>keycloakBootstrap.backoffLimit</td>
 			<td>int</td>
 			<td><pre lang="json">
 6
@@ -739,7 +730,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.config.debug.enabled</td>
+			<td>keycloakBootstrap.config.debug.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
 true
@@ -748,7 +739,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.allowPrivilegeEscalation</td>
+			<td>keycloakBootstrap.containerSecurityContext.allowPrivilegeEscalation</td>
 			<td>bool</td>
 			<td><pre lang="json">
 false
@@ -757,7 +748,7 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.capabilities.drop[0]</td>
+			<td>keycloakBootstrap.containerSecurityContext.capabilities.drop[0]</td>
 			<td>string</td>
 			<td><pre lang="json">
 "ALL"
@@ -766,7 +757,7 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.enabled</td>
+			<td>keycloakBootstrap.containerSecurityContext.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
 true
@@ -775,7 +766,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.privileged</td>
+			<td>keycloakBootstrap.containerSecurityContext.privileged</td>
 			<td>bool</td>
 			<td><pre lang="json">
 false
@@ -784,7 +775,7 @@ false
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.readOnlyRootFilesystem</td>
+			<td>keycloakBootstrap.containerSecurityContext.readOnlyRootFilesystem</td>
 			<td>bool</td>
 			<td><pre lang="json">
 true
@@ -793,7 +784,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.runAsGroup</td>
+			<td>keycloakBootstrap.containerSecurityContext.runAsGroup</td>
 			<td>int</td>
 			<td><pre lang="json">
 1000
@@ -802,7 +793,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.runAsNonRoot</td>
+			<td>keycloakBootstrap.containerSecurityContext.runAsNonRoot</td>
 			<td>bool</td>
 			<td><pre lang="json">
 true
@@ -811,7 +802,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.runAsUser</td>
+			<td>keycloakBootstrap.containerSecurityContext.runAsUser</td>
 			<td>int</td>
 			<td><pre lang="json">
 1000
@@ -820,7 +811,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.containerSecurityContext.seccompProfile.type</td>
+			<td>keycloakBootstrap.containerSecurityContext.seccompProfile.type</td>
 			<td>string</td>
 			<td><pre lang="json">
 "RuntimeDefault"
@@ -829,7 +820,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.enabled</td>
+			<td>keycloakBootstrap.enabled</td>
 			<td>bool</td>
 			<td><pre lang="json">
 true
@@ -838,7 +829,7 @@ true
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.image.pullPolicy</td>
+			<td>keycloakBootstrap.image.pullPolicy</td>
 			<td>string</td>
 			<td><pre lang="json">
 null
@@ -847,7 +838,7 @@ null
 			<td>Image pull policy. This setting has higher precedence than global.imagePullPolicy.</td>
 		</tr>
 		<tr>
-			<td>provisioning.image.registry</td>
+			<td>keycloakBootstrap.image.registry</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
@@ -856,106 +847,7 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.image.repository</td>
-			<td>string</td>
-			<td><pre lang="json">
-"nubus/images/wait-for-dependency"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.image.sha256</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.image.tag</td>
-			<td>string</td>
-			<td><pre lang="json">
-"0.35.0@sha256:61dfaea28a2b150459138dfd6a554ce53850cee05ef2a72ab47bbe23f2a92d0d"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.podSecurityContext.enabled</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.podSecurityContext.fsGroup</td>
-			<td>int</td>
-			<td><pre lang="json">
-1000
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.podSecurityContext.runAsGroup</td>
-			<td>int</td>
-			<td><pre lang="json">
-1000
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.podSecurityContext.runAsNonRoot</td>
-			<td>bool</td>
-			<td><pre lang="json">
-true
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.podSecurityContext.runAsUser</td>
-			<td>int</td>
-			<td><pre lang="json">
-1000
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.podSecurityContext.seccompProfile.type</td>
-			<td>string</td>
-			<td><pre lang="json">
-"RuntimeDefault"
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.provisioningImage.pullPolicy</td>
-			<td>string</td>
-			<td><pre lang="json">
-null
-</pre>
-</td>
-			<td>Image pull policy. This setting has higher precedence than global.imagePullPolicy.</td>
-		</tr>
-		<tr>
-			<td>provisioning.provisioningImage.registry</td>
-			<td>string</td>
-			<td><pre lang="json">
-""
-</pre>
-</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>provisioning.provisioningImage.repository</td>
+			<td>keycloakBootstrap.image.repository</td>
 			<td>string</td>
 			<td><pre lang="json">
 "nubus/images/keycloak-bootstrap"
@@ -964,7 +856,7 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.provisioningImage.sha256</td>
+			<td>keycloakBootstrap.image.sha256</td>
 			<td>string</td>
 			<td><pre lang="json">
 ""
@@ -973,7 +865,7 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.provisioningImage.tag</td>
+			<td>keycloakBootstrap.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
 "0.15.0@sha256:2bb358a4a0c11d11cf07cc16c518287a8257dfa5f6459c7924c241466d8326fe"
@@ -982,7 +874,61 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.resources.limits.cpu</td>
+			<td>keycloakBootstrap.podSecurityContext.enabled</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>keycloakBootstrap.podSecurityContext.fsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>keycloakBootstrap.podSecurityContext.runAsGroup</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>keycloakBootstrap.podSecurityContext.runAsNonRoot</td>
+			<td>bool</td>
+			<td><pre lang="json">
+true
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>keycloakBootstrap.podSecurityContext.runAsUser</td>
+			<td>int</td>
+			<td><pre lang="json">
+1000
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>keycloakBootstrap.podSecurityContext.seccompProfile.type</td>
+			<td>string</td>
+			<td><pre lang="json">
+"RuntimeDefault"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>keycloakBootstrap.resources.limits.cpu</td>
 			<td>int</td>
 			<td><pre lang="json">
 1
@@ -991,7 +937,7 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.resources.limits.memory</td>
+			<td>keycloakBootstrap.resources.limits.memory</td>
 			<td>string</td>
 			<td><pre lang="json">
 "1Gi"
@@ -1000,7 +946,7 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.resources.requests.cpu</td>
+			<td>keycloakBootstrap.resources.requests.cpu</td>
 			<td>float</td>
 			<td><pre lang="json">
 0.1
@@ -1009,7 +955,7 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.resources.requests.memory</td>
+			<td>keycloakBootstrap.resources.requests.memory</td>
 			<td>string</td>
 			<td><pre lang="json">
 "64Mi"
@@ -1018,7 +964,7 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.tolerations</td>
+			<td>keycloakBootstrap.tolerations</td>
 			<td>list</td>
 			<td><pre lang="json">
 []
@@ -1027,10 +973,19 @@ null
 			<td></td>
 		</tr>
 		<tr>
-			<td>provisioning.ttlSecondsAfterFinished</td>
+			<td>keycloakBootstrap.ttlSecondsAfterFinished</td>
 			<td>int</td>
 			<td><pre lang="json">
 60
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>nubusBaseUrl</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
 </pre>
 </td>
 			<td></td>
@@ -1537,7 +1492,7 @@ false
 true
 </pre>
 </td>
-			<td></td>
+			<td>Enables the Ingress for the 2FA admin helpdesk.</td>
 		</tr>
 		<tr>
 			<td>twofaHelpdeskFrontend.config.enableSelfService</td>
@@ -1546,7 +1501,7 @@ true
 true
 </pre>
 </td>
-			<td></td>
+			<td>Enables the Ingress for the 2FA self-service.</td>
 		</tr>
 		<tr>
 			<td>twofaHelpdeskFrontend.config.postLogoutRedirectURI</td>
@@ -1994,6 +1949,51 @@ false
 			<td>list</td>
 			<td><pre lang="json">
 []
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>waitForDependency.image.pullPolicy</td>
+			<td>string</td>
+			<td><pre lang="json">
+null
+</pre>
+</td>
+			<td>Image pull policy. This setting has higher precedence than global.imagePullPolicy.</td>
+		</tr>
+		<tr>
+			<td>waitForDependency.image.registry</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>waitForDependency.image.repository</td>
+			<td>string</td>
+			<td><pre lang="json">
+"nubus/images/wait-for-dependency"
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>waitForDependency.image.sha256</td>
+			<td>string</td>
+			<td><pre lang="json">
+""
+</pre>
+</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>waitForDependency.image.tag</td>
+			<td>string</td>
+			<td><pre lang="json">
+"0.35.0@sha256:61dfaea28a2b150459138dfd6a554ce53850cee05ef2a72ab47bbe23f2a92d0d"
 </pre>
 </td>
 			<td></td>

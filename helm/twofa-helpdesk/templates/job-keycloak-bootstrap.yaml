@@ -1,0 +1,164 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2025 Univention GmbH
+
+{{- if .Values.keycloakBootstrap.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ printf "%s-keycloak-bootstrap" (include "nubus-common.names.fullnameWithRevision" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
+spec:
+  ttlSecondsAfterFinished: {{ .Values.keycloakBootstrap.ttlSecondsAfterFinished }}
+  template:
+    metadata:
+      name: "{{ include "common.names.fullname" . }}-keycloak-bootstrap-{{ .Release.Revision }}"
+      labels:
+        {{- include "common.labels.standard" . | nindent 8 }}
+      annotations:
+        checksum/config: '{{ include (print $.Template.BasePath "/configmap-keycloak-bootstrap.yaml") . | sha256sum }}'
+        {{- if .Values.keycloakBootstrap.extraAnnotations }}
+        {{ toYaml .Values.keycloakBootstrap.extraAnnotations | nindent 8 }}
+        {{- end }}
+    spec:
+      restartPolicy: {{ coalesce .Values.keycloakBootstrap.restartPolicy .Values.global.restartPolicy | quote }}
+      {{- if or .Values.imagePullSecrets .Values.global.imagePullSecrets  }}
+      imagePullSecrets:
+        {{- range .Values.global.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+        {{- range .Values.imagePullSecrets }}
+        - name: "{{ . }}"
+        {{- end }}
+      {{- end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "common.names.fullname" . }}
+      {{- end }}
+      {{- if .Values.keycloakBootstrap.podSecurityContext.enabled }}
+      securityContext:
+        {{- omit .Values.keycloakBootstrap.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      initContainers:
+      - name: "wait-for-keycloak-container"
+        image: "{{ coalesce .Values.waitForDependency.image.registry .Values.global.imageRegistry }}/{{ .Values.waitForDependency.image.repository }}{{ if .Values.waitForDependency.image.sha256 }}@sha256:{{ .Values.waitForDependency.image.sha256 }}{{ else }}:{{ .Values.waitForDependency.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.waitForDependency.image.pullPolicy .Values.global.imagePullPolicy | quote }}
+        {{- if .Values.keycloakBootstrap.containerSecurityContext.enabled }}
+        securityContext:
+          {{- omit .Values.keycloakBootstrap.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-keycloak-bootstrap-init" (include "common.names.fullname" .) }}
+        {{- with .Values.keycloakBootstrap.extraEnvVars }}
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        command: ["wait-for-keycloak.py"]
+        {{- if .Values.keycloakBootstrap.args }}
+        args: {{ .Values.keycloakBootstrap.args }}
+        {{- end }}
+        {{- if .Values.keycloakBootstrap.resources }}
+        resources:
+          {{- toYaml .Values.keycloakBootstrap.resources | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+          {{- if .Values.keycloakBootstrap.extraVolumeMounts }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.keycloakBootstrap.extraVolumeMounts "context" .) | nindent 10 }}
+          {{- end }}
+      containers:
+      - name: "keycloak-bootstrap"
+        {{- if .Values.keycloakBootstrap.containerSecurityContext.enabled }}
+        securityContext:
+          {{- omit .Values.keycloakBootstrap.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
+        image: "{{ coalesce .Values.keycloakBootstrap.image.registry .Values.global.imageRegistry }}/{{ .Values.keycloakBootstrap.image.repository }}{{ if .Values.keycloakBootstrap.image.sha256 }}@sha256:{{ .Values.keycloakBootstrap.image.sha256 }}{{ else }}:{{ .Values.keycloakBootstrap.image.tag }}{{ end }}"
+        imagePullPolicy: {{ coalesce .Values.keycloakBootstrap.image.pullPolicy .Values.global.imagePullPolicy | quote }}
+        command:
+          - /bin/bash
+          - -c
+          - |
+              /app/univention-keycloak \
+                --keycloak-url $KEYCLOAK_URL \
+                --realm $KEYCLOAK_REALM \
+                --binduser $KEYCLOAK_USERNAME \
+                --bindpwdfile /credentials/keycloak.secret \
+                oidc/rp create twofa-helpdesk \
+                --app-url $KEYCLOAK_APP_BASE_URL \
+                --redirect-uri $KEYCLOAK_APP_BASE_URL/* \
+                --audience-to-map guardian \
+                --admin-url $KEYCLOAK_APP_BASE_URL \
+                --host-fqdn $KEYCLOAK_HOST \
+                --public-client \
+                --default-scopes "basic" \
+                --web-origins $KEYCLOAK_APP_BASE_URL \
+                --post-logout-redirect-uris "$POST_LOGOUT_REDIRECT_URI" \
+                --force \
+                --description 'Managed by Nubus. Manual changes will get overwritten on the next update.' \
+              && \
+              python3 /run.py
+        envFrom:
+          - configMapRef:
+              name: {{ printf "%s-keycloak-bootstrap-env" (include "common.names.fullname" .) }}
+          - configMapRef:
+              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
+        env:
+          - name: KEYCLOAK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
+                key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
+        {{- with .Values.keycloakBootstrap.extraEnvVars }}
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        {{- if .Values.keycloakBootstrap.args }}
+        args: {{ .Values.keycloakBootstrap.args }}
+        {{- end }}
+        {{- if .Values.keycloakBootstrap.resources }}
+        resources:
+          {{- toYaml .Values.keycloakBootstrap.resources | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+          - mountPath: "/credentials/keycloak.secret"
+            name: "keycloak-credentials-volume"
+            subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") }}
+          - name: "keycloak-bootstrap-script"
+            mountPath: "/run.py"
+            subPath: run.py
+          - name: "temp-dir"
+            mountPath: "/tmp"
+          {{- if .Values.keycloakBootstrap.extraVolumeMounts }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.keycloakBootstrap.extraVolumeMounts "context" .) | nindent 10 }}
+          {{- end }}
+      {{- with .Values.keycloakBootstrap.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.keycloakBootstrap.affinity }}
+      affinity:
+        {{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.keycloakBootstrap.tolerations }}
+      tolerations:
+        {{ toYaml . | indent 8 }}
+      {{- end }}
+      volumes:
+        - name: "keycloak-credentials-volume"
+          secret:
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-bootstrap-secret" "context" .) | quote }}
+        - name: "temp-dir"
+          emptyDir:
+            sizeLimit: "20Mi"
+        - name: keycloak-bootstrap-script
+          configMap:
+            name: {{ printf "%s-keycloak-bootstrap-script" (include "common.names.fullname" .) }}
+        {{- if .Values.keycloakBootstrap.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.keycloakBootstrap.extraVolumes  "context" .) | nindent 8 }}
+        {{- end }}
+  backoffLimit: {{ .Values.keycloakBootstrap.backoffLimit }}
+...
+{{- end }}
