@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.0...v0.14.1) (2025-08-29)
+
+
+### Bug Fixes
+
+* Update base image to version 5.2.2-build.20250821 ([add57de](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/add57de31c06478df9e141c3e106099b5495c983)), closes [univention/dev/internal/team-nubus#1385](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1385)
+
 ## [0.14.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.13.0...v0.14.0) (2025-07-31)
 
 
