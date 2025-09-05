@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.1...v0.14.2) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** Update gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/nginx/nginx Docker tag to v0.7.5 ([4dabaf0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/4dabaf0f98dc1e1a772d1394b98b66bc10887319)), closes [#0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/issues/0)
+
 ## [0.14.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.0...v0.14.1) (2025-08-29)
 
 
