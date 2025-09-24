@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.2...v0.14.3) (2025-09-24)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency univention/dev/nubus-for-k8s/common-ci to v1.44.2 ([dd246e4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/dd246e4e127de1fa6614c9e9cb28b62692ad4514)), closes [#0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/issues/0)
+
 ## [0.14.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.1...v0.14.2) (2025-09-05)
 
 
