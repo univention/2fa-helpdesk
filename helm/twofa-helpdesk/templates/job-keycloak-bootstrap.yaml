@@ -149,7 +149,7 @@ spec:
       volumes:
         - name: "keycloak-credentials-volume"
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-bootstrap-secret" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
         - name: "temp-dir"
           emptyDir:
             sizeLimit: "20Mi"
