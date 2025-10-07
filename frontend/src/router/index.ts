@@ -10,12 +10,17 @@ import SwaggerPage from "@/pages/SwaggerPage.vue";
 import { fetchWhoAmI } from "../services/whoami";
 import { isAuthenticated, login } from "@/services/keycloak";
 
+function changeFavicon(src: string) {
+  document.querySelector<HTMLLinkElement>("link[rel*='icon']")!.href = src;
+};
+
 const routes = [
   {
     path: "/admin",
     component: AdminPage,
     meta: {
       title: "Administrator: 2FA zurücksetzen",
+      favIcon: "2FA_Administration.svg",
       requiresAuth: true,
       adminOnly: true,
     },
@@ -25,6 +30,7 @@ const routes = [
     component: SelfServicePage,
     meta: {
       title: "Self-Service: 2FA zurücksetzen",
+      favIcon: "2FA_self_service.svg",
       requiresAuth: true,
     },
   },
@@ -42,9 +48,10 @@ const router = createRouter({
   routes,
 });
 
-// Navigation guard to update document title
+// Navigation guard to update document title and favicon
 router.beforeEach(async (to, _from, next) => {
   document.title = (to.meta.title as string) || "2FA Reset";
+  changeFavicon((to.meta.favIcon as string) || "");
 
   if (to.meta.requiresAuth) {
     if (!isAuthenticated()) {

@@ -370,7 +370,7 @@ true
         "suffix": "-ui"
       }
     },
-    "path": "/univention/2fa/(admin|assets|config.json|2fa.svg)(/.*)?$",
+    "path": "/univention/2fa/(admin|assets|config.json|2FA_Administration.svg)(/.*)?$",
     "pathType": "ImplementationSpecific"
   }
 ]
@@ -456,7 +456,7 @@ true
         "suffix": "-ui"
       }
     },
-    "path": "/univention/2fa/(self-service|assets|config.json|2fa.svg)(/.*)?$",
+    "path": "/univention/2fa/(self-service|assets|config.json|2FA_self_service.svg)(/.*)?$",
     "pathType": "ImplementationSpecific"
   }
 ]

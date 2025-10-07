@@ -151,7 +151,7 @@ ingress:
       host: ""
       # -- Define the Ingress paths.
       paths:
-        - path: /univention/2fa/(admin|assets|config.json|2fa.svg)(/.*)?$
+        - path: /univention/2fa/(admin|assets|config.json|2FA_Administration.svg)(/.*)?$
           pathType: ImplementationSpecific
           backend:
             service:
@@ -171,7 +171,7 @@ ingress:
       host: ""
       # -- Define the Ingress paths.
       paths:
-        - path: /univention/2fa/(self-service|assets|config.json|2fa.svg)(/.*)?$
+        - path: /univention/2fa/(self-service|assets|config.json|2FA_self_service.svg)(/.*)?$
           pathType: ImplementationSpecific
           backend:
             service:
