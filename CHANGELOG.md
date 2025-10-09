@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.3...v0.14.4) (2025-10-09)
+
+
+### Bug Fixes
+
+* Replace icons ([484d7a3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/484d7a3b2723eda6a5b0d4ef473c4076909b024e)), closes [univention/dev/internal/team-nubus#1427](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1427)
+
 ## [0.14.3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.2...v0.14.3) (2025-09-24)
 
 
