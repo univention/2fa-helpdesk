@@ -19,7 +19,7 @@ services:
         target: /cache
 
   test-chart:
-    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:latest
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.28.0
     command: pytest tests/chart
     profiles:
       - test
