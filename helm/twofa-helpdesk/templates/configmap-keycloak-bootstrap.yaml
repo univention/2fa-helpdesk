@@ -36,7 +36,7 @@ metadata:
 data:
   DEBUG: {{ .Values.keycloakBootstrap.config.debug.enabled | quote }}
   DOMAIN: {{ .Values.global.domain | quote }}
-  KEYCLOAK_USERNAME: {{ tpl .Values.keycloak.auth.username . | quote }}
+  KEYCLOAK_USERNAME: {{ tpl (required "A keycloak username is required. See keycloak.auth." .Values.keycloak.auth.username) . | quote }}
   KEYCLOAK_HOST: {{ default (printf "%s-keycloak" .Release.Name) (tpl .Values.keycloak.connection.host .) | quote }}
   KEYCLOAK_REALM: {{ tpl .Values.keycloak.realm . | quote }}
   KEYCLOAK_URL: "{{ printf "http://%s:%s"

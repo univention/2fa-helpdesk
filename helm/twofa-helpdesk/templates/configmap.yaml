@@ -29,7 +29,7 @@ data:
   KEYCLOAK_URL: "{{ printf "http://%s:%s"
     (required "keycloak.connection.host is required" (tpl .Values.keycloak.connection.host .))
     (required "keycloak.connection.port is required" (tpl .Values.keycloak.connection.port .)) }}"
-  KEYCLOAK_USERNAME: "{{ tpl .Values.keycloak.auth.username . }}"
+  KEYCLOAK_USERNAME: {{ tpl (required "A keycloak username is required. See keycloak.auth." .Values.keycloak.auth.username) . | quote }}
   KEYCLOAK_REALM_NAME: "{{ tpl .Values.keycloak.realm . }}"
   KEYCLOAK_ADMIN_REALM_NAME: "{{ tpl .Values.keycloak.admin_realm . }}"
 

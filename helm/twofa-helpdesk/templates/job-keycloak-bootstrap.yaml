@@ -71,7 +71,7 @@ spec:
           {{- include "common.tplvalues.render" (dict "value" .Values.keycloakBootstrap.extraVolumeMounts "context" .) | nindent 10 }}
           {{- end }}
       containers:
-      - name: "keycloak-bootstrap"
+      - name: "main"
         {{- if .Values.keycloakBootstrap.containerSecurityContext.enabled }}
         securityContext:
           {{- omit .Values.keycloakBootstrap.containerSecurityContext "enabled" | toYaml | nindent 10 }}
@@ -110,8 +110,8 @@ spec:
           - name: KEYCLOAK_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
-                key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
+                name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) }}
+                key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword" "context" .) }}
         {{- with .Values.keycloakBootstrap.extraEnvVars }}
           {{- . | toYaml | nindent 10 }}
         {{- end }}
@@ -125,7 +125,7 @@ spec:
         volumeMounts:
           - mountPath: "/credentials/keycloak.secret"
             name: "keycloak-credentials-volume"
-            subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") }}
+            subPath: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword" "context" .) }}
           - name: "keycloak-bootstrap-script"
             mountPath: "/run.py"
             subPath: run.py
@@ -149,7 +149,7 @@ spec:
       volumes:
         - name: "keycloak-credentials-volume"
           secret:
-            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
+            secretName: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) }}
         - name: "temp-dir"
           emptyDir:
             sizeLimit: "20Mi"
