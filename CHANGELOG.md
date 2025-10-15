@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.4...v0.14.5) (2025-10-15)
+
+
+### Bug Fixes
+
+* bump chart tests to v0.28.0 ([29c3902](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/29c3902988750ed20a54d227b537473dfa34cd66)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398) [univention/dev/internal/team-nubus#1441](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1441)
+* use correct secret for keycloak bootstrapping ([e38b739](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/e38b73951b81f7072321bc302c2613c136d3c055)), closes [univention/dev/internal/team-nubus#1398](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1398)
+
 ## [0.14.4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.3...v0.14.4) (2025-10-09)
 
 
