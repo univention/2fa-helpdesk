@@ -50,7 +50,7 @@ spec:
       serviceAccountName: {{ include "common.names.fullname" . }}
       {{- end }}
       containers:
-      - name: "twofa-helpdesk-backend-api"
+      - name: "main"
         {{- if .Values.twofaHelpdeskBackend.securityContext.enabled }}
         securityContext:
           {{- omit .Values.twofaHelpdeskBackend.securityContext "enabled" | toYaml  | nindent 12 }}
@@ -67,8 +67,8 @@ spec:
           - name: KEYCLOAK_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) | quote }}
-                key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword") | quote }}
+                name: {{ include "nubus-common.secrets.name" (dict "existingSecret" .Values.keycloak.auth.existingSecret "defaultNameSuffix" "keycloak-credentials" "context" .) }}
+                key: {{ include "nubus-common.secrets.key" (dict "existingSecret" .Values.keycloak.auth.existingSecret "key" "adminPassword" "context" .) }}
         {{- if .Values.twofaHelpdeskBackend.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
