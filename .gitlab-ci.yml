@@ -13,6 +13,7 @@ include:
       - "jobs/container-build-external.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "jobs/container-generate-sbom.yaml"
+      - "jobs/generate-filesystem-sbom.yaml"
       - "templates/sonarqube.yaml"
   - project: "univention/infrastructure/docker-services"
     ref: "master"
@@ -58,6 +59,10 @@ push-image-external:
 container-generate-sbom:
   parallel:
     matrix: *publish-matrix
+
+generate-filesystem-sbom:
+  variables:
+    FOLDER: "frontend"
 
 test-chart:
   stage: test
