@@ -3,7 +3,7 @@
 ---
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.44.2"
+    ref: "v1.45.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -12,6 +12,7 @@ include:
       - "jobs/semantic-release-env.yaml"
       - "jobs/container-build-external.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
+      - "jobs/container-generate-sbom.yaml"
       - "templates/sonarqube.yaml"
   - project: "univention/infrastructure/docker-services"
     ref: "master"
@@ -54,6 +55,9 @@ push-image-external:
   parallel:
     matrix: *publish-matrix
 
+container-generate-sbom:
+  parallel:
+    matrix: *publish-matrix
 
 test-chart:
   stage: test
