@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.6](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.5...v0.14.6) (2025-11-21)
+
+
+### Bug Fixes
+
+* bump images in values ([24292cc](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/24292cc65ba2e2894b5d66eec6a093aee7c3bbc9)), closes [univention/dev/internal/team-nubus#1476](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1476)
+
 ## [0.14.5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.4...v0.14.5) (2025-10-15)
 
 
