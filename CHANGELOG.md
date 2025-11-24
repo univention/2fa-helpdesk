@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.7](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.6...v0.14.7) (2025-11-24)
+
+
+### Bug Fixes
+
+* adjust univention-keycloak to not use the patched version ([33c9e10](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/33c9e10c861d01b6defa47b093080768faa1f3cf)), closes [#0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/issues/0)
+
 ## [0.14.6](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.5...v0.14.6) (2025-11-21)
 
 
