@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.7...v0.15.0) (2025-11-27)
+
+
+### Features
+
+* **ci:** add fs sbom as file in container ([b8c4733](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/b8c4733ae17dc11cf0638a3394b6013906595cde)), closes [univention/dev/tooling/vulnerability-management#1](https://git.knut.univention.de/univention/dev/tooling/vulnerability-management/issues/1)
+
 ## [0.14.7](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.6...v0.14.7) (2025-11-24)
 
 
