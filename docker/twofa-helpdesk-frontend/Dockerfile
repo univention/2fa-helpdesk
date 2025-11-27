@@ -81,3 +81,7 @@ COPY --from=build /app/dist /usr/share/nginx/html/ui
 
 COPY frontend/90_generate_config.py /
 COPY frontend/90_generate_config.sh /entrypoint.d/
+
+FROM final AS sbom
+
+COPY ./sbom-fs-frontend.cdx.json /
