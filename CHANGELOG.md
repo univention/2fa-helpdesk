@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.15.0...v0.15.1) (2025-12-03)
+
+
+### Bug Fixes
+
+* bump image to errata 298 ([f70e261](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/f70e2619c154601376ce928f0da9cbb46b368ef5)), closes [univention/dev/internal/team-nubus#1543](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1543)
+
 ## [0.15.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.14.7...v0.15.0) (2025-11-27)
 
 
