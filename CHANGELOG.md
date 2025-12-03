@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.15.1...v0.15.2) (2025-12-03)
+
+
+### Bug Fixes
+
+* update lockfile ([9b339db](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/9b339dbbc24997e1863206677dd2117f1a0317d2)), closes [univention/dev/internal/team-nubus#1540](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1540)
+
 ## [0.15.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.15.0...v0.15.1) (2025-12-03)
 
 
