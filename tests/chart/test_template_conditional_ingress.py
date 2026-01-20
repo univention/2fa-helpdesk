@@ -59,7 +59,7 @@ class TestTemplateConditionalIngress(Base):
             self.template_name,
         )
         self._assert_ingress_absent(ingresses, self.admin_ingress_name)
-        self._assert_ingress_count(ingresses, 2)
+        self._assert_ingress_count(ingresses, 3)
 
     def test_disable_ingress_self_service_ingress(self, helm, chart_path):
         values = load_yaml(
@@ -77,7 +77,7 @@ class TestTemplateConditionalIngress(Base):
             self.template_name,
         )
         self._assert_ingress_absent(ingresses, self.self_service_ingress_name)
-        self._assert_ingress_count(ingresses, 2)
+        self._assert_ingress_count(ingresses, 3)
 
     def test_disable_ingress_ui(self, helm, chart_path):
         values = load_yaml(
@@ -97,7 +97,7 @@ class TestTemplateConditionalIngress(Base):
         )
         self._assert_ingress_absent(ingresses, self.self_service_ingress_name)
         self._assert_ingress_absent(ingresses, self.admin_ingress_name)
-        self._assert_ingress_count(ingresses, 1)
+        self._assert_ingress_count(ingresses, 2)
 
     def test_enable_ingress_ui(self, helm, chart_path):
         values = load_yaml(
@@ -117,7 +117,7 @@ class TestTemplateConditionalIngress(Base):
         )
         self._assert_ingress_present(ingresses, self.self_service_ingress_name)
         self._assert_ingress_present(ingresses, self.admin_ingress_name)
-        self._assert_ingress_count(ingresses, 3)
+        self._assert_ingress_count(ingresses, 4)
 
     def test_template_null(self, helm, chart_path):
         values = load_yaml(
@@ -138,7 +138,7 @@ class TestTemplateConditionalIngress(Base):
 
         self._assert_ingress_absent(ingresses, self.self_service_ingress_name)
         self._assert_ingress_absent(ingresses, self.admin_ingress_name)
-        self._assert_ingress_count(ingresses, 1)
+        self._assert_ingress_count(ingresses, 2)
 
     def test_template_empty_string(self, helm, chart_path):
         values = load_yaml(
@@ -159,4 +159,4 @@ class TestTemplateConditionalIngress(Base):
 
         self._assert_ingress_absent(ingresses, self.self_service_ingress_name)
         self._assert_ingress_absent(ingresses, self.admin_ingress_name)
-        self._assert_ingress_count(ingresses, 1)
+        self._assert_ingress_count(ingresses, 2)

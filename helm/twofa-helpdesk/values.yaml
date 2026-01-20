@@ -148,11 +148,10 @@ ingress:
   items:
     - name: twofa-helpdesk-ui-admin
       enabled: "{{ .Values.twofaHelpdeskFrontend.config.enableAdminHelpdesk }}"
-      host: ""
       # -- Define the Ingress paths.
       paths:
-        - path: /univention/2fa/(admin|assets|config.json|2FA_Administration.svg)(/.*)?$
-          pathType: ImplementationSpecific
+        - path: /univention/2fa/admin
+          pathType: Prefix
           backend:
             service:
               name: 2fa-helpdesk-backend-ui
@@ -160,19 +159,16 @@ ingress:
                 number: 80
               suffix: "-ui"
       ingressClassName: ""
-      annotations:
-        nginx.ingress.kubernetes.io/use-regex: "true"
-        nginx.ingress.kubernetes.io/rewrite-target: /ui/$1$2
+      annotations: {}
       tls:
         # enabled: true
         secretName: ""
     - name: twofa-helpdesk-ui-self-service
       enabled: "{{ .Values.twofaHelpdeskFrontend.config.enableSelfService }}"
-      host: ""
       # -- Define the Ingress paths.
       paths:
-        - path: /univention/2fa/(self-service|assets|config.json|2FA_self_service.svg)(/.*)?$
-          pathType: ImplementationSpecific
+        - path: /univention/2fa/self-service
+          pathType: Prefix
           backend:
             service:
               name: 2fa-helpdesk-backend-ui
@@ -180,15 +176,36 @@ ingress:
                 number: 80
               suffix: "-ui"
       ingressClassName: ""
-      annotations:
-        nginx.ingress.kubernetes.io/use-regex: "true"
-        nginx.ingress.kubernetes.io/rewrite-target: /ui/$1$2
+      annotations: {}
       tls:
         # enabled: true
         secretName: ""
+    # -- Shared assets for both admin and self-service UIs
+    - name: twofa-helpdesk-ui-assets
+      enabled: true
+      paths:
+        - path: /univention/2fa/assets
+          pathType: Prefix
+          backend:
+            service:
+              name: 2fa-helpdesk-backend-ui
+              port:
+                number: 80
+              suffix: "-ui"
+        - path: /univention/2fa/config.json
+          pathType: Exact
+          backend:
+            service:
+              name: 2fa-helpdesk-backend-ui
+              port:
+                number: 80
+              suffix: "-ui"
+      ingressClassName: ""
+      annotations: {}
+      tls:
+        secretName: ""
     - name: twofa-backend
       enabled: true
-      host: ""
       paths:
         - path: /backend
           pathType: Prefix

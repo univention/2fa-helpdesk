@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 # generate config.json for VITE-Deployment
-output_path = Path("/usr/share/nginx/html/ui/config.json")
+output_path = Path("/usr/share/nginx/html/univention/2fa/config.json")
 
 vite_env_vars = {
     key: value for key, value in os.environ.items() if key.startswith("VITE_")
