@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.15.3...v0.16.0) (2026-01-22)
+
+
+### Features
+
+* Remove nginx-specific ingress rewrites ([0899667](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/089966768c2b09a781d19ad9271717bbaa46604d)), closes [univention/dev/internal/team-nubus#1552](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1552)
+
 ## [0.15.3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.15.2...v0.15.3) (2026-01-14)
 
 
