@@ -100,7 +100,7 @@ spec:
           - name: cache-tmpfs
             mountPath: /var/cache/nginx
           - name: configjson
-            mountPath: /usr/share/nginx/html/ui/config.json
+            mountPath: /usr/share/nginx/html/univention/2fa/config.json
             subPath: config.json
           - name: var-run-volume
             mountPath: /var/run
@@ -116,7 +116,7 @@ spec:
         {{- if .Values.twofaHelpdeskFrontend.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
-            path: /ui/
+            path: /univention/2fa/
             port: 80
           initialDelaySeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.twofaHelpdeskFrontend.probes.liveness.timeoutSeconds }}
@@ -127,7 +127,7 @@ spec:
         {{- if .Values.twofaHelpdeskFrontend.probes.readiness.enabled }}
         readinessProbe:
           httpGet:
-            path: /ui/
+            path: /univention/2fa/
             port: 80
           initialDelaySeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.twofaHelpdeskFrontend.probes.readiness.timeoutSeconds }}

@@ -81,10 +81,11 @@ data:
             root /usr/share/nginx/html;
             index index.html index.htm;
             server_name _;
-            location /ui/ {
+
+            location /univention/2fa/ {
                 root /usr/share/nginx/html;
                 index index.html;
-                try_files $uri $uri/ /ui/index.html;
+                try_files $uri $uri/ /univention/2fa/index.html;
             }
             location / {
                 try_files $uri $uri/ =404;

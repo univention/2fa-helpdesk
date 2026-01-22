@@ -77,7 +77,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY --from=build /app/dist /usr/share/nginx/html/ui
+COPY --from=build /app/dist /usr/share/nginx/html/univention/2fa
 
 COPY frontend/90_generate_config.py /
 COPY frontend/90_generate_config.sh /entrypoint.d/
