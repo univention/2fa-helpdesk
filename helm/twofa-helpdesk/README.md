@@ -296,7 +296,7 @@ true
 			<td>ingress.ingressClassName</td>
 			<td>string</td>
 			<td><pre lang="json">
-"nginx"
+""
 </pre>
 </td>
 			<td>The Ingress controlledebugr class name. (This will be the default for all Ingresses)</td>
