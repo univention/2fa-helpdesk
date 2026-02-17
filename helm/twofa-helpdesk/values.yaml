@@ -133,7 +133,7 @@ ingress:
       kind: "ClusterIssuer"
 
   # -- The Ingress controlledebugr class name. (This will be the default for all Ingresses)
-  ingressClassName: "nginx"
+  ingressClassName: ""
 
   # -- Secure an Ingress by specifying a Secret that contains a TLS private key and certificate.
   #
