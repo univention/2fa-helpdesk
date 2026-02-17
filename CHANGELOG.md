@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.0...v0.16.1) (2026-02-17)
+
+
+### Bug Fixes
+
+* **helm:** Change default ingressClassName from "nginx" to "" ([5758193](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/5758193741008e0ca55e02469de9af8590abb7a5)), closes [univention/dev/internal/team-nubus#1604](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1604)
+
 ## [0.16.0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.15.3...v0.16.0) (2026-01-22)
 
 
