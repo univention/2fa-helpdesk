@@ -67,4 +67,4 @@ USER ${USER}
 
 WORKDIR /app/src/2fa_helpdesk
 
-CMD ["uvicorn", "app:app", "--proxy-headers", "--root-path", "./", "--port", "8080", "--host", "0.0.0.0"]
+CMD ["uvicorn", "app:app", "--proxy-headers", "--forwarded-allow-ips", "*", "--port", "8080", "--host", "0.0.0.0"]
