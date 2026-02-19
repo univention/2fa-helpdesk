@@ -81,6 +81,7 @@ data:
             root /usr/share/nginx/html;
             index index.html index.htm;
             server_name _;
+            absolute_redirect off;
 
             location /univention/2fa/ {
                 root /usr/share/nginx/html;
