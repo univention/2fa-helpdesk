@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.16.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.1...v0.16.2) (2026-02-23)
+
+
+### Bug Fixes
+
+* **frontend:** Activate proxy forwarded headers for fastapi/uvicorn to send the correct protocol and port for redirects ([86c0846](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/86c0846b719a30bda8935b4896bc7595fe804ef2)), closes [univention/dev/internal/team-nubus#1609](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1609)
+* **frontend:** Configure relative redirects in Nginx to avoid absolute redirects with different protocols or ports ([8fdd7bf](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/8fdd7bfa45f4c22f3effff4f1b2f5db485af93ba)), closes [univention/dev/internal/team-nubus#1609](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1609)
+
 ## [0.16.1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.0...v0.16.1) (2026-02-17)
 
 
