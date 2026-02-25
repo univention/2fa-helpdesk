@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.2...v0.16.3) (2026-02-25)
+
+
+### Bug Fixes
+
+* trigger version bump ([5c19df1](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/5c19df15d9a9f5f01c617018d876f28b24c3edb4)), closes [#0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/issues/0)
+
 ## [0.16.2](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.1...v0.16.2) (2026-02-23)
 
 
