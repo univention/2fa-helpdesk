@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.3...v0.16.4) (2026-02-25)
+
+
+### Bug Fixes
+
+* bump wait-for-dependency and keycloak-bootstrap ([fcdd9f5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/fcdd9f535b1ba4f7e6929fdb187393e5a7e9ebc5)), closes [univention/dev/internal/team-horizon#9](https://git.knut.univention.de/univention/dev/internal/team-horizon/issues/9)
+
 ## [0.16.3](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.2...v0.16.3) (2026-02-25)
 
 
