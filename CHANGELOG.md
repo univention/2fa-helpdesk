@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.4...v0.16.5) (2026-03-03)
+
+
+### Bug Fixes
+
+* Bump dependencies ([81472e6](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/81472e6edac2661054ba4790fff273f27193e6ab)), closes [univention/dev/internal/team-nubus#1477](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1477)
+
 ## [0.16.4](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.3...v0.16.4) (2026-02-25)
 
 
