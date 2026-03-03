@@ -15,7 +15,7 @@ python-keycloak = "^5.3.0"
 udm-rest-api-client = "^0.0.2"
 pyJWT = "^2.10.0"
 uvicorn = "^0.27.0"
-fastapi = "^0.110.0"
+fastapi = "^0.115.3"
 pydantic = "^2.11.3"
 pydantic-settings = "^2.8.1"
 
