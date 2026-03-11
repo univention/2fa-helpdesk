@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.16.6](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.5...v0.16.6) (2026-03-11)
+
+
+### Bug Fixes
+
+* Bump frontend dependencies ([f96c51c](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/f96c51c0d9be35e4f9c4c57cdd6693ecb30934a7)), closes [univention/dev/internal/team-nubus#1477](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1477)
+* Bump keycloak-bootstrap ([271e17f](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/271e17f9accda06a3b6f7ac9df4978b5a821ece4)), closes [univention/dev/internal/team-nubus#1477](https://git.knut.univention.de/univention/dev/internal/team-nubus/issues/1477)
+
 ## [0.16.5](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.4...v0.16.5) (2026-03-03)
 
 
