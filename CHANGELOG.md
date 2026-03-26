@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.7](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.6...v0.16.7) (2026-03-26)
+
+
+### Bug Fixes
+
+* **deps:** Update Base Image ([c5e1979](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/commit/c5e1979b0ec591e7feae525c59e28e1ed159db56)), closes [#0](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/issues/0)
+
 ## [0.16.6](https://git.knut.univention.de/univention/dev/projects/2fa-helpdesk/compare/v0.16.5...v0.16.6) (2026-03-11)
 
 
