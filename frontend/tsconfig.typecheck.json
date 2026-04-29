@@ -1,14 +1,13 @@
 {
     "compilerOptions": {
       "strict": true,
-      "baseUrl": ".",
-      "paths": { "@/*": ["src/*"] },
+      "paths": { "@/*": ["./src/*"] },
       "skipLibCheck": true,
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "module": "esnext",
       "target": "esnext",
-      "moduleResolution": "node"
+      "moduleResolution": "bundler"
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "api"]

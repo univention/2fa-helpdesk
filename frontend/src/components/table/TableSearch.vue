@@ -103,6 +103,6 @@ function onInput(event: Event) {
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(-font-color-contrast-high);
+  color: var(--font-color-contrast-high);
 }
 </style>
