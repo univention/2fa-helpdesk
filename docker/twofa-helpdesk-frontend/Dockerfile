@@ -69,7 +69,7 @@ RUN yarn build
 
 ###############################################################################
 # Step 2: Serve with nginx
-FROM gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/nginx/nginx:0.7.44@sha256:e9072d4a4e73c5f0da96b42b2c95765de21024a4932c9e593059ecf84911f7a3 AS final
+FROM gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/nginx/nginx:0.7.45@sha256:55b68cde332a3e4abbb70080eccb6fdb60f2377a7750e3e82c096cd60c86d038 AS final
 
 # RUN apk add python3
 RUN apt-get update && \
