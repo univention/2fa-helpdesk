@@ -10,7 +10,7 @@ include:
       - "jobs/lint-pre-commit.yaml"
       - "jobs/lint-commit-messages.yaml"
       - "jobs/semantic-release-env.yaml"
-      - "jobs/container-build-external.yaml"
+      - "jobs/container-build-external-buildkit.yaml"
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "jobs/generate-filesystem-sbom.yaml"
       - "templates/sonarqube.yaml"
@@ -29,11 +29,11 @@ variables:
       - "twofa-helpdesk-frontend"
   - IMAGE_NAME: "twofa-helpdesk-frontend-testrunner"
     DOCKERFILE_PATH: "docker/twofa-helpdesk-frontend/Dockerfile"
-    KANIKO_BUILD_CONTEXT: "${CI_PROJECT_DIR}"
-    KANIKO_ARGS: "--target=base"
+    BUILD_CONTEXT: "${CI_PROJECT_DIR}"
+    BUILD_TARGET: "base"
   - IMAGE_NAME: "testrunner"
     DOCKERFILE_PATH: "docker/testrunner/Dockerfile"
-    KANIKO_BUILD_CONTEXT: "${CI_PROJECT_DIR}/docker/testrunner"
+    BUILD_CONTEXT: "${CI_PROJECT_DIR}/docker/testrunner"
 .publish-matrix: &publish-matrix
   - IMAGE_NAME:
       - "twofa-helpdesk-backend"
@@ -48,7 +48,7 @@ container-build:
   parallel:
     matrix: *build-matrix
   variables:
-    KANIKO_BUILD_CONTEXT: "$CI_PROJECT_DIR"
+    BUILD_CONTEXT: "$CI_PROJECT_DIR"
     DOCKERFILE_PATH: "docker/${IMAGE_NAME}/Dockerfile"
 
 container-malware-scan:
