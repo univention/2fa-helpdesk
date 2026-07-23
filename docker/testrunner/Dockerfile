@@ -17,7 +17,7 @@ WORKDIR /testrunner
 
 COPY Pipfile Pipfile.lock ./
 
-RUN pip install --no-cache-dir pipenv==2023.6.18
+RUN pip install --no-cache-dir pipenv==2026.6.2
 
 
 FROM base-env
