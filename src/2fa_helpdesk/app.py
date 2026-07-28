@@ -82,7 +82,7 @@ settings = Settings(
     client_id=os.environ["OIDC_CLIENT_ID"],
     cors_allow_origins=os.environ.get("CORS_ALLOW", ""),
 )
-jwks_client = jwt.PyJWKClient(settings.jwks_url)  # Caches JWKS
+jwks_client = jwt.PyJWKClient(str(settings.jwks_url))  # Caches JWKS
 
 
 #
