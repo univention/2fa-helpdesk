@@ -868,7 +868,7 @@ null
 			<td>keycloakBootstrap.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.28.1@sha256:ab1da1860be2b9e9dde0aa01f93fbaa8f4e56990edb5155454759a6fcc04837b"
+"26.7.0@sha256:371242de9698bc5576e78f1566d070687aafd5c9a71453b16137a762fdd35331"
 </pre>
 </td>
 			<td></td>
