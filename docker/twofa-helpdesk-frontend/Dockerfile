@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2025-2026 Univention GmbH
-ARG UCS_BASE_IMAGE_TAG=5.3.0-build.20260824@sha256:e2b7ee0b179cd4a2a2610e9e9cc412b5452bd4a8bcd3ae791a1f498af64d1566
+ARG UCS_BASE_IMAGE_TAG=5.3.0-build.20260903@sha256:c0c06ea1ef4aa8fea856581ecb2ed7f9fc6b355c3f0903a1be39f02a5472dfd5
 ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base
 
 ###############################################################################
@@ -69,7 +69,7 @@ RUN yarn build
 
 ###############################################################################
 # Step 2: Serve with nginx
-FROM gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/nginx/nginx:0.7.45@sha256:55b68cde332a3e4abbb70080eccb6fdb60f2377a7750e3e82c096cd60c86d038 AS final
+FROM gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/nginx/nginx:0.7.47@sha256:d3ae9dc6345e364841b51c01b008576e11c5b1b4b7c0481b592d1ed79fec4c12 AS final
 
 # RUN apk add python3
 RUN apt-get update && \
