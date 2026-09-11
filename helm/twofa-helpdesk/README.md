@@ -868,7 +868,7 @@ null
 			<td>keycloakBootstrap.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"26.7.2-nubus2@sha256:78a689b91b80311cb20e59ce0d6306405288f8effc65eb26585dc042933ae28d"
+"26.7.2-nubus4@sha256:ba88c9c2f1edd30e26a70b0c520b62c374bee0c7d9b78f0a2a9074619aa64f23"
 </pre>
 </td>
 			<td></td>
@@ -1993,7 +1993,7 @@ null
 			<td>waitForDependency.image.tag</td>
 			<td>string</td>
 			<td><pre lang="json">
-"0.36.14@sha256:ae1a18fd34afe9027aff1036102448db0cdab563711214c0ad7dfbaf6264a7a9"
+"0.36.16@sha256:ca3394e7e1cd393e6941822e42a9fbdd59a0a03a0ba772fd9219e661b50f170f"
 </pre>
 </td>
 			<td></td>
