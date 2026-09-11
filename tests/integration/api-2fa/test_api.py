@@ -124,8 +124,9 @@ def test_list_users_no_query(
     assert resp_json["success"]
     expected_users = {keycloak_2fa_admin.id, keycloak_user_with_totp.id}
     assert {
-        user["keycloak_internal_id"] for user in resp_json["users"] \
-            if user["keycloak_internal_id"] != known_keycloak_user_id
+        user["keycloak_internal_id"]
+        for user in resp_json["users"]
+        if user["keycloak_internal_id"] != known_keycloak_user_id
     } == expected_users
 
 
@@ -145,8 +146,68 @@ def test_list_users_with_query(
     resp_json = resp.json()
 
     assert resp_json["success"]
-    assert resp_json["total"] == 1
+    assert resp_json["has_next"] is False
     expected_users = {keycloak_2fa_admin.id}
     assert {
         user["keycloak_internal_id"] for user in resp_json["users"]
     } == expected_users
+
+
+def test_list_users_with_more_users_than_limit_first_page(
+    keycloak_2fa_admin,
+    keycloak_users,
+    twofa_api_baseurl,
+    session: requests.Session,
+):
+    resp = session.post(
+        f"{twofa_api_baseurl}/list_users",
+        params={"limit": 10, "page": 1},
+        json={"query": "@multiple-users.com"},
+        headers={"Authorization": f"Bearer {keycloak_2fa_admin.get_access_token()}"},
+    )
+    resp.raise_for_status()
+    resp_json = resp.json()
+
+    assert resp_json["success"]
+    assert len(resp_json["users"]) == 10
+    assert resp_json["has_next"]
+
+
+def test_list_users_with_more_users_than_limit_middle_page(
+    keycloak_2fa_admin,
+    keycloak_users,
+    twofa_api_baseurl,
+    session: requests.Session,
+):
+    resp = session.post(
+        f"{twofa_api_baseurl}/list_users",
+        params={"limit": 10, "page": 2},
+        json={"query": "@multiple-users.com"},
+        headers={"Authorization": f"Bearer {keycloak_2fa_admin.get_access_token()}"},
+    )
+    resp.raise_for_status()
+    resp_json = resp.json()
+
+    assert resp_json["success"]
+    assert len(resp_json["users"]) == 10
+    assert resp_json["has_next"]
+
+
+def test_list_users_with_more_users_than_limit_last_page(
+    keycloak_2fa_admin,
+    keycloak_users,
+    twofa_api_baseurl,
+    session: requests.Session,
+):
+    resp = session.post(
+        f"{twofa_api_baseurl}/list_users",
+        params={"limit": 10, "page": 3},
+        json={"query": "@multiple-users.com"},
+        headers={"Authorization": f"Bearer {keycloak_2fa_admin.get_access_token()}"},
+    )
+    resp.raise_for_status()
+    resp_json = resp.json()
+
+    assert resp_json["success"]
+    assert len(resp_json["users"]) == 5
+    assert not resp_json["has_next"]

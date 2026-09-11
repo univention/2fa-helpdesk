@@ -19,31 +19,37 @@ from pydantic_settings import BaseSettings
 class ResetUsersRequest(BaseModel):
     user_ids: List[str]
 
+
 class ListUserQuery(BaseModel):
     query: Optional[str] = pydantic.Field(
-        "", description="Search for users matching this query",
+        "",
+        description="Search for users matching this query",
     )
+
 
 class ResetResponse(BaseModel):
     success: bool
     detail: str
     resets_by_user: Dict[str, int] = pydantic.Field(
-        "", description="Map of usernames to reset counts",
+        "",
+        description="Map of usernames to reset counts",
     )
+
 
 class WhoAmIResponse(BaseModel):
     token: dict
     success: bool
     twofa_admin: bool
 
+
 class ListUserResponse(BaseModel):
     users: List[adapters.keycloak.User]
     success: bool
     detail: str
-    total: int
-    total_pages: int
+    has_next: bool
     page: int
     limit: int
+
 
 class Settings(BaseSettings):
     oidc_host: str
@@ -95,8 +101,10 @@ oauth2_scheme = security.OAuth2AuthorizationCodeBearer(
     tokenUrl=str(settings.token_url),
 )
 
+
 def _not_2fa_admin_msg(user_token):
     return f"You ({user_token['username']}) are not a 2FA admin."
+
 
 def user_token(
     token_str: Annotated[str, Security(oauth2_scheme)],
@@ -168,12 +176,13 @@ app = FastAPI()
 prefix = os.environ.get("PREFIX") or "/"
 app.mount(prefix, backend_app)
 
+
 def is_2fa_admin(user_token: dict) -> bool:
-    '''Check if a given user is a 2FA-Admin'''
+    """Check if a given user is a 2FA-Admin"""
 
     groups = user_token["2fa_user_groups"]
     twofa_admin_groups = os.environ["TWOFA_ADMIN_GROUPS"].split(",")
-    return any([g in twofa_admin_groups for g in groups ])
+    return any([g in twofa_admin_groups for g in groups])
 
 
 @backend_app.post(
@@ -191,6 +200,7 @@ def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)])
         resets_by_user={user_id: results_count},
     )
 
+
 @backend_app.post(
     "/token/reset/user/",
     dependencies=[Security(user_token, scopes=OIDC_DEFAULT_SCOPES)],
@@ -206,7 +216,7 @@ def reset_user_tokens(
     if is_2fa_admin(user_token):
         for user_id in body.user_ids:
             reset_count = adapters.keycloak.reset_2fa_token(user_id)
-            results.update({ user_id: reset_count})
+            results.update({user_id: reset_count})
         success = True
         detail = ""
     else:
@@ -241,11 +251,11 @@ def list_users(
         query = ""
 
     if is_2fa_admin(user_token):
-        users, total = adapters.keycloak.list_users(query, page, limit)
+        users, has_next = adapters.keycloak.list_users(query, page, limit)
         success = True
         detail = ""
     else:
-        users, total = 0, 0
+        users, has_next = [], False
         success = False
         detail = _not_2fa_admin_msg(user_token)
 
@@ -253,11 +263,11 @@ def list_users(
         users=users,
         success=success,
         detail=detail,
-        total=total,
-        total_pages=int(total/limit)+1,
+        has_next=has_next,
         page=page,
         limit=limit,
     )
+
 
 @backend_app.get(
     "/whoami",
@@ -270,9 +280,10 @@ def whoami(
 
     return WhoAmIResponse(
         token=user_token,
-        success=True, # FIXME
+        success=True,  # FIXME
         twofa_admin=is_2fa_admin(user_token),
     )
+
 
 @backend_app.get("/backend/openapi.json", include_in_schema=False)
 @backend_app.get("//backend/openapi.json", include_in_schema=False)
