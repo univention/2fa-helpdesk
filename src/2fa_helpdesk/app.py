@@ -237,8 +237,8 @@ def reset_user_tokens(
 )
 def list_users(
     user_token: Annotated[Dict[Any, Any], Security(user_token)],
-    page: Optional[int] = fastapi.Query(0),
-    limit: Optional[int] = fastapi.Query(20),
+    page: Optional[int] = fastapi.Query(1, ge=1),
+    limit: Optional[int] = fastapi.Query(10, ge=1, le=100),
     body: ListUserQuery | None = None,
 ):
 

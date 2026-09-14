@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: AGPL-3.0-only
- * SPDX-FileCopyrightText: 2025 Univention GmbH
+ * SPDX-FileCopyrightText: 2026 Univention GmbH
  */
 
 import { ref, computed } from "vue";
@@ -41,10 +41,11 @@ const translations = {
     adminPageDescription:
       "Auf eine Schaltfläche klicken, um einen Token zurückzusetzen.",
 
-    // Pagination
-    previous: "Zurück",
-    next: "Vor",
-    go: "Gehe zu",
+    // Table footer
+    loadMore: "Mehr laden",
+    loadMoreHint: "(oder verfeinern Sie Ihre Suche, um die Liste einzugrenzen)",
+    noMoreResults: "Keine weiteren Ergebnisse",
+    searchMinChars: "Bitte mindestens 3 Zeichen eingeben",
   },
   [Locale.EN]: {
     // Self-Service Page
@@ -74,10 +75,11 @@ const translations = {
     adminPageTitle: "Two-Factor Authentication Administration",
     adminPageDescription: "Click on one of the buttons to reset a token.",
 
-    // Pagination
-    previous: "Previous",
-    next: "Next",
-    go: "Go to",
+    // Table footer
+    loadMore: "Load more",
+    loadMoreHint: "(or refine your search to narrow the list)",
+    noMoreResults: "No more results",
+    searchMinChars: "Please enter at least 3 characters",
   },
 };
 
