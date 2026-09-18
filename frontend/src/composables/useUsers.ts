@@ -95,7 +95,7 @@ export function useUsers() {
   const loadMore = () => {
     if (searchTooShort.value) return;
     if (!hasNextPage.value || loading.value || loadingMore.value) return;
-    fetchUsers(currentPage.value + 1, true);
+    return fetchUsers(currentPage.value + 1, true);
   };
 
   return {
