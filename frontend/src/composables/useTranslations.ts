@@ -46,7 +46,7 @@ const translations = {
     loadMore: "Mehr laden",
     loadMoreHint: "(oder verfeinern Sie Ihre Suche, um die Liste einzugrenzen)",
     noMoreResults: "Keine weiteren Ergebnisse",
-    searchMinChars: "Bitte mindestens 3 Zeichen eingeben",
+    searchMinChars: "Bitte mindestens 5 Zeichen eingeben",
   },
   [Locale.EN]: {
     // Self-Service Page
@@ -81,7 +81,7 @@ const translations = {
     loadMore: "Load more",
     loadMoreHint: "(or refine your search to narrow the list)",
     noMoreResults: "No more results",
-    searchMinChars: "Please enter at least 3 characters",
+    searchMinChars: "Please enter at least 5 characters",
   },
 };
 

@@ -33,18 +33,32 @@ def type_search(page: Page, query: str):
     page.locator(".search-input").fill(query)
 
 
-def search_for(page: Page, query: str):
-    """Type a search term and wait for its results to arrive.
+def _is_search_request(response, query: str) -> bool:
+    """A POST to list_users carrying this exact query, and no other.
 
-    Waiting matters: the field is debounced, and an unfiltered first page
-    looks exactly like a filtered one from the outside (ten rows, another page
-    available). Without waiting for the request the assertions below can pass
-    against the pre-search list and the test then pages through the wrong set.
+    The page's initial, unfiltered load also POSTs to list_users, so matching
+    on the endpoint alone is not enough: if that first request is still in
+    flight when a test searches, it can satisfy the wait instead of the
+    debounced search request, and the assertions that follow run against the
+    unfiltered list, the exact failure this helper exists to prevent.
     """
-    with page.expect_response(
-        lambda response: "list_users" in response.url
-        and response.request.method == "POST",
-    ):
+    if "list_users" not in response.url or response.request.method != "POST":
+        return False
+    try:
+        body = response.request.post_data_json
+    except Exception:
+        return False
+    return bool(body) and body.get("query") == query
+
+
+def search_for(page: Page, query: str):
+    """Type a search term and wait for its own results to arrive.
+
+    The field is debounced, so waiting matters, and it has to wait for this
+    specific query's request (see _is_search_request) rather than just any
+    list_users call.
+    """
+    with page.expect_response(lambda response: _is_search_request(response, query)):
         type_search(page, query)
 
 
@@ -114,7 +128,7 @@ def test_search_below_minimum_length_is_not_queried(
         admin_page_url: str,
         keycloak_2fa_admin: KeycloakUser,
         keycloak_users: list[KeycloakUser]):
-    """Tests that a search term under three characters is not sent to the backend."""
+    """Tests that a search term under five characters is not sent to the backend."""
     admin_opens_user_table(page, admin_page_url, keycloak_2fa_admin)
 
     search_hint = page.locator(".search-hint")
@@ -122,15 +136,15 @@ def test_search_below_minimum_length_is_not_queried(
 
     expect(search_hint).not_to_be_visible()
 
-    # Two characters are too unspecific to be worth the lookup, so no request
-    # is expected here and there is nothing to wait for.
-    type_search(page, SHARED_USER_QUERY[:2])
+    # One short of the minimum, so no request is expected here and there is
+    # nothing to wait for.
+    type_search(page, SHARED_USER_QUERY[:4])
     expect(search_hint).to_be_visible()
 
     # No request went out, so there is nothing to page through either.
     expect(footer).not_to_be_visible()
 
-    # A third character makes the term searchable again.
+    # The fifth character makes the term searchable again.
     search_for(page, SHARED_USER_QUERY)
     expect(search_hint).not_to_be_visible()
     expect(page.locator("tbody tr")).to_have_count(PAGE_SIZE)

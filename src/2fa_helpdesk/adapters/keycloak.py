@@ -65,7 +65,6 @@ def list_users(query: str, page: int, limit: int) -> tuple[list[User], bool]:
     query_struct = {
         "first": page * limit,
         "max": limit + 1,
-        "briefRepresentation": True,
     }
 
     if query:

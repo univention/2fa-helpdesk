@@ -8,7 +8,7 @@ import axiosInstance from "../services/axios";
 import { getUsersResponseData, type UserData } from "../types";
 
 /** Shortest search term we are willing to send to the backend. */
-export const MIN_SEARCH_LENGTH = 3;
+export const MIN_SEARCH_LENGTH = 5;
 
 export function useUsers() {
   const users = ref<UserData[]>([]);

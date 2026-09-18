@@ -172,12 +172,12 @@ describe("useUsers", () => {
 
       searchQuery.value = "ab";
       await nextTick();
-      searchQuery.value = "abc";
+      searchQuery.value = "abcde";
       await nextTick();
       await vi.waitFor(() => expect(postMock).toHaveBeenCalledTimes(1));
 
       expect(searchTooShort.value).toBe(false);
-      expect(queryOf(postMock, 0)).toBe("abc");
+      expect(queryOf(postMock, 0)).toBe("abcde");
       expect(paramsOf(postMock, 0)).toEqual({ page: 1, limit: PAGE_SIZE });
     });
 
@@ -185,7 +185,7 @@ describe("useUsers", () => {
       postMock.mockResolvedValue(makePage(1, PAGE_SIZE, true));
       const { searchQuery } = useUsers();
 
-      searchQuery.value = "abc";
+      searchQuery.value = "abcde";
       await nextTick();
       await vi.waitFor(() => expect(postMock).toHaveBeenCalledTimes(1));
 
@@ -205,7 +205,7 @@ describe("useUsers", () => {
       expect(currentPage.value).toBe(2);
 
       postMock.mockResolvedValueOnce(makePage(50, 2, false));
-      searchQuery.value = "abc";
+      searchQuery.value = "abcde";
       await nextTick();
       await vi.waitFor(() => expect(users.value).toHaveLength(2));
 
@@ -241,7 +241,7 @@ describe("useUsers", () => {
 
       // A newer search overtakes the still pending first request.
       postMock.mockResolvedValueOnce(makePage(50, 1, false));
-      searchQuery.value = "abc";
+      searchQuery.value = "abcde";
       await nextTick();
       await vi.waitFor(() => expect(users.value).toHaveLength(1));
 
@@ -270,7 +270,7 @@ describe("useUsers", () => {
       await nextTick();
 
       postMock.mockResolvedValueOnce(makePage(50, 2, false));
-      searchQuery.value = "abc";
+      searchQuery.value = "abcde";
       await nextTick();
       await vi.waitFor(() => expect(users.value).toHaveLength(2));
 
