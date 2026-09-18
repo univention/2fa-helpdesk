@@ -9,7 +9,7 @@ export interface UserData {
     lastname: string;
     email: string;
   keycloak_internal_id: string;
-  totp: string | null;
+  totp: boolean | null;
 }
 
 export interface getUsersResponseData {

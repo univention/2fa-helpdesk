@@ -56,9 +56,13 @@
               <td>
                 <SimpleButton
                   :label="t('resetTokenButton')"
-                  variant="secondary"
+                  :variant="user.totp ? 'primary' : 'secondary'"
+                  :disabled="!user.totp"
+                  :title="!user.totp ? t('noTotpConfigured') : undefined"
                   @click="handleButtonClick(user)"
-                  :aria-label="`${user.firstname} ${user.lastname}, ${user.username} : ${t('resetTokenButton')}`"
+                  :aria-label="`${user.firstname} ${user.lastname}, ${user.username} : ${
+                    user.totp ? t('resetTokenButton') : t('noTotpConfigured')
+                  }`"
                 />
               </td>
             </tr>
