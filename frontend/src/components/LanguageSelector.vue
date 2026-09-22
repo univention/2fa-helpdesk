@@ -38,21 +38,22 @@ const changeLanguage = () => {
 <style scoped>
 .language-selector {
   display: inline-block;
-  margin-left: 1rem;
 }
 
 .language-dropdown {
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid var(--font-color-contrast-low);
+  height: var(--control-height);
+  padding: 0 var(--control-padding-inline);
+  border-radius: var(--control-radius);
+  border: 1px solid var(--control-border-color);
   background-color: var(--bgc-inputfield-on-body);
   color: var(--font-color-contrast-high);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: var(--control-font-size);
+  font-weight: 500;
+  transition: border-color 0.2s;
 }
 
-.language-dropdown:focus {
-  outline: none;
-  border-color: var(--color-focus);
+.language-dropdown:focus-visible {
+  outline: 2px solid var(--color-focus);
 }
 </style>

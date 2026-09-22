@@ -4,13 +4,21 @@
 -->
 
 <template>
-  <div class="user-table">
-    <div class="table-header">
-      <TableSearch
-        :value="props.searchQuery ?? ''"
-        @update:value="onSearchInput"
-        :placeholder="t('searchPlaceholder')"
-      />
+  <div
+    class="user-table"
+    :style="{ '--table-header-height': `${tableHeaderHeight}px` }"
+  >
+    <div class="table-header" ref="tableHeader">
+      <div class="search-column">
+        <TableSearch
+          :value="props.searchQuery ?? ''"
+          @update:value="onSearchInput"
+          :placeholder="t('searchPlaceholder')"
+        />
+        <p v-if="searchTooShort" class="search-hint">
+          {{ t("searchMinChars") }}
+        </p>
+      </div>
     </div>
 
     <div class="table-wrapper">
@@ -41,16 +49,20 @@
             </tr>
           </template>
           <template v-else>
-            <tr v-for="user in paginatedUsers" :key="user.username">
+            <tr v-for="user in users" :key="user.keycloak_internal_id">
               <td>{{ user.username }}</td>
               <td>{{ user.firstname }}</td>
               <td>{{ user.lastname }}</td>
               <td>
                 <SimpleButton
                   :label="t('resetTokenButton')"
-                  variant="secondary"
+                  :variant="user.totp ? 'primary' : 'secondary'"
+                  :disabled="!user.totp"
+                  :title="!user.totp ? t('noTotpConfigured') : undefined"
                   @click="handleButtonClick(user)"
-                  :aria-label="`${user.firstname} ${user.lastname}, ${user.username} : ${t('resetTokenButton')}`"
+                  :aria-label="`${user.firstname} ${user.lastname}, ${user.username} : ${
+                    user.totp ? t('resetTokenButton') : t('noTotpConfigured')
+                  }`"
                 />
               </td>
             </tr>
@@ -59,11 +71,11 @@
       </table>
     </div>
 
-    <TablePagination
-      :current-page="currentPage"
-      :total-pages="totalPages ?? 1"
-      @page-change="handlePageChange"
-      :maxPageButtons="7"
+    <TableLoadMore
+      v-if="!loading && !searchTooShort && users?.length"
+      :has-next-page="hasNextPage ?? false"
+      :loading-more="loadingMore"
+      @load-more="emit('load-more')"
     />
 
     <Modal :isOpen="isModalOpen" @close="closeModal">
@@ -100,9 +112,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { type UserData } from "../../types";
-import TablePagination from "./TablePagination.vue";
+import TableLoadMore from "./TableLoadMore.vue";
 import TableSearch from "./TableSearch.vue";
 import SimpleButton from "../Button.vue";
 import Modal from "../Modal.vue";
@@ -118,16 +130,16 @@ const props = withDefaults(
     title?: string;
     users?: UserData[];
     searchQuery?: string;
-    pageSize?: number;
+    searchTooShort?: boolean;
     loading?: boolean;
+    loadingMore?: boolean;
     language?: string;
-    currentPage?: number;
-    totalPages?: number;
-    fetchUsers: (page: number) => void;
+    hasNextPage?: boolean;
   }>(),
   {
-    pageSize: 20,
     loading: false,
+    loadingMore: false,
+    searchTooShort: false,
     language: Locale.DE,
   }
 );
@@ -138,28 +150,35 @@ const t = (key: keyof Translations[Locale]) => tComputed.value(key);
 
 const emit = defineEmits<{
   (e: "update:searchQuery", val: string): void;
+  (e: "load-more"): void;
 }>();
 
 function onSearchInput(val: string) {
   emit("update:searchQuery", val);
 }
-const currentPage = ref(props.currentPage || 1);
+// The column row sticks directly below the search header, whose height
+// changes when the "minimum characters" hint appears. Measuring it keeps the
+// two from overlapping or leaving a gap between them.
+const tableHeader = ref<HTMLElement | null>(null);
+const tableHeaderHeight = ref(0);
+let headerResizeObserver: ResizeObserver | null = null;
+
+onMounted(() => {
+  if (!tableHeader.value) return;
+  headerResizeObserver = new ResizeObserver(([entry]) => {
+    tableHeaderHeight.value = (entry.target as HTMLElement).offsetHeight;
+  });
+  headerResizeObserver.observe(tableHeader.value);
+});
+
+onBeforeUnmount(() => {
+  headerResizeObserver?.disconnect();
+  headerResizeObserver = null;
+});
+
 const isModalOpen = ref(false);
 const selectedUser = ref<UserData | null>(null);
 const isTokenResetting = ref(false);
-
-const totalPages = computed(() => {
-  return props.totalPages;
-});
-
-const paginatedUsers = computed(() => {
-  return props.users;
-});
-
-const handlePageChange = (page: number) => {
-  currentPage.value = page;
-  props.fetchUsers(page);
-};
 
 const handleButtonClick = (user: UserData) => {
   selectedUser.value = user;
@@ -201,14 +220,36 @@ const resetToken = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  position: sticky;
+  top: var(--module-header-height, 0px);
+  z-index: 2;
+  background-color: var(--bgc-content-body);
+}
+
+.search-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.search-hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--font-color-contrast-middle);
 }
 
 .table-wrapper {
-  overflow-x: auto;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   margin-bottom: 2px;
+}
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
 }
 
 table {
@@ -219,7 +260,6 @@ table {
 
 thead {
   background-color: var(--bgc-table-row-bg);
-  border-bottom: 2px solid var(--bgc-table-seperator);
 }
 
 th {
@@ -228,6 +268,13 @@ th {
   font-weight: 600;
   color: var(--font-color-contrast-high);
   white-space: nowrap;
+  background-color: var(--bgc-table-row-bg);
+  position: sticky;
+  top: calc(
+    var(--module-header-height, 0px) + var(--table-header-height, 0px)
+  );
+  z-index: 1;
+  box-shadow: inset 0 -2px 0 var(--bgc-table-seperator);
 }
 
 td {
@@ -263,7 +310,7 @@ tr {
 .no-results {
   padding: 2rem 0;
   text-align: center;
-  color: var(---font-color-contrast-middle);
+  color: var(--font-color-contrast-middle);
 }
 
 th:nth-child(1),

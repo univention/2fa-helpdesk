@@ -13,7 +13,11 @@
 :root {
   --bgc-table-seperator: var(--bgc-content-body);
   --bgc-table-row-bg: var(--bgc-content-container);
-  --bgc-pagination-button-bg: var(--bgc-content-container);
+  --control-height: 2.5rem;
+  --control-padding-inline: 0.75rem;
+  --control-radius: 8px;
+  --control-border-color: var(--font-color-contrast-low);
+  --control-font-size: 0.9rem;
 }
 /* ===== BASE STYLES ===== */
 *,
@@ -83,6 +87,6 @@ button:focus-visible {
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }

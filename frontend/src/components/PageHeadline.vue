@@ -30,7 +30,7 @@ withDefaults(
 
 <style scoped>
 .headline {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   font-weight: 600;
   line-height: 1.2;
   color: inherit;

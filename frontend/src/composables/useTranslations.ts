@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: AGPL-3.0-only
- * SPDX-FileCopyrightText: 2025 Univention GmbH
+ * SPDX-FileCopyrightText: 2026 Univention GmbH
  */
 
 import { ref, computed } from "vue";
@@ -26,6 +26,7 @@ const translations = {
     firstname: "Vorname",
     lastname: "Nachname",
     actions: "Aktionen",
+    noTotpConfigured: "Kein 2FA-Token konfiguriert",
     loading: "Lädt...",
     noResults: "Keine Ergebnisse gefunden",
     action: "Aktion",
@@ -41,10 +42,11 @@ const translations = {
     adminPageDescription:
       "Auf eine Schaltfläche klicken, um einen Token zurückzusetzen.",
 
-    // Pagination
-    previous: "Zurück",
-    next: "Vor",
-    go: "Gehe zu",
+    // Table footer
+    loadMore: "Mehr laden",
+    loadMoreHint: "(oder verfeinern Sie Ihre Suche, um die Liste einzugrenzen)",
+    noMoreResults: "Keine weiteren Ergebnisse",
+    searchMinChars: "Bitte mindestens 5 Zeichen eingeben",
   },
   [Locale.EN]: {
     // Self-Service Page
@@ -60,6 +62,7 @@ const translations = {
     firstname: "First Name",
     lastname: "Last Name",
     actions: "Actions",
+    noTotpConfigured: "No 2FA token configured",
     loading: "Loading...",
     noResults: "No results found",
     action: "Action",
@@ -74,10 +77,11 @@ const translations = {
     adminPageTitle: "Two-Factor Authentication Administration",
     adminPageDescription: "Click on one of the buttons to reset a token.",
 
-    // Pagination
-    previous: "Previous",
-    next: "Next",
-    go: "Go to",
+    // Table footer
+    loadMore: "Load more",
+    loadMoreHint: "(or refine your search to narrow the list)",
+    noMoreResults: "No more results",
+    searchMinChars: "Please enter at least 5 characters",
   },
 };
 

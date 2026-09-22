@@ -6,14 +6,16 @@ import keycloak
 import fastapi
 import typing
 from pydantic import BaseModel
-class User(BaseModel):
 
+
+class User(BaseModel):
     keycloak_internal_id: str
     username: str
     email: typing.Optional[str] = None
     firstname: typing.Optional[str] = None
     lastname: typing.Optional[str] = None
     totp: typing.Optional[bool] = False
+
 
 def _get_kc_admin():
     try:
@@ -29,16 +31,18 @@ def _get_kc_admin():
         return kc_admin
     except KeyError as e:
         raise fastapi.HTTPException(
-            status_code=500, detail=f"Missing required Environment: {str(e)}",
+            status_code=500,
+            detail=f"Missing required Environment: {str(e)}",
         )
     except Exception as e:
         raise fastapi.HTTPException(
-            status_code=500, detail=f"Keycloak connection error: {type(e)} - {str(e)}",
+            status_code=500,
+            detail=f"Keycloak connection error: {type(e)} - {str(e)}",
         )
 
 
 def reset_2fa_token(user_id: str) -> dict:
-    '''Reset the 2FA token for the give user'''
+    """Reset the 2FA token for the give user"""
 
     kc_admin = _get_kc_admin()
 
@@ -50,46 +54,37 @@ def reset_2fa_token(user_id: str) -> dict:
 
     return len(otp_creds)
 
-def list_users(query: str, page: int, limit: int) -> typing.Tuple[list[User], int]:
-    '''List users based on a query (paginated)'''
 
-    # FIXME: frontend current 1-indexes pages, is that correct?
+def list_users(query: str, page: int, limit: int) -> tuple[list[User], bool]:
+    """List users based on a query (paginated)."""
+
     page -= 1
 
     kc_admin = _get_kc_admin()
 
-    # generate paginated query #
-    query_struct_with_pages = {
-        "search" : query or "*@*",
-        "first": page*limit,
-        "max": limit,
+    query_struct = {
+        "first": page * limit,
+        "max": limit + 1,
     }
 
-    # generate user count query #
-    query_struct_user_count = {
-        "search" : query or "*@*",
-        "briefRepresentation": True,
-    }
+    if query:
+        query_struct["search"] = f"*{query}*"  # For proper 'contains' search
 
-    user_dicts = kc_admin.get_users(query=query_struct_with_pages)
+    user_dicts = kc_admin.get_users(query=query_struct)
 
-    # FIXME broken on keycloak-side
-    # total_for_this_query = kc_admin.users_count(query=query_struct)
-    total_for_this_query = len(kc_admin.get_users(query_struct_user_count))
+    has_next = len(user_dicts) > limit
+    user_dicts = user_dicts[:limit]
 
-    # generate fastapi objects from users #
-    users = []
-    for kc_user in user_dicts:
-
-        users.append(
-            User(
-                keycloak_internal_id=kc_user.get("id"),
-                username=kc_user.get('username'),
-                email=kc_user.get('email'),
-                firstname=kc_user.get('firstName'),
-                lastname=kc_user.get('lastName'),
-                totp=kc_user.get('totp'),
-            ),
+    users = [
+        User(
+            keycloak_internal_id=kc_user.get("id"),
+            username=kc_user.get("username"),
+            email=kc_user.get("email"),
+            firstname=kc_user.get("firstName"),
+            lastname=kc_user.get("lastName"),
+            totp=kc_user.get("totp"),
         )
+        for kc_user in user_dicts
+    ]
 
-    return users, total_for_this_query
+    return users, has_next

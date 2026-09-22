@@ -175,12 +175,13 @@ def _create_kc_user(
     keycloak_client_id,
     keycloak_admin: KeycloakAdmin,
     fake,
+    email_domain: str = "example.com",
 ) -> KeycloakUser:
     first_name = fake.first_name()
     last_name = fake.last_name()
     username = fake.user_name()
     password = fake.password()
-    email = f"{username}@example.com"
+    email = f"{username}@{email_domain}"
 
     kc_payload = {
         "email": email,
@@ -258,6 +259,36 @@ def keycloak_user(
         keycloak_admin.delete_user(user.id)
     except Exception as e:
         print(f"Failed to delete created keycloak user: {e}")
+
+
+@pytest.fixture
+def keycloak_users(
+    fake,
+    keycloak_admin,
+    keycloak_server_url,
+    keycloak_realm_name,
+    keycloak_client_id,
+):
+    users = [
+        _create_kc_user(
+            ["2fa-users"],
+            keycloak_server_url,
+            keycloak_realm_name,
+            keycloak_client_id,
+            keycloak_admin,
+            fake,
+            email_domain="multiple-users.com",  # Distinct domain to avoid data conflicts
+        )
+        for _ in range(25)
+    ]
+
+    yield users
+
+    for user in users:
+        try:
+            keycloak_admin.delete_user(user.id)
+        except Exception as e:
+            print(f"Failed to delete created keycloak user: {e}")
 
 
 @pytest.fixture
@@ -351,32 +382,36 @@ def keycloak_user_with_totp(
 
     return keycloak_user
 
+
 @pytest.fixture
 def known_keycloak_user_id():
     """Find the user 'test' in the realm export file and return their ID."""
     realm_file_path = "tests/integration/data/export/realm-export-with-user.json"
 
-    with open(realm_file_path, 'r') as f:
+    with open(realm_file_path, "r") as f:
         realms = json.load(f)
 
     # Look through all realms for the user 'test'
     for realm in realms:
-        if 'users' in realm:
-            for user in realm['users']:
+        if "users" in realm:
+            for user in realm["users"]:
                 if user.get("username") == "test":
                     return user["id"]
 
     raise ValueError("User 'test' not found in realm export file")
+
 
 @pytest.fixture
 def frontend_base_url():
     """Fixture to provide the frontend base URL."""
     return os.getenv("FRONTEND_URL", "http://localhost:3000")
 
+
 @pytest.fixture
 def self_service_url(frontend_base_url: str):
     """Fixture to provide the self-service URL."""
     return f"{frontend_base_url}/univention/2fa/self-service"
+
 
 @pytest.fixture
 def admin_page_url(frontend_base_url: str):
@@ -391,11 +426,13 @@ def self_service_page(page: Page, self_service_url: str):
     page.goto(self_service_url)
     return page
 
+
 @pytest.fixture
 def admin_page(page: Page, admin_page_url: str):
     """Fixture to provide the admin page."""
     page.set_default_timeout(10000)
     page.goto(admin_page_url)
     return page
+
 
 expect.set_options(timeout=10_000)

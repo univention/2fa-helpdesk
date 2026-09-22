@@ -4,7 +4,7 @@
 -->
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeUnmount } from "vue";
 import {
   Locale,
   Translations,
@@ -27,15 +27,22 @@ const t = (key: keyof Translations[Locale]) => tComputed.value(key);
 const translatedPlaceholder = computed(() => {
   return props.placeholder || t("searchPlaceholder");
 });
+// Trailing debounce on purpose: the search runs against LDAP, so a query
+// should only be issued once typing comes to rest, never on the prefixes
+// passed through on the way there.
 const debouncedEmit = debounce((val: string) => {
   emit("update:value", val);
-}, 300);
+}, 400);
 
 // Emit updates on user input with debounce
 function onInput(event: Event) {
   const target = event.target as HTMLInputElement;
   debouncedEmit(target.value);
 }
+
+onBeforeUnmount(() => {
+  debouncedEmit.cancel();
+});
 </script>
 
 <template>
@@ -71,31 +78,32 @@ function onInput(event: Event) {
 .search-container {
   position: relative;
   width: 100%;
-  max-width: 354px;
-  margin-bottom: 1rem;
+  max-width: 22rem;
 }
 
 .search-input {
   width: 100%;
-  box-sizing: border-box;
   display: block;
-  padding: 0.5rem 0.75rem;
+  height: var(--control-height);
+  padding: 0 var(--control-padding-inline);
+  /* Room for the magnifier sitting inside the field. */
   padding-right: 2rem;
-  border: 1px solid var(--font-color-contrast-low);
+  border: 1px solid var(--control-border-color);
   background-color: var(--bgc-inputfield-on-body);
-  border-radius: 8px;
+  border-radius: var(--control-radius);
+  font-size: var(--control-font-size);
   font-weight: 500;
   outline: none;
   transition: border-color 0.2s;
   color: var(--font-color-contrast-high);
 }
 
-.search-input:focus {
+.search-input:focus-visible {
   outline: 2px solid var(--color-focus);
 }
 
 .search-input::placeholder {
-  color: var(---font-color-contrast-medium);
+  color: var(--font-color-contrast-middle);
 }
 .search-icon {
   display: block;
