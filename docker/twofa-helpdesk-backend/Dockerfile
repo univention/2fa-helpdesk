@@ -25,19 +25,23 @@ WORKDIR /app
 
 COPY ./src/pyproject.toml ./src/uv.lock ./
 
-# The project is not packaged, so this installs the dependencies and nothing
-# else. The sources are copied in below and run from /app/src.
+# Dependencies first, so editing a source file does not reinstall them.
 RUN --mount=type=cache,target=/root/.cache \
-    uv sync --locked --no-dev \
-    && uv export --no-dev --frozen --no-hashes -o /app/requirements.txt
+    uv sync --locked --no-dev --no-install-project
 
-COPY ./src ./src
+COPY ./src/twofa_helpdesk ./twofa_helpdesk
+
+# --no-editable puts a built copy of the package inside the venv, so the final
+# stage needs nothing but /app/.venv.
+RUN --mount=type=cache,target=/root/.cache \
+    uv sync --locked --no-dev --no-editable \
+    && uv export --no-dev --frozen --no-emit-project --no-hashes -o /app/requirements.txt
 
 # Verify the app imports while a shell is still available; the final stage has
 # none. app.py builds its OIDC settings at import time, hence the three
 # variables. Nothing contacts those URLs, PyJWKClient fetches lazily.
 RUN OIDC_HOST=http://localhost OIDC_REALM=verify OIDC_CLIENT_ID=verify \
-    /app/.venv/bin/python -c 'import sys; sys.path.insert(0, "/app/src/2fa_helpdesk"); import app'
+    /app/.venv/bin/python -c 'import twofa_helpdesk.app'
 
 ###############################################
 # Stage 2: final image
@@ -53,7 +57,6 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1
 
 COPY --from=builder /app/.venv /app/.venv
-COPY --from=builder /app/src /app/src
 COPY --from=builder /app/requirements.txt /app/requirements.txt
 
 WORKDIR /app
@@ -61,5 +64,5 @@ WORKDIR /app
 # The base image ships an ENTRYPOINT of its own, which would swallow CMD.
 ENTRYPOINT []
 
-CMD ["/app/.venv/bin/uvicorn", "--app-dir", "/app/src/2fa_helpdesk", "app:app", \
+CMD ["/app/.venv/bin/uvicorn", "twofa_helpdesk.app:app", \
      "--proxy-headers", "--forwarded-allow-ips", "*", "--port", "8080", "--host", "0.0.0.0"]
