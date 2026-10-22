@@ -135,13 +135,11 @@ Prerequisites:
 
 * Python 3.13
 
-First load the pipenv environment:
+First load the uv environment:
 
 ```shell
-cd docker/testrunner
-pipenv sync
-pipenv shell
-cd -
+uv sync --project docker/testrunner
+source docker/testrunner/.venv/bin/activate
 ```
 
 The execute the tests:
@@ -215,13 +213,11 @@ Prerequisites:
 
 * Python 3.13
 
-First load the pipenv environment:
+First load the uv environment:
 
 ```shell
-cd docker/testrunner
-pipenv sync
-pipenv shell
-cd -
+uv sync --project docker/testrunner
+source docker/testrunner/.venv/bin/activate
 ```
 
 The execute the tests:
