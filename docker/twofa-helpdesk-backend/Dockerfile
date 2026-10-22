@@ -37,17 +37,11 @@ RUN --mount=type=cache,target=/root/.cache \
     uv sync --locked --no-dev --no-editable \
     && uv export --no-dev --frozen --no-emit-project --no-hashes -o /app/requirements.txt
 
-# Verify the app imports while a shell is still available; the final stage has
-# none. app.py builds its OIDC settings at import time, hence the three
-# variables. Nothing contacts those URLs, PyJWKClient fetches lazily.
-RUN OIDC_HOST=http://localhost OIDC_REALM=verify OIDC_CLIENT_ID=verify \
-    /app/.venv/bin/python -c 'import twofa_helpdesk.app'
-
 ###############################################
 # Stage 2: final image
 #
-# Distroless: no shell, so no RUN steps here. The user and the CA bundle come
-# from the base image.
+# Distroless: no shell, so every instruction here is exec form. The user and
+# the CA bundle come from the base image.
 FROM ${UCS_DISTROLESS_IMAGE}:${UCS_DISTROLESS_IMAGE_TAG} AS runtime
 
 EXPOSE 8080
@@ -60,6 +54,13 @@ COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app/requirements.txt /app/requirements.txt
 
 WORKDIR /app
+
+# Verify the app imports in the image that ships. app.py builds its OIDC
+# settings at import time, hence the three variables. Nothing contacts those
+# URLs, PyJWKClient fetches lazily. hadolint shellchecks the Python as sh.
+# hadolint ignore=SC1072
+RUN ["python3.13", "-c", \
+     "import os; os.environ.update(OIDC_HOST='http://localhost', OIDC_REALM='verify', OIDC_CLIENT_ID='verify'); import twofa_helpdesk.app"]
 
 # The base image ships an ENTRYPOINT of its own, which would swallow CMD.
 ENTRYPOINT []
