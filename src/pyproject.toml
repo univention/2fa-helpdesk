@@ -12,20 +12,18 @@ license = {text = "AGPL-3.0-only"}
 requires-python = ">=3.11"
 
 dependencies = [
-  # CVE floor, pulled in by python-keycloak through jwcrypto.
+  # CVE floor; PyJWT needs it directly for RS256 verification
   "cryptography>=50.0.0",
   "fastapi<1.0.0,>=0.141.0",
   # Switches uvicorn off the pure-Python h11 parser, as in
   # provisioning@jlohmer/small-sbom -- do not drop.
   "httptools<1.0.0,>=0.8.0",
+  "httpx<1.0.0,>=0.28.1",
   "pydantic<3.0.0,>=2.13.4",
   "pydantic-settings<3.0.0,>=2.14.2",
   "pyjwt<3.0.0,>=2.13.0",
-  "python-keycloak<8.0.0,>=7.1.1",
   # CVE floor, pulled in by fastapi.
   "starlette>=1.3.1",
-  # CVE floor, pulled in by python-keycloak through requests.
-  "urllib3>=2.7.0",
   "uvicorn<1.0.0,>=0.52.0",
   "uvloop>=0.22.1",
 ]
