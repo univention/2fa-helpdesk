@@ -30,11 +30,21 @@ dependencies = [
   "uvloop>=0.22.1",
 ]
 
+[dependency-groups]
+dev = [
+  "pytest>=8.4.2",
+  "pytest-httpserver>=1.1.5",
+]
+
 [tool.uv]
 # The import package directory is "2fa_helpdesk", which no Python identifier can
 # name, so there is nothing to build a wheel from yet. uv installs the
 # dependencies only and the Dockerfile copies the sources.
 package = false
+
+[tool.pytest.ini_options]
+# The adapters are imported flat, the way uvicorn runs them.
+pythonpath = ["2fa_helpdesk"]
 
 [tool.ruff]
 line-length = 100
