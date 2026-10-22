@@ -5,7 +5,6 @@ import os
 from typing import Annotated, Any, Dict, List, Optional
 
 import adapters.keycloak
-import adapters.udm
 import fastapi
 import jwt
 import pydantic
