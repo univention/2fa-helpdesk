@@ -4,7 +4,6 @@ import logging
 import os
 from typing import Annotated, Any, Dict, List, Optional
 
-import adapters.keycloak
 import fastapi
 import jwt
 import pydantic
@@ -13,6 +12,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
+
+from twofa_helpdesk.adapters import keycloak
 
 
 class ResetUsersRequest(BaseModel):
@@ -42,7 +43,7 @@ class WhoAmIResponse(BaseModel):
 
 
 class ListUserResponse(BaseModel):
-    users: List[adapters.keycloak.User]
+    users: List[keycloak.User]
     success: bool
     detail: str
     has_next: bool
@@ -192,7 +193,7 @@ def is_2fa_admin(user_token: dict) -> bool:
 def reset_own_token(user_token: Annotated[Dict[Any, Any], Security(user_token)]):
 
     user_id = user_token["sub"]
-    results_count = adapters.keycloak.reset_2fa_token(user_id)
+    results_count = keycloak.reset_2fa_token(user_id)
     return ResetResponse(
         success=True,
         detail="",
@@ -214,7 +215,7 @@ def reset_user_tokens(
     success = False
     if is_2fa_admin(user_token):
         for user_id in body.user_ids:
-            reset_count = adapters.keycloak.reset_2fa_token(user_id)
+            reset_count = keycloak.reset_2fa_token(user_id)
             results.update({user_id: reset_count})
         success = True
         detail = ""
@@ -250,7 +251,7 @@ def list_users(
         query = ""
 
     if is_2fa_admin(user_token):
-        users, has_next = adapters.keycloak.list_users(query, page, limit)
+        users, has_next = keycloak.list_users(query, page, limit)
         success = True
         detail = ""
     else:

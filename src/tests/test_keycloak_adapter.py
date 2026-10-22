@@ -3,7 +3,7 @@
 
 import pytest
 
-import adapters.keycloak as keycloak
+from twofa_helpdesk.adapters import keycloak
 
 REALM = "test-realm"
 
