@@ -18,7 +18,7 @@ dependencies = [
   # Switches uvicorn off the pure-Python h11 parser, as in
   # provisioning@jlohmer/small-sbom -- do not drop.
   "httptools<1.0.0,>=0.8.0",
-  "httpx<1.0.0,>=0.28.1",
+  "httpx2<3.0.0,>=2.13.0",
   "pydantic<3.0.0,>=2.13.4",
   "pydantic-settings<3.0.0,>=2.14.2",
   "pyjwt<3.0.0,>=2.13.0",

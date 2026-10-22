@@ -5,7 +5,7 @@ import os
 import typing
 
 import fastapi
-import httpx
+import httpx2
 from pydantic import BaseModel
 
 
@@ -18,7 +18,7 @@ class User(BaseModel):
     totp: typing.Optional[bool] = False
 
 
-def _get_kc_admin() -> httpx.Client:
+def _get_kc_admin() -> httpx2.Client:
     """Return a client for the admin API of the configured realm, holding a fresh token"""
 
     try:
@@ -40,7 +40,7 @@ def _get_kc_admin() -> httpx.Client:
     verify = os.environ.get("KEYCLOAK_VERIFY_SSL", "true").lower() not in ("0", "false", "no")
 
     try:
-        with httpx.Client(verify=verify) as client:
+        with httpx2.Client(verify=verify) as client:
             response = client.post(
                 f"{server_url}/realms/{admin_realm}/protocol/openid-connect/token",
                 data=credentials,
@@ -53,7 +53,7 @@ def _get_kc_admin() -> httpx.Client:
             detail=f"Keycloak connection error: {type(e)} - {str(e)}",
         )
 
-    return httpx.Client(
+    return httpx2.Client(
         base_url=f"{server_url}/admin/realms/{realm}",
         headers={"Authorization": f"Bearer {token}"},
         verify=verify,
