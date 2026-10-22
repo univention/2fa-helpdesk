@@ -3,10 +3,15 @@
 
 import os
 import typing
+from urllib.parse import quote
 
 import fastapi
 import httpx2
 from pydantic import BaseModel
+
+
+def urlencode(string: str) -> str:
+    return quote(string, safe="")
 
 
 class User(BaseModel):
@@ -42,7 +47,7 @@ def _get_kc_admin() -> httpx2.Client:
     try:
         with httpx2.Client(verify=verify) as client:
             response = client.post(
-                f"{server_url}/realms/{admin_realm}/protocol/openid-connect/token",
+                f"{server_url}/realms/{urlencode(admin_realm)}/protocol/openid-connect/token",
                 data=credentials,
             )
             response.raise_for_status()
@@ -54,7 +59,7 @@ def _get_kc_admin() -> httpx2.Client:
         )
 
     return httpx2.Client(
-        base_url=f"{server_url}/admin/realms/{realm}",
+        base_url=f"{server_url}/admin/realms/{urlencode(realm)}",
         headers={"Authorization": f"Bearer {token}"},
         verify=verify,
     )
@@ -64,12 +69,15 @@ def reset_2fa_token(user_id: str) -> int:
     """Reset the 2FA token for the give user"""
 
     with _get_kc_admin() as kc_admin:
-        response = kc_admin.get(f"/users/{user_id}/credentials")
+        response = kc_admin.get(f"/users/{urlencode(user_id)}/credentials")
         response.raise_for_status()
 
         otp_creds = [i for i in response.json() if i["type"] == "otp"]
         for cred in otp_creds:
-            kc_admin.delete(f"/users/{user_id}/credentials/{cred['id']}").raise_for_status()
+            response = kc_admin.delete(
+                f"/users/{urlencode(user_id)}/credentials/{urlencode(cred['id'])}",
+            )
+            response.raise_for_status()
 
     return len(otp_creds)
 

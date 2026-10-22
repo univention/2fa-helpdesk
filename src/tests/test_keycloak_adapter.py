@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2026 Univention GmbH
 
+import httpx2
 import pytest
 
 from twofa_helpdesk.adapters import keycloak
@@ -45,3 +46,17 @@ def test_reset_2fa_token_deletes_only_otp_credentials(keycloak_stub):
     ).respond_with_data("", status=204)
 
     assert keycloak.reset_2fa_token("user0") == 1
+
+
+def test_reset_2fa_token_keeps_the_user_id_inside_the_realm(keycloak_stub):
+    other_realm = "/admin/realms/master/users/admin/credentials"
+    keycloak_stub.expect_request(other_realm).respond_with_json([{"id": "otp0", "type": "otp"}])
+    keycloak_stub.expect_request(
+        f"{other_realm}/otp0",
+        method="DELETE",
+    ).respond_with_data("", status=204)
+
+    with pytest.raises(httpx2.HTTPStatusError):
+        keycloak.reset_2fa_token("../../master/users/admin")
+
+    assert all(request.method != "DELETE" for request, _ in keycloak_stub.log)
