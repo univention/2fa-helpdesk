@@ -31,6 +31,12 @@ RUN --mount=type=cache,target=/root/.cache \
 
 COPY ./src ./src
 
+# Verify the app imports while a shell is still available; the final stage has
+# none. app.py builds its OIDC settings at import time, hence the three
+# variables. Nothing contacts those URLs, PyJWKClient fetches lazily.
+RUN OIDC_HOST=http://localhost OIDC_REALM=verify OIDC_CLIENT_ID=verify \
+    /app/.venv/bin/python -c 'import sys; sys.path.insert(0, "/app/src/2fa_helpdesk"); import app'
+
 ###############################################
 # Stage 2: final image
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS runtime
