@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+[project]
+name = "twofa-helpdesk-testrunner"
+version = "0.1.0"
+description = "Integration and end-to-end test dependencies for the 2FA Helpdesk"
+authors = [
+  {name = "Univention GmbH", email = "packages@univention.de"},
+]
+license = {text = "AGPL-3.0-only"}
+requires-python = "==3.13.*"
+
+dependencies = [
+  "beautifulsoup4",
+  "faker",
+  "pyotp",
+  "pytest",
+  "pytest-playwright",
+  "python-keycloak",
+  "requests",
+]
+
+[tool.uv]
+# Nothing to build here, the tests are mounted in at /app.
+package = false

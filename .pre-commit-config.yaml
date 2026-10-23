@@ -33,8 +33,23 @@ repos:
         # Whitespace is specific syntax in markdown
         exclude: '.*\.md$'
 
+  - repo: "https://github.com/astral-sh/uv-pre-commit"
+    rev: "0.12.13"
+    hooks:
+      # "Fail when uv.lock does not match pyproject.toml"
+      - id: "uv-lock"
+        name: "uv-lock (backend)"
+        args:
+          - "--project"
+          - "src"
+      - id: "uv-lock"
+        name: "uv-lock (testrunner)"
+        args:
+          - "--project"
+          - "docker/testrunner"
+
   - repo: "https://github.com/compilerla/conventional-pre-commit"
-    rev: "v2.1.1"
+    rev: "v4.4.0"
     hooks:
       - id: "conventional-pre-commit"
         stages: ["commit-msg"]

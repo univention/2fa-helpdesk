@@ -1,70 +1,69 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # SPDX-FileCopyrightText: 2024-2026 Univention GmbH
 
-ARG UCS_BASE_IMAGE_TAG=5.3.0-build.20261008@sha256:52175e1efb9452119ed135126afd931d4e2361bdc69bded46101e35fa27ae0d0
-ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base
-ARG POETRY_VERSION=2.4.1
+ARG UCS_BASE_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-base-python
+ARG UCS_BASE_IMAGE_TAG=5.3.0-build.20261022@sha256:ea444eeecf1681d2ca6e599a08779b3e078a29311f74678b2a3245474c564f61
+ARG UCS_DISTROLESS_IMAGE=gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-distroless-python
+ARG UCS_DISTROLESS_IMAGE_TAG=5.3.0-build.20261022@sha256:f65cefc852c76dfd42ad0c1ad0f6885357e62899f51aa421b6f89eef550b97cf
 
+###############################################
+# Stage 1: build the virtual environment
+#
+# Built on ucs-base-python so the venv is made by the same CPython minor
+# version the distroless final stage runs.
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS builder
 
-RUN apt-get -qq update \
-    && apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    curl \
-    python3-pip \
-    python3-univention-directory-manager-rest-client \
-    python3-venv \
-    && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
+COPY --from=ghcr.io/astral-sh/uv:0.12.13@sha256:b485bd65cc2cf1c9a93b3554012c9c3778cf7b1b5fd3d3096ce9e1226c97e1e6 /uv /usr/local/bin/uv
 
-ARG POETRY_VERSION
-ENV POETRY_HOME=/opt/poetry \
-    POETRY_VERSION=${POETRY_VERSION}
-RUN python3 -m venv "$POETRY_HOME" \
-    && "$POETRY_HOME"/bin/pip install --no-cache-dir poetry==${POETRY_VERSION}
-ENV PATH="$POETRY_HOME/bin:$PATH"
-
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PYTHON_DOWNLOADS=never \
+    UV_PYTHON=python3.13 \
+    UV_PROJECT_ENVIRONMENT=/app/.venv
 
 WORKDIR /app
 
-COPY ./src/poetry.lock ./src/pyproject.toml ./
+COPY ./src/pyproject.toml ./src/uv.lock ./
 
-RUN --mount=type=cache,target=$POETRY_CACHE_DIR \
-    poetry install --only=main --no-root
+# Dependencies first, so editing a source file does not reinstall them.
+RUN --mount=type=cache,target=/root/.cache \
+    uv sync --locked --no-dev --no-install-project
 
-COPY ./src ./src
+COPY ./src/twofa_helpdesk ./twofa_helpdesk
 
-RUN --mount=type=cache,target=$POETRY_CACHE_DIR \
-    poetry install --only-root
+# --no-editable puts a built copy of the package inside the venv, so the final
+# stage needs nothing but /app/.venv.
+RUN --mount=type=cache,target=/root/.cache \
+    uv sync --locked --no-dev --no-editable \
+    && uv export --no-dev --frozen --no-emit-project --no-hashes -o /app/requirements.txt
 
-FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS runtime
+###############################################
+# Stage 2: final image
+#
+# Distroless: no shell, so every instruction here is exec form. The user and
+# the CA bundle come from the base image.
+FROM ${UCS_DISTROLESS_IMAGE}:${UCS_DISTROLESS_IMAGE_TAG} AS runtime
 
-RUN apt-get -qq update \
-    && apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    python3 \
-    python3-univention-directory-manager-rest-client \
-    && rm -fr /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-ARG USER=fastapi
-ARG UID=1000
-ARG GID=1000
-RUN groupadd -g ${GID} ${USER} \
-    && useradd -l -m -u ${UID} -g ${GID} -s /bin/bash ${USER}
-
-WORKDIR /app
-
-COPY --from=builder --chown=root:root --chmod=755 /app/.venv /app/.venv
-COPY --from=builder --chown=root:root --chmod=755 /app/src /app/src
+EXPOSE 8080
 
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONPATH="/app/src:/usr/lib/python3/dist-packages"
+    PYTHONDONTWRITEBYTECODE=1
 
-USER ${USER}
+COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /app/requirements.txt /app/requirements.txt
 
-WORKDIR /app/src/2fa_helpdesk
+WORKDIR /app
 
-CMD ["uvicorn", "app:app", "--proxy-headers", "--forwarded-allow-ips", "*", "--port", "8080", "--host", "0.0.0.0"]
+# Verify the app imports in the image that ships. app.py builds its OIDC
+# settings at import time, hence the three variables. Nothing contacts those
+# URLs, PyJWKClient fetches lazily. hadolint shellchecks the Python as sh.
+# hadolint ignore=SC1072
+RUN ["python3.13", "-c", \
+     "import os; os.environ.update(OIDC_HOST='http://localhost', OIDC_REALM='verify', OIDC_CLIENT_ID='verify'); import twofa_helpdesk.app"]
+
+# The base image ships an ENTRYPOINT of its own, which would swallow CMD.
+ENTRYPOINT []
+
+CMD ["/app/.venv/bin/uvicorn", "twofa_helpdesk.app:app", \
+     "--proxy-headers", "--forwarded-allow-ips", "*", "--port", "8080", "--host", "0.0.0.0"]
