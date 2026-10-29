@@ -181,21 +181,12 @@ importers:
       axios:
         specifier: 1.21.0
         version: 1.21.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
-      from:
-        specifier: 0.1.7
-        version: 0.1.7
-      import:
-        specifier: 0.0.6
-        version: 0.0.6
       keycloak-js:
         specifier: 26.2.5
         version: 26.2.5
       lodash-es:
         specifier: 4.18.1
         version: 4.18.1
-      path:
-        specifier: 0.12.7
-        version: 0.12.7
       pinia:
         specifier: 4.1.0
         version: 4.1.0(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.44(typescript@6.0.3))
@@ -2352,9 +2343,6 @@ packages:
     resolution: {integrity: sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==}
     engines: {node: '>=0.4.x'}
 
-  from@0.1.7:
-    resolution: {integrity: sha512-twe20eF1OxVxp/ML/kq2p1uc6KvFK/+vs8WjEbeKmV2He22MKm7YF2ANIt+EOqhJ5L3K/SuuPhk0hWQDjOM23g==}
-
   fs-extra@11.4.0:
     resolution: {integrity: sha512-EQsFzMUJkCKGr1ePqlYADkIUmHW1s3ZXr5Yqy6wbGrfUCphpl2maM/kyOIRA2HpP3AaFQTZXD4ldjek+nccddA==}
     engines: {node: '>=14.14'}
@@ -2541,11 +2529,6 @@ packages:
     engines: {node: '>=8'}
     hasBin: true
 
-  import@0.0.6:
-    resolution: {integrity: sha512-QPhTdjy9J4wUzmWSG7APkSgMFuPGPw+iJTYUblcfc2AfpqaatbwgCldK1HoLYx+v/+lWvab63GWZtNkcnj9JcQ==}
-    engines: {node: '>=0.10.0'}
-    hasBin: true
-
   imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
@@ -2553,9 +2536,6 @@ packages:
   indent-string@3.2.0:
     resolution: {integrity: sha512-BYqTHXTGUIvg7t1r4sJNKcbDZkL92nkXA8YtRpbjFHRHGDL/NtUeiBJMeE60kIFN/Mg8ESaWQvftaYMGJzQZCQ==}
     engines: {node: '>=4'}
-
-  inherits@2.0.3:
-    resolution: {integrity: sha512-x00IRNXNy63jwGkJmzPigoySHbaqpNuzKbBOmzK+g2OdZpQ9w+sxCN+VSB3ja7IAge2OP2qpfxTjeNcyjmW1uw==}
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -3207,9 +3187,6 @@ packages:
     deprecated: Renamed to `open-cli`.
     hasBin: true
 
-  optimist@0.3.7:
-    resolution: {integrity: sha512-TCx0dXQzVtSCg2OgY/bO9hjM9cV4XYx09TVK+s3+FhkjT6LovsLe+pPMzpWf+6yXK/hUizs2gUoTw3jHM0VaTQ==}
-
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
@@ -3309,9 +3286,6 @@ packages:
     resolution: {integrity: sha512-T2ZUsdZFHgA3u4e5PfPbjd7HDDpxPnQb5jN0SrDsjNSuVXHJqtwTnWqG0B1jZrgmJ/7lj1EmVIByWt1gxGkWvg==}
     engines: {node: '>=4'}
 
-  path@0.12.7:
-    resolution: {integrity: sha512-aXXC6s+1w7otVF9UletFkFcDsJeO7lSZBPUQhtb5O0xJe8LtYhj/GxldoL09bBj9+ZmE2hNoHqQSFMN5fikh4Q==}
-
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
@@ -3385,10 +3359,6 @@ packages:
   prismjs@1.30.0:
     resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
     engines: {node: '>=6'}
-
-  process@0.11.10:
-    resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
-    engines: {node: '>= 0.6.0'}
 
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
@@ -4081,9 +4051,6 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  util@0.10.4:
-    resolution: {integrity: sha512-0Pm9hTQ3se5ll1XihRic3FDIku70C+iHUdT/W926rSgHV5QgXsYbKZN8MSC3tJtSkhuROzvsQjAaFENRXr+19A==}
-
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
     deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
@@ -4303,10 +4270,6 @@ packages:
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
-
-  wordwrap@0.0.3:
-    resolution: {integrity: sha512-1tMA907+V4QmxV7dbRvb4/8MaRALK6q9Abid3ndMYnbyo8piisCmeONVqVSXqQA3KaP4SLt5b7ud6E2sqP8TFw==}
-    engines: {node: '>=0.4.0'}
 
   wordwrap@1.0.0:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
@@ -6899,8 +6862,6 @@ snapshots:
 
   format@0.2.2: {}
 
-  from@0.1.7: {}
-
   fs-extra@11.4.0:
     dependencies:
       graceful-fs: 4.2.11
@@ -7102,15 +7063,9 @@ snapshots:
       pkg-dir: 4.2.0
       resolve-cwd: 3.0.0
 
-  import@0.0.6:
-    dependencies:
-      optimist: 0.3.7
-
   imurmurhash@0.1.4: {}
 
   indent-string@3.2.0: {}
-
-  inherits@2.0.3: {}
 
   inherits@2.0.4: {}
 
@@ -7910,10 +7865,6 @@ snapshots:
       open: 6.4.0
       temp-write: 4.0.0
 
-  optimist@0.3.7:
-    dependencies:
-      wordwrap: 0.0.3
-
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -8029,11 +7980,6 @@ snapshots:
     dependencies:
       pify: 3.0.0
 
-  path@0.12.7:
-    dependencies:
-      process: 0.11.10
-      util: 0.10.4
-
   pathe@2.0.3: {}
 
   perfect-debounce@2.1.0: {}
@@ -8097,8 +8043,6 @@ snapshots:
       ansi-styles: 5.2.0
 
   prismjs@1.30.0: {}
-
-  process@0.11.10: {}
 
   prop-types@15.8.1:
     dependencies:
@@ -8812,10 +8756,6 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  util@0.10.4:
-    dependencies:
-      inherits: 2.0.3
-
   uuid@3.4.0: {}
 
   v8-to-istanbul@9.3.0:
@@ -9014,8 +8954,6 @@ snapshots:
       stackback: 0.0.2
 
   word-wrap@1.2.5: {}
-
-  wordwrap@0.0.3: {}
 
   wordwrap@1.0.0: {}
 

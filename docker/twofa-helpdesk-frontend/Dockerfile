@@ -13,25 +13,11 @@ ARG NODE_VERSION="24.15.0"
 ARG PNPM_VERSION="12.15.0"
 ARG NODE_SHA256="44836872d9aec49f1e6b52a9a922872db9a2b02d235a616a5681b6a85fec8d89"
 
-# The following dependencies are only needed when on an aarch64 platform,
-# because then the package "deasync" does not include ready made binaries
-# for the platform and falls back to compiling them.
-#
-# This is relevant for developers who work on machines with Apple's M1
-# processors.
-
 # hadolint ignore=DL3008
 RUN \
     apt-get install  --assume-yes --verbose-versions --no-install-recommends \
     "ca-certificates" \
     "wget" \
-    && if [[ "$(uname -m)" == "aarch64" ]]; then \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    "gcc" \
-    "g++" \
-    "make" \
-    "python3" \
-    ; fi \
     && wget --progress="dot:giga" --output-document="node.tar.gz" \
     "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz" \
     && echo "${NODE_SHA256}  node.tar.gz" > SHA256 \
