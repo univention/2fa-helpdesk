@@ -10,7 +10,7 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS local-dev-env
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG NODE_VERSION="24.15.0"
-ARG YARN_VERSION="1.22.22"
+ARG PNPM_VERSION="12.15.0"
 ARG NODE_SHA256="44836872d9aec49f1e6b52a9a922872db9a2b02d235a616a5681b6a85fec8d89"
 
 # The following dependencies are only needed when on an aarch64 platform,
@@ -41,31 +41,29 @@ RUN \
     && NODE_RESULT=$(node --version) \
     && echo "node version: ${NODE_RESULT}" \
     && if [[ "${NODE_RESULT}" != "v${NODE_VERSION}" ]]; then echo "Bad node version"; exit 1; fi \
-    && npm install -g yarn@"${YARN_VERSION}" \
-    && yarn set version "${YARN_VERSION}" \
-    && YARN_RESULT=$(yarn --version) \
-    && echo "yarn version: ${YARN_RESULT}" \
-    && if [[ "${YARN_RESULT}" != "${YARN_VERSION}" ]]; then echo "Bad yarn version"; exit 1; fi
+    && npm install -g pnpm@"${PNPM_VERSION}" \
+    && PNPM_RESULT=$(pnpm --version) \
+    && echo "pnpm version: ${PNPM_RESULT}" \
+    && if [[ "${PNPM_RESULT}" != "${PNPM_VERSION}" ]]; then echo "Bad pnpm version"; exit 1; fi
 
 WORKDIR /app
 CMD ["/bin/bash"]
 
 FROM local-dev-env AS base
 COPY ./frontend/package.json .
-COPY ./frontend/yarn.lock .
+COPY ./frontend/pnpm-lock.yaml .
+COPY ./frontend/pnpm-workspace.yaml .
 
-RUN \
-    yarn install --frozen-lockfile \
-    && yarn cache clean
+RUN pnpm install --frozen-lockfile
 
-# Copy should come after yarn install to prevent long rebuilding time
+# Copy should come after pnpm install to prevent long rebuilding time
 COPY ./frontend .
 
 ###############################################################################
 # Step 1: Build the app
 FROM base AS build
 
-RUN yarn build
+RUN pnpm build
 
 ###############################################################################
 # Step 2: Serve with nginx

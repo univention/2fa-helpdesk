@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-FileCopyrightText: 2026 Univention GmbH
+
+allowBuilds:
+  '@parcel/watcher': false
+  '@openapitools/openapi-generator-cli': false
+  '@scarf/scarf': false
+  '@tree-sitter-grammars/tree-sitter-yaml': false
+  core-js-pure: false
+  tree-sitter: false
+  tree-sitter-json: false
+  unrs-resolver: false
+permissions:
+  '@tanstack/vue-table':
+    skills: false
+overrides:
+  minimatch: ^10.0.0

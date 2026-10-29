@@ -6,7 +6,7 @@
   "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "vite",
-    "build": "yarn type-check && vite build",
+    "build": "pnpm type-check && vite build",
     "preview": "vite preview",
     "type-check": "vue-tsc -p tsconfig.typecheck.json --noEmit",
     "swagger": "vite & opn http://localhost:5173/ui/swagger",
@@ -27,8 +27,7 @@
     "pinia": "4.1.0",
     "swagger-ui": "5.34.0",
     "vue": "3.5.44",
-    "vue-router": "5.4.0",
-    "yarn": "1.22.22"
+    "vue-router": "5.4.0"
   },
   "devDependencies": {
     "@eslint/css": "1.4.0",
@@ -57,7 +56,5 @@
     "vitest": "4.1.12",
     "vue-tsc": "3.3.14"
   },
-  "resolutions": {
-    "minimatch": "^10.0.0"
-  }
+  "packageManager": "pnpm@12.15.0"
 }

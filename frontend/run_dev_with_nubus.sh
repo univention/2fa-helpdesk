@@ -58,4 +58,4 @@ echo "  * add http://localhost:5173/ to the CSP in the Realm settings -> securit
 echo "---------------------------"
 echo ""
 
-yarn run dev --clearScreen false
+pnpm run dev --clearScreen false
