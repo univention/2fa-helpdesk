@@ -13,5 +13,3 @@ allowBuilds:
 permissions:
   '@tanstack/vue-table':
     skills: false
-overrides:
-  minimatch: ^10.0.0
