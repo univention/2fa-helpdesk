@@ -36,11 +36,29 @@ data:
   TWOFA_ADMIN_GROUPS: {{ join "," .Values.twofaHelpdeskBackend.config.twofa_admin_groups }}
 
   PREFIX: "/backend"
-  VITE_API_URL: /backend
-  VITE_KEYCLOAK_URL: "{{ required "keycloak.connection.url is required" (tpl .Values.keycloak.connection.url .) }}"
-  VITE_KEYCLOAK_REALM: "{{ tpl .Values.keycloak.realm . }}"
-  VITE_KEYCLOAK_CLIENT_ID: "{{ tpl .Values.keycloak.client . }}"
-  VITE_POST_LOGOUT_REDIRECT_URI: "{{ tpl .Values.twofaHelpdeskFrontend.config.postLogoutRedirectURI . }}"
+...
+---
+apiVersion: "v1"
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-ui" (include "common.names.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    {{- include "common.labels.standard" ( dict "customLabels" .Values.additionalLabels "context" . ) | nindent 4 }}
+  {{- include "nubus-common.annotations.render" ( dict
+    "values" ( list .Values.additionalAnnotations )
+    "context" . )
+    | nindent 2 }}
+data:
+  # Served to every browser as /univention/2fa/config.json.
+  config.json: |
+    {{- dict
+      "VITE_API_URL" "/backend"
+      "VITE_KEYCLOAK_URL" (required "keycloak.connection.url is required" (tpl .Values.keycloak.connection.url .))
+      "VITE_KEYCLOAK_REALM" (tpl .Values.keycloak.realm .)
+      "VITE_KEYCLOAK_CLIENT_ID" (tpl .Values.keycloak.client .)
+      "VITE_POST_LOGOUT_REDIRECT_URI" (tpl .Values.twofaHelpdeskFrontend.config.postLogoutRedirectURI .)
+      | toPrettyJson | nindent 4 }}
 ...
 ---
 kind: "ConfigMap"

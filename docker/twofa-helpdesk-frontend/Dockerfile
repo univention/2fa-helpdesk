@@ -69,18 +69,9 @@ RUN yarn build
 
 ###############################################################################
 # Step 2: Serve with nginx
-FROM gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/nginx/nginx:0.7.53@sha256:2aa375eba6c98fcf9383ab06c8c4cdd10c8bc53682a0c58026208b3b48119f42 AS final
-
-# RUN apk add python3
-RUN apt-get update && \
-    apt-get install --assume-yes --verbose-versions --no-install-recommends python3 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+FROM gitregistry.knut.univention.de/univention/dev/projects/ucs-base-image/ucs-distroless-nginx:5.3.0-build.20261102@sha256:7fdda30d248ef37a1ab8f5eb6c183df54bd87f0f7aaad5f704afe5552cdaede1 AS final
 
 COPY --from=build /app/dist /usr/share/nginx/html/univention/2fa
-
-COPY frontend/90_generate_config.py /
-COPY frontend/90_generate_config.sh /entrypoint.d/
 
 FROM final AS sbom
 
