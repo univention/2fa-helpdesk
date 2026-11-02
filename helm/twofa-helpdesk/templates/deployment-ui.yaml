@@ -54,12 +54,9 @@ spec:
       serviceAccountName: {{ include "common.names.fullname" . }}
       {{- end }}
       volumes:
-      - name: cache-tmpfs
-        emptyDir:
-          medium: Memory
-      - name: configjson
-        emptyDir:
-          medium: Memory
+      - name: ui-config
+        configMap:
+          name: {{ printf "%s-ui" (include "common.names.fullname" .) }}
       - name: var-run-volume
         emptyDir: {}
       - name: var-lib-nginx-volume
@@ -72,20 +69,6 @@ spec:
       securityContext:
         {{- omit .Values.twofaHelpdeskFrontend.podSecurityContext "enabled" | toYaml  | nindent 10 }}
       {{- end }}
-      initContainers:
-      - name: init-configjson
-        {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
-        securityContext:
-          {{- omit .Values.twofaHelpdeskFrontend.securityContext "enabled" | toYaml  | nindent 12 }}
-        {{- end }}
-        image: "{{ coalesce .Values.twofaHelpdeskFrontend.image.registry .Values.global.imageRegistry }}/{{ .Values.twofaHelpdeskFrontend.image.repository }}{{ if .Values.twofaHelpdeskFrontend.image.sha256 }}@sha256:{{ .Values.twofaHelpdeskFrontend.image.sha256 }}{{ else }}:{{ .Values.twofaHelpdeskFrontend.image.tag }}{{ end }}"
-        imagePullPolicy: {{ coalesce .Values.twofaHelpdeskFrontend.image.pullPolicy .Values.global.imagePullPolicy | quote }}
-        command: ["sh", "-c", "mkdir -p /mnt && touch /mnt/config.json"]
-        volumeMounts:
-          - name: configjson
-            mountPath: /mnt
-        resources:
-          {{- toYaml .Values.twofaHelpdeskFrontend.resources | nindent 10 }}
       containers:
       - name: "twofa-helpdesk-frontend-ui"
         {{- if .Values.twofaHelpdeskFrontend.securityContext.enabled }}
@@ -97,9 +80,7 @@ spec:
         ports:
         - containerPort: 80
         volumeMounts:
-          - name: cache-tmpfs
-            mountPath: /var/cache/nginx
-          - name: configjson
+          - name: ui-config
             mountPath: /usr/share/nginx/html/univention/2fa/config.json
             subPath: config.json
           - name: var-run-volume
@@ -109,10 +90,6 @@ spec:
           - name: {{ printf "%s-nginx" (include "common.names.fullname" .) | quote }}
             subPath: nginx.conf
             mountPath: /etc/nginx/nginx.conf
-        env:
-        envFrom:
-          - configMapRef:
-              name: {{ printf "%s-config" (include "common.names.fullname" .) }}
         {{- if .Values.twofaHelpdeskFrontend.probes.liveness.enabled }}
         livenessProbe:
           httpGet:
