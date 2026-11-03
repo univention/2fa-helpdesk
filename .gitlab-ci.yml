@@ -100,7 +100,7 @@ test-frontend-unit:
   image: "${CI_REGISTRY_IMAGE}/twofa-helpdesk-frontend-testrunner:${RELEASE_VERSION}"
   script:
     - cd /app
-    - yarn test
+    - pnpm test
 
 test-backend:
   stage: test

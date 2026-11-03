@@ -9,63 +9,39 @@ FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS local-dev-env
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ARG NODE_VERSION="24.15.0"
-ARG YARN_VERSION="1.22.22"
-ARG NODE_SHA256="44836872d9aec49f1e6b52a9a922872db9a2b02d235a616a5681b6a85fec8d89"
+ARG PNPM_VERSION="12.15.0"
 
-# The following dependencies are only needed when on an aarch64 platform,
-# because then the package "deasync" does not include ready made binaries
-# for the platform and falls back to compiling them.
-#
-# This is relevant for developers who work on machines with Apple's M1
-# processors.
+# Debian's Node 20 is too old for jsdom.
+COPY --from=docker.io/library/node:24.15.0-trixie-slim@sha256:291be77873bc04731968cacf82f0fcef17cee8cf200c6b6951e2bcab41560eb7 /usr/local/bin/node /usr/local/bin/node
+COPY --from=docker.io/library/node:24.15.0-trixie-slim@sha256:291be77873bc04731968cacf82f0fcef17cee8cf200c6b6951e2bcab41560eb7 /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm
 
 # hadolint ignore=DL3008
 RUN \
     apt-get install  --assume-yes --verbose-versions --no-install-recommends \
     "ca-certificates" \
-    "wget" \
-    && if [[ "$(uname -m)" == "aarch64" ]]; then \
-    apt-get --assume-yes --verbose-versions --no-install-recommends install \
-    "gcc" \
-    "g++" \
-    "make" \
-    "python3" \
-    ; fi \
-    && wget --progress="dot:giga" --output-document="node.tar.gz" \
-    "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz" \
-    && echo "${NODE_SHA256}  node.tar.gz" > SHA256 \
-    && sha256sum --check "SHA256" \
-    && tar xz -C "/usr/local" --strip-components=1 -f "node.tar.gz" \
-    && rm -f "node.tar.gz" "SHA256" \
-    && NODE_RESULT=$(node --version) \
-    && echo "node version: ${NODE_RESULT}" \
-    && if [[ "${NODE_RESULT}" != "v${NODE_VERSION}" ]]; then echo "Bad node version"; exit 1; fi \
-    && npm install -g yarn@"${YARN_VERSION}" \
-    && yarn set version "${YARN_VERSION}" \
-    && YARN_RESULT=$(yarn --version) \
-    && echo "yarn version: ${YARN_RESULT}" \
-    && if [[ "${YARN_RESULT}" != "${YARN_VERSION}" ]]; then echo "Bad yarn version"; exit 1; fi
+    && node /usr/local/lib/node_modules/npm/bin/npm-cli.js install -g pnpm@"${PNPM_VERSION}" \
+    && PNPM_RESULT=$(pnpm --version) \
+    && echo "pnpm version: ${PNPM_RESULT}" \
+    && if [[ "${PNPM_RESULT}" != "${PNPM_VERSION}" ]]; then echo "Bad pnpm version"; exit 1; fi
 
 WORKDIR /app
 CMD ["/bin/bash"]
 
 FROM local-dev-env AS base
 COPY ./frontend/package.json .
-COPY ./frontend/yarn.lock .
+COPY ./frontend/pnpm-lock.yaml .
+COPY ./frontend/pnpm-workspace.yaml .
 
-RUN \
-    yarn install --frozen-lockfile \
-    && yarn cache clean
+RUN pnpm install --frozen-lockfile
 
-# Copy should come after yarn install to prevent long rebuilding time
+# Copy should come after pnpm install to prevent long rebuilding time
 COPY ./frontend .
 
 ###############################################################################
 # Step 1: Build the app
 FROM base AS build
 
-RUN yarn build
+RUN pnpm build
 
 ###############################################################################
 # Step 2: Serve with nginx
