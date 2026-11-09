@@ -3,7 +3,7 @@
 ---
 include:
   - project: "univention/dev/nubus-for-k8s/common-ci"
-    ref: "v1.70.0"
+    ref: "v1.72.0"
     file:
       - "defaults/stages.yaml"
       - "defaults/nubus-workflow.yaml"
@@ -14,11 +14,8 @@ include:
       - "jobs/package-and-publish-helm-charts-external.yaml"
       - "jobs/generate-filesystem-sbom.yaml"
       - "templates/sonarqube.yaml"
-  - project: "univention/infrastructure/docker-services"
-    ref: "master"
-    file:
-      - "dind.yml"
-  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.70.0"
+      - "templates/compose-test.yaml"
+  - component: "$CI_SERVER_FQDN/univention/dev/nubus-for-k8s/common-ci/vul-man@v1.72.0"
 
 variables:
   RENOVATE_USER_ID: "1393"
@@ -103,54 +100,22 @@ test-frontend-unit:
     - pnpm test
 
 test-backend:
+  extends: ".compose-test"
   stage: test
-  extends: ".dind"
-  rules:
-    - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
-      when: "manual"
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: "never"
-    - when: "on_success"
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.4.1"
-  before_script:
-    # Allow that the Docker API version is negotiated between client and server
-    - unset DOCKER_API_VERSION
-    - export IMAGE_TAG=${RELEASE_VERSION}
-    - echo -e "\e[0Ksection_start:`date +%s`:docker_debug[collapsed=true]\r\e[0KDocker version details"
-    - echo $IMAGE_TAG
-    - docker version
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_debug\r\e[0K"
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"
-    - docker compose --profile test-it-services up --no-build --quiet-pull --wait --wait-timeout 180
+  variables:
+    COMPOSE_PROFILES: "test-it-services"
+    COMPOSE_TEST_WAIT_TIMEOUT: "180"
   script:
     - docker compose run --quiet-pull --rm testrunner bash -c 'pytest -lvv tests/integration/api-2fa'
-  after_script:
-    - docker compose down --volumes
 
 test-e2e:
+  extends: ".compose-test"
   stage: test
-  extends: ".dind"
-  rules:
-    - if: '$GITLAB_USER_ID == $RENOVATE_USER_ID && $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS !~ /Renovate run dind/'
-      when: "manual"
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: "never"
-    - when: "on_success"
-  image: "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.4.1"
-  before_script:
-    # Allow that the Docker API version is negotiated between client and server
-    - unset DOCKER_API_VERSION
-    - export IMAGE_TAG=${RELEASE_VERSION}
-    - echo -e "\e[0Ksection_start:`date +%s`:docker_debug[collapsed=true]\r\e[0KDocker version details"
-    - echo $IMAGE_TAG
-    - docker version
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_debug\r\e[0K"
-    - echo -e "\e[0Ksection_end:`date +%s`:docker_compose_config\r\e[0K"
-    - docker compose --profile test-e2e-services up --no-build --quiet-pull --wait --wait-timeout 180
+  variables:
+    COMPOSE_PROFILES: "test-e2e-services"
+    COMPOSE_TEST_WAIT_TIMEOUT: "180"
   script:
     - docker compose run --quiet-pull --rm testrunner bash -c 'pytest -lvv tests/integration/e2e'
-  after_script:
-    - docker compose down --volumes
 
 sonarqube:
   extends: .sonarqube
