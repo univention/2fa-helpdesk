@@ -54,6 +54,7 @@ def assert_user_can_login_using_otp(page: Page, user: KeycloakUser):
     user_logs_in_with_password(page, user)
     user_is_redirected_to_totp_setup(page)
     user_sets_up_totp(page, user)
+    user_is_redirected_to_self_service(page)
     logout_user_from_browser(page, user)
 
     page.reload()

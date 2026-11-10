@@ -7,7 +7,7 @@ services:
   pre-commit:
     profiles:
       - test
-    image: gitregistry.knut.univention.de/univention/dev/tooling/pre-commit/univention-pre-commit:latest
+    image: gitregistry.knut.univention.de/univention/dev/tooling/pre-commit/univention-pre-commit:latest@sha256:bca4152a9e2f12fc27ae91eac6d8bb796aa353ac675b472440ecab5424ba26ee
     volumes:
       - type: bind
         source: .
@@ -19,7 +19,7 @@ services:
         target: /cache
 
   test-chart:
-    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.28.0
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.24@sha256:1f34d54d23452475db4e92a43b669b8cb1817c4837b0003b2d897d47ed2f9d35
     command: pytest tests/chart
     profiles:
       - test
@@ -29,7 +29,7 @@ services:
 
   keycloak:
     # FIXME: Change this to our keycloak image e.g. artifacts.software-univention.de/nubus/images/keycloak:0.2.5
-    image: quay.io/keycloak/keycloak:26.4.4
+    image: quay.io/keycloak/keycloak:26.8.2@sha256:723b1d6e254c0fc96d5cffec860c7e0744d6a3277822b865bb538cf891575e41
     profiles:
       - test-it
       - test-it-services
@@ -103,7 +103,7 @@ services:
 
   keycloak-setup:
     # FIXME: Change this to our keycloak image e.g. artifacts.software-univention.de/nubus/images/keycloak:0.2.5
-    image: quay.io/keycloak/keycloak:26.3.1
+    image: quay.io/keycloak/keycloak:26.8.2@sha256:723b1d6e254c0fc96d5cffec860c7e0744d6a3277822b865bb538cf891575e41
     profiles:
       - setup
     env_file: .env.test

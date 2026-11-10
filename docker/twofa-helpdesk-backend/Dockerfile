@@ -13,7 +13,7 @@ ARG UCS_DISTROLESS_IMAGE_TAG=5.3.0-build.20261026@sha256:f65cefc852c76dfd42ad0c1
 # version the distroless final stage runs.
 FROM ${UCS_BASE_IMAGE}:${UCS_BASE_IMAGE_TAG} AS builder
 
-COPY --from=ghcr.io/astral-sh/uv:0.12.13@sha256:b485bd65cc2cf1c9a93b3554012c9c3778cf7b1b5fd3d3096ce9e1226c97e1e6 /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.13.7@sha256:96f40d3904aad8d0bd010539001d36c8e2188b981e1334471a90c4a1d93bb490 /uv /usr/local/bin/uv
 
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
