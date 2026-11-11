@@ -31,8 +31,13 @@ FROM base-env
 # Playwright defaults to ~/.cache/ms-playwright, which the cache mount below would keep out of the image.
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
+# The node binary that Playwright bundles needs libatomic1 before install-deps can run.
+# hadolint ignore=DL3008
 RUN --mount=type=cache,target=/root/.cache \
-    uv sync --locked \
+    apt-get update \
+    && apt-get install --assume-yes --no-install-recommends libatomic1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && uv sync --locked \
     && playwright install-deps \
     && playwright install chromium
 
