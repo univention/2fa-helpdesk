@@ -21,7 +21,9 @@ spec:
       name: "{{ include "common.names.fullname" . }}-keycloak-bootstrap-{{ .Release.Revision }}"
       labels:
         {{- include "common.labels.standard" ( dict
-          "customLabels" ( dict "app.kubernetes.io/name" ( printf "%s-keycloak-bootstrap" ( include "common.names.fullname" . ) ) )
+          "customLabels" ( merge
+            ( deepCopy ( .Values.additionalLabels | default dict ) )
+            ( dict "app.kubernetes.io/name" ( printf "%s-keycloak-bootstrap" ( include "common.names.fullname" . ) ) ) )
           "context" . ) | nindent 8 }}
       annotations:
         checksum/config: '{{ include (print $.Template.BasePath "/configmap-keycloak-bootstrap.yaml") . | sha256sum }}'
