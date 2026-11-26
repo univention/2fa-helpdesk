@@ -19,7 +19,7 @@ services:
         target: /cache
 
   test-chart:
-    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.29.25@sha256:ad501511d7b3ede40c1f42fc57f48838f57ba104a432934fc4925fe0d4c53088
+    image: gitregistry.knut.univention.de/univention/dev/nubus-for-k8s/common-helm/testrunner:0.30.1@sha256:c11f2d5210be69da131df071a442bfef55ff5892734b33718523579a74193602
     command: pytest tests/chart
     profiles:
       - test
@@ -29,7 +29,7 @@ services:
 
   keycloak:
     # FIXME: Change this to our keycloak image e.g. artifacts.software-univention.de/nubus/images/keycloak:0.2.5
-    image: quay.io/keycloak/keycloak:26.8.2@sha256:c68e286cacd87b942ac1939a0a1481461109d6acd3a57dc496969a319a76bbf0
+    image: quay.io/keycloak/keycloak:26.8.2@sha256:7e66a96e4739239070aeaf72e4c5decf0f7f682cfc725b9f7ea2b336eaba38b3
     profiles:
       - test-it
       - test-it-services
@@ -103,7 +103,7 @@ services:
 
   keycloak-setup:
     # FIXME: Change this to our keycloak image e.g. artifacts.software-univention.de/nubus/images/keycloak:0.2.5
-    image: quay.io/keycloak/keycloak:26.8.2@sha256:c68e286cacd87b942ac1939a0a1481461109d6acd3a57dc496969a319a76bbf0
+    image: quay.io/keycloak/keycloak:26.8.2@sha256:7e66a96e4739239070aeaf72e4c5decf0f7f682cfc725b9f7ea2b336eaba38b3
     profiles:
       - setup
     env_file: .env.test
